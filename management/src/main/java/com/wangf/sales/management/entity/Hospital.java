@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -31,11 +32,8 @@ public class Hospital {
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	private Province province;
 
-	@ManyToMany
-	@JoinTable(name = "HOSPITAL_DEPARTMENT", joinColumns = {
-			@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-					@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID") }, uniqueConstraints = {
-							@UniqueConstraint(columnNames = { "DEPARTMENT_ID", "HOSPITAL_ID" }) })
+	@OneToMany
+	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<Department> departments;
 
 	/**

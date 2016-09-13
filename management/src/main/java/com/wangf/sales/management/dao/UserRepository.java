@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.wangf.sales.management.entity.User;
 
-@RepositoryRestResource(collectionResourceRel = "province", path = "province")
+@RepositoryRestResource(collectionResourceRel = "user", path = "user")
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
 	List<User> findByUserName(@Param("userName") String name);

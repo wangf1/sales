@@ -1,7 +1,7 @@
-delete from Hospital_Department
 delete from USER_HOSPITAL
-delete from Hospital
 delete from Department
+delete from Hospital
+delete from DEPARTMENT_NAME
 delete from Province
 delete from Hospital_Level
 delete from Product
@@ -16,9 +16,10 @@ insert into Hospital_Level(id, name) values(1, '三甲')
 
 insert into Hospital(id, name, level_id, province_id) values (1, '长征', 1, 1)
 
-insert into Department(id, name) values (1, 'ICU')
+insert into DEPARTMENT_NAME(id, name) values(1, 'ICU')
 
-insert into Hospital_Department(Hospital_id, Department_id) values (1,1)
+insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (1, 1, 1)
+
 
 insert into Company(id, name) values(1, 'Thermo')
 

@@ -1,16 +1,12 @@
 package com.wangf.sales.management.entity;
 
-import java.util.List;
-
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -20,30 +16,27 @@ public class Department {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(unique = true, nullable = false)
-	private String name;
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "DEPARTMENT_NAME_ID", referencedColumnName = "ID")
+	private DepartmentName name;
 
-	@ManyToMany
-	@JoinTable(name = "HOSPITAL_DEPARTMENT", joinColumns = {
-			@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-					@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, uniqueConstraints = {
-							@UniqueConstraint(columnNames = { "DEPARTMENT_ID", "HOSPITAL_ID" }) })
-	private List<Hospital> hospitals;
+	@ManyToOne
+	private Hospital hospital;
 
-	public String getName() {
+	public DepartmentName getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(DepartmentName name) {
 		this.name = name;
 	}
 
-	public List<Hospital> getHospitals() {
-		return hospitals;
+	public Hospital getHospital() {
+		return hospital;
 	}
 
-	public void setHospitals(List<Hospital> hospitals) {
-		this.hospitals = hospitals;
+	public void setHospitals(Hospital hospital) {
+		this.hospital = hospital;
 	}
 
 	@Override

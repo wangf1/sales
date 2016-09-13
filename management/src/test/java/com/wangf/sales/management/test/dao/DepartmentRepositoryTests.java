@@ -1,10 +1,7 @@
 package com.wangf.sales.management.test.dao;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,10 +17,10 @@ public class DepartmentRepositoryTests extends TestBase {
 
 	@Test
 	public void findsAllHospital() {
-		List<Department> results = this.repository.findByName("ICU");
-		Assert.assertTrue(results.size() >= 1);
-		for (Department hospital : results) {
-			System.out.println(hospital.getHospitals().size());
+		Iterable<Department> results = this.repository.findAll();
+		for (Department depart : results) {
+			System.out.println(depart.getName());
+			System.out.println(depart.getHospital());
 		}
 	}
 

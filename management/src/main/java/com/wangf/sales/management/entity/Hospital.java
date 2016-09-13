@@ -15,7 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 @Entity
 public class Hospital {
@@ -32,6 +33,7 @@ public class Hospital {
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	private Province province;
 
+	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<Department> departments;
@@ -39,6 +41,7 @@ public class Hospital {
 	/**
 	 * Hospitals managed by who
 	 */
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
 			@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
@@ -88,6 +91,7 @@ public class Hospital {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		return string;
 	}
 }

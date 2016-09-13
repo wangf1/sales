@@ -11,7 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 @Entity
 public class Department {
@@ -26,10 +27,12 @@ public class Department {
 	@ManyToOne
 	private Hospital hospital;
 
+	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
 	private List<ProductInstallLocation> installLocations;
 
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ORDER_DEPARTMENT_ID", referencedColumnName = "ID")
 	private List<SalesRecord> salesRecords;
@@ -68,6 +71,7 @@ public class Department {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		return string;
 	}
 }

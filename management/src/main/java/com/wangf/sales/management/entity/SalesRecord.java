@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.google.common.base.MoreObjects;
 
 @Entity
 public class SalesRecord {
@@ -41,6 +41,12 @@ public class SalesRecord {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass())
+				.add("installDepartment", installLocation.getDepartment().getName())
+				.add("hospital", installLocation.getDepartment().getHospital().getName())
+				.add("province", installLocation.getDepartment().getHospital().getProvince().getName())
+				.add("product", installLocation.getProduct().getName())
+				.add("orderDepartment", orderDepartment.getName().getName()).toString();
+		return string;
 	}
 }

@@ -10,7 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 @Entity
 public class DepartmentName {
@@ -21,6 +22,7 @@ public class DepartmentName {
 	@Column(unique = true, nullable = false)
 	private String name;
 
+	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name = "DEPARTMENT_NAME_ID", referencedColumnName = "ID")
 	private List<Department> departments;
@@ -43,6 +45,7 @@ public class DepartmentName {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		return string;
 	}
 }

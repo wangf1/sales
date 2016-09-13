@@ -10,17 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 @Entity
 public class HospitalLevel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	@Column(unique = true, nullable = false)
 	private String name;
 
+	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name = "LEVEL_ID", referencedColumnName = "ID")
 	private List<Hospital> hospitals;
@@ -43,6 +45,7 @@ public class HospitalLevel {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		return string;
 	}
 }

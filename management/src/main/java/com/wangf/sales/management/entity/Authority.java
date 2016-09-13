@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.google.common.base.MoreObjects;
 
 @Entity
 @Table(name = "AUTHORITIES", uniqueConstraints = { @UniqueConstraint(columnNames = { "userName", "authority" }) })
@@ -46,6 +46,8 @@ public class Authority {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		String string = MoreObjects.toStringHelper(this.getClass()).add("authority", authority).toString();
+		return string;
 	}
+
 }

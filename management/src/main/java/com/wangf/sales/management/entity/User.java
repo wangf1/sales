@@ -13,7 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 @Entity
 @Table(name = "USERS")
@@ -35,6 +36,7 @@ public class User {
 	@JoinColumn(name = "MANAGER", referencedColumnName = "USERNAME")
 	private User manager;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "manager")
 	private List<User> employees;
 
@@ -53,6 +55,7 @@ public class User {
 	 * http://docs.spring.io/spring-security/site/docs/current/reference/html/
 	 * appendix-schema.html
 	 */
+	@JsonIgnore
 	@OneToMany
 	@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
 	private List<Authority> authorities;
@@ -131,6 +134,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+
+		String string = MoreObjects.toStringHelper(this.getClass()).add("userName", userName)
+				.add("firstName", firstName).add("lastName", lastName).toString();
+		return string;
 	}
 }

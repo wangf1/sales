@@ -40,4 +40,4 @@ insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)
 
 insert into product_install_location(id, product_id, department_id) values(1, 1, 1)
 
-insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID) values(1, 1, 1)
+insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(1, 1, 1, 'Stella', 100)

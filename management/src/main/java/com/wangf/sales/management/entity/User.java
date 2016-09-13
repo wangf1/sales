@@ -60,6 +60,11 @@ public class User {
 	@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
 	private List<Authority> authorities;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
+	private List<SalesRecord> salesRecords;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -130,6 +135,14 @@ public class User {
 
 	public void setHospitals(List<Hospital> hospitals) {
 		this.hospitals = hospitals;
+	}
+
+	public List<SalesRecord> getSalesRecords() {
+		return salesRecords;
+	}
+
+	public void setSalesRecords(List<SalesRecord> salesRecords) {
+		this.salesRecords = salesRecords;
 	}
 
 	@Override

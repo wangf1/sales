@@ -19,7 +19,7 @@ public class UserRepositoryTests extends TestBase {
 
 	@Test
 	public void findsAllHospital() {
-		List<User> results = this.repository.findByUserName("wangf");
+		List<User> results = this.repository.findByUserName("Stella");
 		// Iterable<User> results = this.repository.findAll();
 		// Assert.assertTrue(results.size() >= 1);
 		for (User user : results) {
@@ -30,6 +30,7 @@ public class UserRepositoryTests extends TestBase {
 			System.out.println(user.getEmployees());
 			System.out.println(user.getAuthorities());
 			System.out.println(user.getHospitals());
+			System.out.println(user.getSalesRecords());
 		}
 	}
 

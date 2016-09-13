@@ -20,9 +20,11 @@ public class DepartmentRepositoryTests extends TestBase {
 	public void findsAllHospital() {
 		Iterable<Department> results = this.repository.findAll();
 		for (Department depart : results) {
-			System.out.println(depart.getName());
-			System.out.println(depart.getHospital());
-			Assert.assertTrue(depart.getInstallLocations().size()>=1);
+			System.out.println(depart.getName().getName());
+			System.out.println(depart.getHospital().getName());
+			Assert.assertTrue(depart.getInstallLocations().size() >= 1);
+			Assert.assertTrue(depart.getSalesRecords().size() >= 1);
+			Assert.assertTrue(depart.getInstallLocations().get(0).getSalesRecords().size() >= 1);
 		}
 	}
 

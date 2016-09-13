@@ -30,6 +30,10 @@ public class Department {
 	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
 	private List<ProductInstallLocation> installLocations;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ORDER_DEPARTMENT_ID", referencedColumnName = "ID")
+	private List<SalesRecord> salesRecords;
+
 	public DepartmentName getName() {
 		return name;
 	}
@@ -52,6 +56,14 @@ public class Department {
 
 	public void setInstallLocations(List<ProductInstallLocation> installLocations) {
 		this.installLocations = installLocations;
+	}
+
+	public List<SalesRecord> getSalesRecords() {
+		return salesRecords;
+	}
+
+	public void setSalesRecords(List<SalesRecord> salesRecords) {
+		this.salesRecords = salesRecords;
 	}
 
 	@Override

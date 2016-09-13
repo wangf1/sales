@@ -26,6 +26,7 @@ public class ProductRepositoryTests extends TestBase {
 			System.out.println(product.getName());
 			System.out.println(product.getCompany().getName());
 			Assert.assertTrue(product.getInstallLocations().size() >= 1);
+			Assert.assertTrue(product.getInstallLocations().get(0).getSalesRecords().size() >= 1);
 		}
 	}
 

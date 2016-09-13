@@ -1,4 +1,5 @@
 delete from USER_HOSPITAL
+delete from sales_record
 delete from product_install_location
 delete from Department
 delete from Hospital
@@ -35,3 +36,5 @@ insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1)
 insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)
 
 insert into product_install_location(id, product_id, department_id) values(1, 1, 1)
+
+insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID) values(1, 1, 1)

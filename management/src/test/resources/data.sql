@@ -1,4 +1,5 @@
 delete from Hospital_Department
+delete from USER_HOSPITAL
 delete from Hospital
 delete from Department
 delete from Province
@@ -27,3 +28,6 @@ insert into Users(username, password, enabled, first_name, last_name) values('wa
 insert into Users(username, password, enabled, first_name, last_name, MANAGER) values('Stella', 'password', 1, 'Ding', 'Stella', 'wangf')
 
 insert into AUTHORITIES(username, authority) values('wangf', 'Admin')
+
+insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1)
+insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)

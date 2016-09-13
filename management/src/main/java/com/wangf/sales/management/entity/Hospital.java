@@ -38,6 +38,16 @@ public class Hospital {
 							@UniqueConstraint(columnNames = { "DEPARTMENT_ID", "HOSPITAL_ID" }) })
 	private List<Department> departments;
 
+	/**
+	 * Hospitals managed by who
+	 */
+	@ManyToMany
+	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
+			@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "USERNAME", "HOSPITAL_ID" }) })
+	private List<User> users;
+
 	public String getName() {
 		return name;
 	}
@@ -68,6 +78,14 @@ public class Hospital {
 
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	@Override

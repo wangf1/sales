@@ -6,9 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -34,6 +37,16 @@ public class User {
 
 	@OneToMany(mappedBy = "manager")
 	private List<User> employees;
+
+	/**
+	 * Sales persons who manage these hospitals.
+	 */
+	@ManyToMany
+	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
+			@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, inverseJoinColumns = {
+					@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "USERNAME", "HOSPITAL_ID" }) })
+	private List<Hospital> hospitals;
 
 	/**
 	 * authorities is required by spring security, see
@@ -106,6 +119,14 @@ public class User {
 
 	public void setAuthorities(List<Authority> authorities) {
 		this.authorities = authorities;
+	}
+
+	public List<Hospital> getHospitals() {
+		return hospitals;
+	}
+
+	public void setHospitals(List<Hospital> hospitals) {
+		this.hospitals = hospitals;
 	}
 
 	@Override

@@ -1,12 +1,16 @@
 package com.wangf.sales.management.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -22,13 +26,9 @@ public class Product {
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	private Company company;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
+	@OneToMany
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	private List<ProductInstallLocation> installLocations;
 
 	public String getName() {
 		return name;
@@ -44,6 +44,14 @@ public class Product {
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public List<ProductInstallLocation> getInstallLocations() {
+		return installLocations;
+	}
+
+	public void setInstallLocations(List<ProductInstallLocation> installLocations) {
+		this.installLocations = installLocations;
 	}
 
 	@Override

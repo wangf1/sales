@@ -25,14 +25,6 @@ public class Company {
 	@JoinColumn(name = "COMPANY_ID", referencedColumnName = "ID")
 	private List<Product> products;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}

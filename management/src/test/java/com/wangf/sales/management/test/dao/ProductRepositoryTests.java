@@ -19,12 +19,13 @@ public class ProductRepositoryTests extends TestBase {
 	private ProductRepository repository;
 
 	@Test
-	public void findsAllHospital() {
+	public void findByName() {
 		List<Product> results = this.repository.findByName("PCT-Q");
 		Assert.assertTrue(results.size() >= 1);
-		for (Product hospital : results) {
-			System.out.println(hospital.getName());
-			System.out.println(hospital.getCompany().getName());
+		for (Product product : results) {
+			System.out.println(product.getName());
+			System.out.println(product.getCompany().getName());
+			Assert.assertTrue(product.getInstallLocations().size() >= 1);
 		}
 	}
 

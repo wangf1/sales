@@ -2,6 +2,7 @@ package com.wangf.sales.management.test.dao;
 
 import javax.transaction.Transactional;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +22,7 @@ public class DepartmentRepositoryTests extends TestBase {
 		for (Department depart : results) {
 			System.out.println(depart.getName());
 			System.out.println(depart.getHospital());
+			Assert.assertTrue(depart.getInstallLocations().size()>=1);
 		}
 	}
 

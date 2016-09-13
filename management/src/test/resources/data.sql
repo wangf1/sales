@@ -1,4 +1,5 @@
 delete from USER_HOSPITAL
+delete from product_install_location
 delete from Department
 delete from Hospital
 delete from DEPARTMENT_NAME
@@ -32,3 +33,5 @@ insert into AUTHORITIES(username, authority) values('wangf', 'Admin')
 
 insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1)
 insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)
+
+insert into product_install_location(id, product_id, department_id) values(1, 1, 1)

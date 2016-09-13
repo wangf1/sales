@@ -25,14 +25,6 @@ public class HospitalLevel {
 	@JoinColumn(name = "LEVEL_ID", referencedColumnName = "ID")
 	private List<Hospital> hospitals;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}

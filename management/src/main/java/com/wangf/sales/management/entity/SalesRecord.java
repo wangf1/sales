@@ -89,10 +89,12 @@ public class SalesRecord {
 
 	@Override
 	public String toString() {
+		User manager = salesPerson.getManager();
+		String managerName = manager != null ? manager.getUserName() : "";
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id)
 				.add("region", installLocation.getDepartment().getHospital().getProvince().getRegion())
 				.add("province", installLocation.getDepartment().getHospital().getProvince().getName())
-				.add("manager", salesPerson.getManager().getUserName()).add("salesPerson", salesPerson.getUserName())
+				.add("manager", managerName).add("salesPerson", salesPerson.getUserName())
 				.add("hospital", installLocation.getDepartment().getHospital().getName())
 				.add("product", installLocation.getProduct().getName())
 				.add("installDepartment", installLocation.getDepartment().getName())

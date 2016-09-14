@@ -69,7 +69,7 @@ public class ProductInstallLocation {
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("product", product.getName())
-				.add("department", department.getName()).toString();
+				.add("department", department.getName()).add("hospital", department.getHospital().getName()).toString();
 		return string;
 	}
 }

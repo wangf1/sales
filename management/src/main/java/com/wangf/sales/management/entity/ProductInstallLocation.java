@@ -24,7 +24,6 @@ public class ProductInstallLocation {
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private Product product;
 
-	@JsonIgnore
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
 	private Department department;

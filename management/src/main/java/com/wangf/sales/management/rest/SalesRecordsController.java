@@ -1,12 +1,16 @@
 package com.wangf.sales.management.rest;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +32,12 @@ public class SalesRecordsController {
 	@Autowired
 	private SalesRecordsService salesRecordsService;
 
+	@InitBinder
+	public void initBinder(final WebDataBinder binder) {
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
+
 	@RequestMapping(path = "/getSalesRecordsByCurrentUser", method = RequestMethod.GET)
 	public List<SalesRecord> getSalesRecords() {
 		UserDetails principal = SecurityUtils.getCurrentUserDetails();
@@ -42,6 +52,20 @@ public class SalesRecordsController {
 		return result;
 	}
 
+	/**
+	 * Example query string:
+	 * 
+	 * <pre>
+	 * http://localhost:8090/management/salesRecordsAdvanceSearch?product=PCT-Q&locationDepartmentName=ICU&hospital=%E9%95%BF%E5%BE%81&orderDepartName=ICU&startFrom=2016-09-01
+	 * </pre>
+	 * 
+	 * @param productName
+	 * @param locationDepartmentName
+	 * @param hospitalName
+	 * @param orderDepartName
+	 * @param startFrom
+	 * @return
+	 */
 	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.GET)
 	public List<SalesRecord> advanceSearch(@RequestParam("product") String productName,
 			@RequestParam("locationDepartmentName") String locationDepartmentName,

@@ -18,36 +18,42 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         return toolBar;
     };
     var createTable = function(oController) {
+        var tableColumns = [];
+        var tableCells = [];
+        var columNames = [
+            "region", "province", "manager", "salesPerson", "hospital", "product", "installDepartment", "orderDepartment", "quantity", "date"
+        ];
+        columNames.forEach(function(name) {
+            tableColumns.push(new sap.m.Column({
+                width: "30%",
+                hAlign: sap.ui.core.TextAlign.Center,
+                header: [
+                    new sap.m.Text({
+                        text: "{i18n>" + name + "}"
+                    })
+                ]
+            }));
+            tableCells.push(new sap.m.Text({
+                text: "{" + name + "}"
+            }));
+        });
+
         var table = new sap.m.Table({
             id: oController.createId("recordsTable"),
             headerText: "{i18n>salesRecords}",
             width: "auto",
+            headerToolbar: createTableHeaderToolBar(oController),
             items: {
                 path: "/salesRecords",
                 sorter: {
-                    path: "installLocation/department/hospital/name",
+                    path: "hospital",
                     group: true
                 },
                 template: new sap.m.ColumnListItem({
-                    cells: [
-                        new sap.m.Text({
-                            text: "{installLocation/department/hospital/name}"
-                        })
-                    ]
+                    cells: tableCells
                 })
             },
-            headerToolbar: createTableHeaderToolBar(oController),
-            columns: [
-                new sap.m.Column({
-                    width: "30%",
-                    hAlign: sap.ui.core.TextAlign.Center,
-                    header: [
-                        new sap.m.Text({
-                            text: "{i18n>hospital}"
-                        })
-                    ]
-                })
-            ]
+            columns: tableColumns
 
         });
         table.addStyleClass("sapUiResponsiveMargin");

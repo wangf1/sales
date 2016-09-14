@@ -1,4 +1,4 @@
-package com.wangf.sales.management.rest.service;
+package com.wangf.sales.management.service;
 
 import java.util.Date;
 import java.util.List;

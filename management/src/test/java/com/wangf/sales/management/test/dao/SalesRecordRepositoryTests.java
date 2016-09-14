@@ -18,6 +18,7 @@ import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
+import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
 import com.wangf.sales.management.test.TestBase;
 
 @Transactional
@@ -77,7 +78,11 @@ public class SalesRecordRepositoryTests extends TestBase {
 		Date lastMonth = calendar.getTime();
 		List<SalesRecord> records = repository.findBySalesPersonAndInstallLocationAndOrderDepartmentAndDateAfter(
 				salesPerson, installLocation, orderDepartment, lastMonth);
-		System.out.println(records);
+
+		for (SalesRecord record : records) {
+			SalesRecordPojo pojo = SalesRecordPojo.from(record);
+			System.out.println(pojo);
+		}
 	}
 
 }

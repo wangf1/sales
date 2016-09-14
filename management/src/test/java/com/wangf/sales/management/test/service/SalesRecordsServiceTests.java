@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wangf.sales.management.entity.SalesRecord;
-import com.wangf.sales.management.rest.service.SalesRecordsService;
+import com.wangf.sales.management.service.SalesRecordsService;
 import com.wangf.sales.management.test.TestBase;
 
 @Transactional

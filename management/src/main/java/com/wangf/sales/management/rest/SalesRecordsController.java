@@ -1,6 +1,7 @@
 package com.wangf.sales.management.rest;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
-import com.wangf.sales.management.rest.service.SalesRecordsService;
+import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
+import com.wangf.sales.management.service.SalesRecordsService;
 import com.wangf.sales.management.utils.SecurityUtils;
 
 @RestController
@@ -39,7 +41,7 @@ public class SalesRecordsController {
 	}
 
 	@RequestMapping(path = "/getSalesRecordsByCurrentUser", method = RequestMethod.GET)
-	public List<SalesRecord> getSalesRecords() {
+	public List<SalesRecordPojo> getSalesRecords() {
 		UserDetails principal = SecurityUtils.getCurrentUserDetails();
 		logger.info(principal.getUsername());
 		logger.info(principal.getAuthorities().toString());
@@ -48,7 +50,12 @@ public class SalesRecordsController {
 			return null;
 		}
 		User currentUser = users.get(0);
-		List<SalesRecord> result = currentUser.getSalesRecords();
+		List<SalesRecord> records = currentUser.getSalesRecords();
+		List<SalesRecordPojo> result = new ArrayList<>();
+		for (SalesRecord record : records) {
+			SalesRecordPojo pojo = SalesRecordPojo.from(record);
+			result.add(pojo);
+		}
 		return result;
 	}
 

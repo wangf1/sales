@@ -27,6 +27,14 @@ public class Company {
 	@JoinColumn(name = "COMPANY_ID", referencedColumnName = "ID")
 	private List<Product> products;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -45,7 +53,7 @@ public class Company {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name).toString();
 		return string;
 	}
 

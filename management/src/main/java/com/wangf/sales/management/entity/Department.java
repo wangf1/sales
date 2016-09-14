@@ -37,6 +37,14 @@ public class Department {
 	@JoinColumn(name = "ORDER_DEPARTMENT_ID", referencedColumnName = "ID")
 	private List<SalesRecord> salesRecords;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public DepartmentName getName() {
 		return name;
 	}
@@ -71,7 +79,7 @@ public class Department {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).toString();
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name).toString();
 		return string;
 	}
 }

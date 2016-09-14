@@ -34,6 +34,14 @@ public class ProductInstallLocation {
 	@JoinColumn(name = "INSTALL_LOCATION_ID", referencedColumnName = "ID")
 	private List<SalesRecord> salesRecords;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public Product getProduct() {
 		return product;
 	}
@@ -60,7 +68,7 @@ public class ProductInstallLocation {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("product", product.getName())
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("product", product.getName())
 				.add("department", department.getName()).toString();
 		return string;
 	}

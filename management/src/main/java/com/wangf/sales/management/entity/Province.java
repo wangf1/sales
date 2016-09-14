@@ -29,6 +29,14 @@ public class Province {
 	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
 	private List<Hospital> hospitals;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -55,7 +63,8 @@ public class Province {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("name", name).add("region", region).toString();
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name)
+				.add("region", region).toString();
 		return string;
 	}
 }

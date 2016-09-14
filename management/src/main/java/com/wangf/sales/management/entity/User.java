@@ -43,6 +43,7 @@ public class User {
 	/**
 	 * Sales persons who manage these hospitals.
 	 */
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
 			@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, inverseJoinColumns = {

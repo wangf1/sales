@@ -39,6 +39,14 @@ public class SalesRecord {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public ProductInstallLocation getInstallLocation() {
 		return installLocation;
 	}
@@ -81,7 +89,7 @@ public class SalesRecord {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass())
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id)
 				.add("region", installLocation.getDepartment().getHospital().getProvince().getRegion())
 				.add("province", installLocation.getDepartment().getHospital().getProvince().getName())
 				.add("manager", salesPerson.getManager().getUserName()).add("salesPerson", salesPerson.getUserName())

@@ -28,6 +28,14 @@ public class Authority {
 	@Column(nullable = false)
 	private String authority;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -46,7 +54,8 @@ public class Authority {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("authority", authority).toString();
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("authority", authority)
+				.toString();
 		return string;
 	}
 

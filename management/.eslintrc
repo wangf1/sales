@@ -1,0 +1,16 @@
+{
+	"env": {
+		"browser": true
+	},
+	"globals": {
+		"sales": true,
+		"sap": true,
+		"jQuery": true,
+		"$": true,
+		"Promise": true
+	},
+
+	"rules": {
+
+	}
+}

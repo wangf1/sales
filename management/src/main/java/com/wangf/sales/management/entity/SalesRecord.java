@@ -97,7 +97,7 @@ public class SalesRecord {
 				.add("manager", managerName).add("salesPerson", salesPerson.getUserName())
 				.add("hospital", installLocation.getDepartment().getHospital().getName())
 				.add("product", installLocation.getProduct().getName())
-				.add("installDepartment", installLocation.getDepartment().getName())
+				.add("installDepartment", installLocation.getDepartment().getName().getName())
 				.add("orderDepartment", orderDepartment.getName().getName()).add("quantity", quantity).add("date", date)
 				.toString();
 		return string;

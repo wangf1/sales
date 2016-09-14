@@ -79,7 +79,8 @@ public class Department {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name).toString();
+		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name)
+				.add("hospital", hospital.getName()).toString();
 		return string;
 	}
 }

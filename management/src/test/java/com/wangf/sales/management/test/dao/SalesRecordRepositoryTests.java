@@ -1,5 +1,9 @@
 package com.wangf.sales.management.test.dao;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
@@ -59,6 +63,21 @@ public class SalesRecordRepositoryTests extends TestBase {
 		repository.save(record);
 
 		Assert.assertEquals(repository.count(), existingCount + 1);
+	}
+
+	@Test
+	public void findBySalesPersonAndInstallLocationAndOrderDepartment() throws Exception {
+		User salesPerson = userRepository.findOne("wangf");
+		ProductInstallLocation installLocation = installLocationRepository.findByProductDepartmentHospital("PCT-Q",
+				"ICU", "长征");
+		Department orderDepartment = departmentRepository.findByDepartmentNameHospitalName("ICU", "长征");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, -1);
+		Date lastMonth = calendar.getTime();
+		List<SalesRecord> records = repository.findBySalesPersonAndInstallLocationAndOrderDepartmentAndDateAfter(
+				salesPerson, installLocation, orderDepartment, lastMonth);
+		System.out.println(records);
 	}
 
 }

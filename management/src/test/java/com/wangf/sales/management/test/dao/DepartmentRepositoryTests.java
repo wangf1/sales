@@ -28,4 +28,10 @@ public class DepartmentRepositoryTests extends TestBase {
 		}
 	}
 
+	@Test
+	public void findByDepartmentNameHospitalName() throws Exception {
+		Department department = repository.findByDepartmentNameHospitalName("ICU", "长征");
+		System.out.println(department);
+	}
+
 }

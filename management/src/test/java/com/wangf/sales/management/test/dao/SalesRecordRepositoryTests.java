@@ -73,9 +73,7 @@ public class SalesRecordRepositoryTests extends TestBase {
 				"ICU", "长征");
 		Department orderDepartment = departmentRepository.findByDepartmentNameHospitalName("ICU", "长征");
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.MONTH, -1);
-		Date lastMonth = calendar.getTime();
+		Date lastMonth = getLastMonth();
 		List<SalesRecord> records = repository.findBySalesPersonAndInstallLocationAndOrderDepartmentAndDateAfter(
 				salesPerson, installLocation, orderDepartment, lastMonth);
 
@@ -83,6 +81,21 @@ public class SalesRecordRepositoryTests extends TestBase {
 			SalesRecordPojo pojo = SalesRecordPojo.from(record);
 			System.out.println(pojo);
 		}
+	}
+
+	private Date getLastMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, -1);
+		Date lastMonth = calendar.getTime();
+		return lastMonth;
+	}
+
+	@Test
+	public void advanceSearch() throws Exception {
+		List<SalesRecord> allRecords = repository.advanceSearch(null, null, null, null, null, null);
+		List<SalesRecord> records = repository.advanceSearch("PCT-Q", "wangf", "长征", "ICU", "ICU", getLastMonth());
+		System.out.println(allRecords.size());
+		System.out.println(records);
 	}
 
 }

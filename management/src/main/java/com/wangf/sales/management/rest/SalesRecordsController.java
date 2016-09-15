@@ -12,6 +12,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,17 +75,47 @@ public class SalesRecordsController {
 	 * @return
 	 */
 	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.GET)
-	public List<SalesRecord> advanceSearch(@RequestParam("product") String productName,
-			@RequestParam("locationDepartmentName") String locationDepartmentName,
-			@RequestParam("hospital") String hospitalName, @RequestParam("orderDepartName") String orderDepartName,
-			@RequestParam("startFrom") Date startFrom) {
+	public List<SalesRecordPojo> advanceSearch(@RequestParam(name = "product", required = false) String productName,
+			@RequestParam(name = "locationDepartmentName", required = false) String locationDepartmentName,
+			@RequestParam(name = "hospital", required = false) String hospitalName,
+			@RequestParam(name = "orderDepartName", required = false) String orderDepartName,
+			@RequestParam(name = "startFrom", required = false) Date startFrom) {
 		UserDetails principal = SecurityUtils.getCurrentUserDetails();
 		String salesPersonName = principal.getUsername();
 		logger.info(salesPersonName);
 
-		List<SalesRecord> result = salesRecordsService.advanceSearch(productName, salesPersonName, hospitalName,
+		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(productName, salesPersonName, hospitalName,
 				locationDepartmentName, orderDepartName, startFrom);
-		return result;
+
+		return records;
+	}
+
+	/**
+	 * Example request:
+	 * 
+	 * <pre>
+	 * POST http://localhost:8090/management/salesRecordsAdvanceSearch
+	 * Content-Type = application/json
+	 * body:
+	 * 
+	 {
+		"hospital": "长征",
+		"product": "PCT-Q",
+		"installDepartment": "ICU",
+		"orderDepartment": "ICU",
+		"date": "2016-09-15"
+	}
+	 * </pre>
+	 * 
+	 */
+	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.POST)
+	public List<SalesRecordPojo> advanceSearch(@RequestBody SalesRecordPojo searchCriteria) {
+		UserDetails principal = SecurityUtils.getCurrentUserDetails();
+		String salesPersonName = principal.getUsername();
+		searchCriteria.setSalesPerson(salesPersonName);
+
+		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(searchCriteria);
+		return records;
 	}
 
 }

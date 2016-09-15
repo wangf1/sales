@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.wangf.sales.management.entity.SalesRecord;
+import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
 import com.wangf.sales.management.service.SalesRecordsService;
 import com.wangf.sales.management.test.TestBase;
 
@@ -25,7 +25,13 @@ public class SalesRecordsServiceTests extends TestBase {
 		calendar.add(Calendar.MONTH, -1);
 		Date lastMonth = calendar.getTime();
 
-		List<SalesRecord> records = service.advanceSearch("PCT-Q", "wangf", "长征", "ICU", "ICU", lastMonth);
+		String productName = "PCT-Q";
+		String salesPersonName = "wangf";
+		String hospitalName = "长征";
+		String locationDepartmentName = "ICU";
+		String orderDepartmentName = "ICU";
+		List<SalesRecordPojo> records = service.advanceSearch(productName, salesPersonName, hospitalName,
+				locationDepartmentName, orderDepartmentName, lastMonth);
 		System.out.println(records);
 	}
 

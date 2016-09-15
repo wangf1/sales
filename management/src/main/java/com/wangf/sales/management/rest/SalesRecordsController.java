@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,10 +42,7 @@ public class SalesRecordsController {
 
 	@RequestMapping(path = "/getSalesRecordsByCurrentUser", method = RequestMethod.GET)
 	public List<SalesRecordPojo> getSalesRecords() {
-		UserDetails principal = SecurityUtils.getCurrentUserDetails();
-		logger.info(principal.getUsername());
-		logger.info(principal.getAuthorities().toString());
-		List<User> users = userRepository.findByUserName(principal.getUsername());
+		List<User> users = userRepository.findByUserName(SecurityUtils.getCurrentUserName());
 		if (users.isEmpty()) {
 			return null;
 		}
@@ -80,8 +76,7 @@ public class SalesRecordsController {
 			@RequestParam(name = "hospital", required = false) String hospitalName,
 			@RequestParam(name = "orderDepartName", required = false) String orderDepartName,
 			@RequestParam(name = "startFrom", required = false) Date startFrom) {
-		UserDetails principal = SecurityUtils.getCurrentUserDetails();
-		String salesPersonName = principal.getUsername();
+		String salesPersonName = SecurityUtils.getCurrentUserName();
 		logger.info(salesPersonName);
 
 		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(productName, salesPersonName, hospitalName,
@@ -110,8 +105,7 @@ public class SalesRecordsController {
 	 */
 	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.POST)
 	public List<SalesRecordPojo> advanceSearch(@RequestBody SalesRecordPojo searchCriteria) {
-		UserDetails principal = SecurityUtils.getCurrentUserDetails();
-		String salesPersonName = principal.getUsername();
+		String salesPersonName = SecurityUtils.getCurrentUserName();
 		searchCriteria.setSalesPerson(salesPersonName);
 
 		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(searchCriteria);

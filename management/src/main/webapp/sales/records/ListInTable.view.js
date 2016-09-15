@@ -5,12 +5,12 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         return "sales.records.ListInTable";
     };
 
-    function createSearchPanel(oController) {
+    function createFacetFilter(oController) {
         var filters = [];
-        filters.push(new sap.m.FacetFilterList(oController.createId("rpt_ffl_app_id"), {
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterRegion"), {
             multiselect: true,
             listClose: function(ec) {
-                oController.onApplicationFacetFilter(ec);
+
             },
             title: "{i18n>region}",
             key: "region"
@@ -21,10 +21,10 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 text: "{}"
             })
         }));
-        filters.push(new sap.m.FacetFilterList(oController.createId("rpt_ffl_vendor"), {
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterProvince"), {
             multiselect: true,
             listClose: function(ec) {
-                oController.onApplicationFacetFilter(ec);
+
             },
             title: "{i18n>province}",
             key: "province"
@@ -35,16 +35,98 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 text: "{name}"
             })
         }));
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterHospital"), {
+            multiselect: true,
+            listClose: function(ec) {
+
+            },
+            title: "{i18n>hospital}",
+            key: "hospital"
+        }).bindItems({
+            path: "/hospitals",
+            template: new sap.m.FacetFilterItem({
+                key: "{id}",
+                text: "{name}"
+            })
+        }));
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterInstallDepartment"), {
+            multiselect: true,
+            listClose: function(ec) {
+
+            },
+            title: "{i18n>installDepartment}",
+            key: "installDepartment"
+        }).bindItems({
+            path: "/departments",
+            template: new sap.m.FacetFilterItem({
+                key: "{id}",
+                text: "{name}"
+            })
+        }));
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterOrderDepartment"), {
+            multiselect: true,
+            listClose: function(ec) {
+
+            },
+            title: "{i18n>orderDepartment}",
+            key: "orderDepartment"
+        }).bindItems({
+            path: "/departments",
+            template: new sap.m.FacetFilterItem({
+                key: "{id}",
+                text: "{name}"
+            })
+        }));
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterProduct"), {
+            multiselect: true,
+            listClose: function(ec) {
+
+            },
+            title: "{i18n>product}",
+            key: "product"
+        }).bindItems({
+            path: "/products",
+            template: new sap.m.FacetFilterItem({
+                key: "{id}",
+                text: "{name}"
+            })
+        }));
 
         var facetFilter = new sap.m.FacetFilter({
             type: "Simple",
-            showReset: true,
+            showReset: false,
             lists: filters,
-            reset: function(re) {
-                oController.onFilterReset(re);
+            confirm: function(e) {
             }
         });
         return facetFilter;
+    }
+
+    function createSearchPanel(oController) {
+        var panel = new sap.m.Panel({
+            expandable: false,
+            expanded: true,
+        });
+
+        var vBox = new sap.m.VBox();
+        var toolBar = new sap.m.Toolbar();
+        toolBar.addContent(new sap.m.Label({
+            text: "{i18n>searchPanelHeader}"
+        }));
+        vBox.addItem(toolBar);
+        var hBox = new sap.m.HBox();
+        var facetFilter = createFacetFilter(oController);
+        hBox.addItem(facetFilter);
+        hBox.addItem(new sap.m.Button({
+            text: "{i18n>search}",
+            press: function(e) {
+                oController.onAdvanceSearchSalesRecord();
+            }
+        }));
+        vBox.addItem(hBox);
+
+        panel.addContent(vBox);
+        return panel;
     }
 
     var createTableHeaderToolBar = function(oController) {

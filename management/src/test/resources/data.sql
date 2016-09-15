@@ -22,6 +22,7 @@ insert into Hospital(id, name, level_id, province_id) values (2, '长海', 1, 1)
 insert into DEPARTMENT_NAME(id, name) values(1, 'ICU')
 
 insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (1, 1, 1)
+insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (2, 1, 2)
 
 
 insert into Company(id, name) values(1, 'Thermo')
@@ -39,6 +40,8 @@ insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 2)
 insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)
 
 insert into product_install_location(id, product_id, department_id) values(1, 1, 1)
+insert into product_install_location(id, product_id, department_id) values(2, 1, 2)
 
 insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(1, 1, 1, 'Stella', 100)
-insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(2, 1, 1, 'wangf', 100)
+insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(2, 1, 1, 'wangf', 200)
+insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(3, 2, 2, 'wangf', 300)

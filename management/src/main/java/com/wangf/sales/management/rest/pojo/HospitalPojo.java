@@ -41,7 +41,7 @@ public class HospitalPojo {
 		pojo.setId(hospital.getId());
 		pojo.setName(hospital.getName());
 		pojo.setLevel(hospital.getLevel().getName());
-		return null;
+		return pojo;
 	}
 
 }

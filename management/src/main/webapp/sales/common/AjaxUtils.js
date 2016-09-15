@@ -94,7 +94,7 @@ sales.common.AjaxUtils = (function() {
                         });
                     } else {
                         jQuery.sap.require("sap.m.MessageBox");
-                        var errorMsg = that.parseErrorMessage(jqXHR);
+                        var errorMsg = jqXHR.responseText;
                         if (errorMsg === "") {
                             if (settings.defaultErrorMessage !== "") {
                                 errorMsg = settings.defaultErrorMessage;

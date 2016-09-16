@@ -30,7 +30,7 @@ public class SalesRecordsServiceTests extends TestBase {
 		String hospitalName = "长征";
 		String locationDepartmentName = "ICU";
 		String orderDepartmentName = "ICU";
-		List<SalesRecordPojo> records = service.advanceSearch(productName, salesPersonName, hospitalName,
+		List<SalesRecordPojo> records = service.searchAgainstSingleValues(productName, salesPersonName, hospitalName,
 				locationDepartmentName, orderDepartmentName, lastMonth);
 		System.out.println(records);
 	}

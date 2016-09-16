@@ -2,6 +2,7 @@ package com.wangf.sales.management.rest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
@@ -79,36 +81,63 @@ public class SalesRecordsController {
 		String salesPersonName = SecurityUtils.getCurrentUserName();
 		logger.info(salesPersonName);
 
-		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(productName, salesPersonName, hospitalName,
-				locationDepartmentName, orderDepartName, startFrom);
+		List<SalesRecordPojo> records = salesRecordsService.searchAgainstSingleValues(productName, salesPersonName,
+				hospitalName, locationDepartmentName, orderDepartName, startFrom);
 
 		return records;
 	}
 
+	@RequestMapping(path = "/test", method = RequestMethod.GET)
+	public SalesRecordSearchCriteria test() {
+
+		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
+		criteria.setProductNames(Arrays.asList(new String[] { "PCT-Q" }));
+		criteria.setSalesPersonNames(Arrays.asList(new String[] { "wangf" }));
+		criteria.setHospitalNames(Arrays.asList(new String[] { "长征", "长海" }));
+		criteria.setLocationDepartmentNames(Arrays.asList(new String[] { "ICU" }));
+		criteria.setOrderDepartNames(Arrays.asList(new String[] { "ICU" }));
+		criteria.setStartAt(new Date());
+		criteria.setEndAt(new Date());
+		criteria.setEndAt(new Date());
+		return criteria;
+	}
+
 	/**
-	 * Example request:
+	 * POST http://localhost:8090/management/salesRecordsAdvanceSearch<br>
+	 * Content-Type = application/json<br>
+	 * Body:
 	 * 
 	 * <pre>
-	 * POST http://localhost:8090/management/salesRecordsAdvanceSearch
-	 * Content-Type = application/json
-	 * body:
-	 * 
-	 {
-		"hospital": "长征",
-		"product": "PCT-Q",
-		"installDepartment": "ICU",
-		"orderDepartment": "ICU",
-		"date": "2016-09-15"
+	{
+		productNames: [
+		"PCT-Q"
+		],
+		hospitalNames: [
+		"长征",
+		"长海"
+		],
+		locationDepartmentNames: [
+		"ICU"
+		],
+		orderDepartNames: [
+		"ICU"
+		],
+		startAt: "2016-08-16",
+		endAt: "2016-09-17"
 	}
 	 * </pre>
 	 * 
+	 * @param criteria
+	 * @return
 	 */
 	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.POST)
-	public List<SalesRecordPojo> advanceSearch(@RequestBody SalesRecordPojo searchCriteria) {
+	public List<SalesRecordPojo> advanceSearch(@RequestBody SalesRecordSearchCriteria criteria) {
 		String salesPersonName = SecurityUtils.getCurrentUserName();
-		searchCriteria.setSalesPerson(salesPersonName);
+		List<String> salesPerson = new ArrayList<>();
+		salesPerson.add(salesPersonName);
+		criteria.setSalesPersonNames(salesPerson);
 
-		List<SalesRecordPojo> records = salesRecordsService.advanceSearch(searchCriteria);
+		List<SalesRecordPojo> records = salesRecordsService.searchAgainstMultipleValues(criteria);
 		return records;
 	}
 

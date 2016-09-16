@@ -1,5 +1,6 @@
 package com.wangf.sales.management.test.dao;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.wangf.sales.management.dao.DepartmentRepository;
 import com.wangf.sales.management.dao.ProductInstallLocationRepository;
 import com.wangf.sales.management.dao.SalesRecordRepository;
+import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.ProductInstallLocation;
@@ -92,9 +94,28 @@ public class SalesRecordRepositoryTests extends TestBase {
 
 	@Test
 	public void advanceSearch() throws Exception {
-		List<SalesRecord> allRecords = repository.advanceSearch(null, null, null, null, null, null);
-		List<SalesRecord> records = repository.advanceSearch("PCT-Q", "wangf", "长征", "ICU", "ICU", getLastMonth());
+		List<SalesRecord> allRecords = repository.searchAgainstSingleValues(null, null, null, null, null, null);
+		List<SalesRecord> records = repository.searchAgainstSingleValues("PCT-Q", "wangf", "长征", "ICU", "ICU",
+				getLastMonth());
 		System.out.println(allRecords.size());
+		System.out.println(records);
+	}
+
+	@Test
+	public void advanceSearchMultipeCritera() throws Exception {
+		List<SalesRecord> allRecords = repository.searchAgainstMultipleValues(new SalesRecordSearchCriteria());
+		System.out.println(allRecords);
+
+		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
+		criteria.setProductNames(Arrays.asList(new String[] { "PCT-Q" }));
+		criteria.setSalesPersonNames(Arrays.asList(new String[] { "wangf" }));
+		criteria.setHospitalNames(Arrays.asList(new String[] { "长征", "长海" }));
+		criteria.setLocationDepartmentNames(Arrays.asList(new String[] { "ICU" }));
+		criteria.setOrderDepartNames(Arrays.asList(new String[] { "ICU" }));
+		criteria.setStartAt(getLastMonth());
+		criteria.setEndAt(new Date());
+
+		List<SalesRecord> records = repository.searchAgainstMultipleValues(criteria);
 		System.out.println(records);
 	}
 

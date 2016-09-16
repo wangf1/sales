@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.wangf.sales.management.entity.SalesRecord;
@@ -17,7 +18,7 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 	private EntityManager em;
 
 	@Override
-	public List<SalesRecord> advanceSearch(String productName, String salesPersonName, String hospitalName,
+	public List<SalesRecord> searchAgainstSingleValues(String productName, String salesPersonName, String hospitalName,
 			String locationDepartmentName, String orderDepartName, Date startFrom) {
 		String queryString = "select record from SalesRecord record " + " join record.installLocation location "
 				+ " join record.orderDepartment orderDep " + " join record.salesPerson person " + " where 1=1 ";
@@ -59,6 +60,61 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 		}
 		if (startFrom != null) {
 			query.setParameter("startFrom", startFrom);
+		}
+
+		List<SalesRecord> records = query.getResultList();
+
+		return records;
+	}
+
+	@Override
+	public List<SalesRecord> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
+		String queryString = "select record from SalesRecord record " + " join record.installLocation location "
+				+ " join record.orderDepartment orderDep " + " join record.salesPerson person " + " where 1=1 ";
+		if (CollectionUtils.isNotEmpty(criteria.getProductNames())) {
+			queryString = queryString + " and location.product.name in :products ";
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getSalesPersonNames())) {
+			queryString = queryString + " and record.salesPerson.userName in :salesPersonNames ";
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getHospitalNames())) {
+			queryString = queryString + " and location.department.hospital.name in :hospitals ";
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getLocationDepartmentNames())) {
+			queryString = queryString + " and location.department.name.name in :locationDepartments ";
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getOrderDepartNames())) {
+			queryString = queryString + " and record.orderDepartment.name.name in :orderDeparts ";
+		}
+		if (criteria.getStartAt() != null) {
+			queryString = queryString + " and record.date >= :startAt ";
+		}
+		if (criteria.getEndAt() != null) {
+			queryString = queryString + " and record.date <= :endAt ";
+		}
+
+		TypedQuery<SalesRecord> query = em.createQuery(queryString, SalesRecord.class);
+
+		if (CollectionUtils.isNotEmpty(criteria.getProductNames())) {
+			query.setParameter("products", criteria.getProductNames());
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getSalesPersonNames())) {
+			query.setParameter("salesPersonNames", criteria.getSalesPersonNames());
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getHospitalNames())) {
+			query.setParameter("hospitals", criteria.getHospitalNames());
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getLocationDepartmentNames())) {
+			query.setParameter("locationDepartments", criteria.getLocationDepartmentNames());
+		}
+		if (CollectionUtils.isNotEmpty(criteria.getOrderDepartNames())) {
+			query.setParameter("orderDeparts", criteria.getOrderDepartNames());
+		}
+		if (criteria.getStartAt() != null) {
+			query.setParameter("startAt", criteria.getStartAt());
+		}
+		if (criteria.getEndAt() != null) {
+			query.setParameter("endAt", criteria.getEndAt());
 		}
 
 		List<SalesRecord> records = query.getResultList();

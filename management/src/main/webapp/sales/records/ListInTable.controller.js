@@ -9,7 +9,9 @@ sap.ui.define([
         provinces: [],
         hospitals: [],
         departments: [],
-        products: []
+        products: [],
+        startAt: DateTimeUtils.firstDayOfCurrentMonth(),
+        endAt: DateTimeUtils.today()
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -105,19 +107,53 @@ sap.ui.define([
     function onFilterRecords() {
     }
 
+    function getAllOwnPropertyAsArray(object) {
+        var props = [];
+        for ( var key in object) {
+            if (!object.hasOwnProperty(key)) {
+                continue;
+            }
+            props.push(object[key]);
+        }
+        return props;
+    }
     function doAdvanceSearchSalesRecord(hospitals, installDepartments, orderDepartments, products) {
-        // FXME!!! Search by multiple values API not yet ready
-        var mockSearchCriteria = {
-            "hospital": "长征",
-            "product": "PCT-Q",
-            "installDepartment": "ICU",
-            "orderDepartment": "ICU",
-            "date": "2016-09-15"
+        /*
+        searchCriteriaFormatExample:
+        {
+            "productNames": [
+                "PCT-Q"
+            ],
+            "hospitalNames": [
+                "长征", "长海"
+            ],
+            "locationDepartmentNames": [
+                "ICU"
+            ],
+            "orderDepartNames": [
+                "ICU"
+            ],
+            "startAt": "2016-08-16",
+            "endAt": "2016-09-17"
+        }
+        */
+        var productNames = getAllOwnPropertyAsArray(products);
+        var hospitalNames = getAllOwnPropertyAsArray(hospitals);
+        var locationDepartmentNames = getAllOwnPropertyAsArray(installDepartments);
+        var orderDepartNames = getAllOwnPropertyAsArray(orderDepartments);
+
+        var searchCriteria = {
+            "productNames": productNames,
+            "hospitalNames": hospitalNames,
+            "locationDepartmentNames": locationDepartmentNames,
+            "orderDepartNames": orderDepartNames,
+            "startAt": viewModelData.startAt,
+            "endAt": viewModelData.endAt
         };
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "salesRecordsAdvanceSearch",
-            data: JSON.stringify(mockSearchCriteria),
+            data: JSON.stringify(searchCriteria),
             dataType: "json",
             contentType: "application/json"
         });
@@ -127,8 +163,8 @@ sap.ui.define([
     }
 
     function onAdvanceSearchSalesRecord() {
-        var selectedRegins = this.byId("filterRegion").getSelectedKeys();
-        var selectedProvinces = this.byId("filterProvince").getSelectedKeys();
+// var selectedRegins = this.byId("filterRegion").getSelectedKeys();
+// var selectedProvinces = this.byId("filterProvince").getSelectedKeys();
         var selectedHospitals = this.byId("filterHospital").getSelectedKeys();
         var selectedInstallDepartments = this.byId("filterInstallDepartment").getSelectedKeys();
         var selectedOrderDepartments = this.byId("filterOrderDepartment").getSelectedKeys();

@@ -1,3 +1,4 @@
+jQuery.sap.require('sap.ui.layout.Grid');
 sap.ui.jsview("sales.records.ListInTable", (function() {
     "use strict";
 
@@ -8,7 +9,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
     function createFacetFilter(oController) {
         var filters = [];
         filters.push(new sap.m.FacetFilterList(oController.createId("filterRegion"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -22,7 +22,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             })
         }));
         filters.push(new sap.m.FacetFilterList(oController.createId("filterProvince"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -36,7 +35,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             })
         }));
         filters.push(new sap.m.FacetFilterList(oController.createId("filterHospital"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -50,7 +48,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             })
         }));
         filters.push(new sap.m.FacetFilterList(oController.createId("filterInstallDepartment"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -64,7 +61,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             })
         }));
         filters.push(new sap.m.FacetFilterList(oController.createId("filterOrderDepartment"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -78,7 +74,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             })
         }));
         filters.push(new sap.m.FacetFilterList(oController.createId("filterProduct"), {
-            multiselect: true,
             listClose: function(ec) {
 
             },
@@ -95,38 +90,56 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var facetFilter = new sap.m.FacetFilter({
             type: "Simple",
             showReset: false,
-            lists: filters,
-            confirm: function(e) {
-            }
+            lists: filters
         });
         return facetFilter;
     }
 
     function createSearchPanel(oController) {
-        var panel = new sap.m.Panel({
-            expandable: false,
-            expanded: true,
-        });
-
-        var vBox = new sap.m.VBox();
         var toolBar = new sap.m.Toolbar();
         toolBar.addContent(new sap.m.Label({
             text: "{i18n>searchPanelHeader}"
         }));
-        vBox.addItem(toolBar);
-        var hBox = new sap.m.HBox();
-        var facetFilter = createFacetFilter(oController);
-        hBox.addItem(facetFilter);
-        hBox.addItem(new sap.m.Button({
+        toolBar.addContent(new sap.m.ToolbarSpacer());
+        toolBar.addContent(new sap.m.Button({
             text: "{i18n>search}",
-            press: function(e) {
+            icon: "sap-icon://search",
+            press: function() {
                 oController.onAdvanceSearchSalesRecord();
             }
         }));
-        vBox.addItem(hBox);
 
-        panel.addContent(vBox);
-        return panel;
+        var hBox = new sap.m.HBox();
+        hBox.setAlignItems(sap.m.FlexAlignItems.Center);
+        var facetFilter = createFacetFilter(oController);
+        hBox.addItem(facetFilter);
+        hBox.addItem(new sap.m.Label({
+            text: "{i18n>startAt}"
+        }));
+        hBox.addItem(new sap.m.DatePicker({
+            value: "{/startAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd",
+        }));
+        hBox.addItem(new sap.m.Label({
+            text: "{i18n>endAt}"
+        }));
+        hBox.addItem(new sap.m.DatePicker({
+            value: "{/endAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd",
+        }));
+
+        var form = new sap.ui.layout.form.SimpleForm({
+            layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+            editable: true,
+            minWidth: 1024,
+            toolbar: toolBar
+        });
+        form.addContent(facetFilter);
+        form.addContent(hBox);
+
+        return form;
     }
 
     var createTableHeaderToolBar = function(oController) {

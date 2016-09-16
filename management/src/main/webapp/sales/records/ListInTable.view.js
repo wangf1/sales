@@ -100,7 +100,9 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolBar.addContent(new sap.m.Label({
             text: "{i18n>searchPanelHeader}"
         }));
-        toolBar.addContent(new sap.m.ToolbarSpacer());
+        toolBar.addContent(new sap.m.ToolbarSpacer({
+            width: "10%"
+        }));
         toolBar.addContent(new sap.m.Button({
             text: "{i18n>search}",
             icon: "sap-icon://search",
@@ -149,8 +151,14 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         }));
         toolbarContent.push(new sap.m.ToolbarSpacer());
         toolbarContent.push(new sap.m.SearchField({
+            placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",
-            search: oController.onFilterRecords
+            search: function(e) {
+                oController.onFilterRecords(e);
+            },
+            liveChange: function(e) {
+                oController.onFilterRecords(e);
+            }
         }));
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
@@ -160,10 +168,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
     var createTable = function(oController) {
         var tableColumns = [];
         var tableCells = [];
-        var columNames = [
-            "region", "province", "manager", "salesPerson", "hospital", "product", "installDepartment", "orderDepartment", "quantity", "date"
-        ];
-        columNames.forEach(function(name) {
+        oController.columNames.forEach(function(name) {
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,

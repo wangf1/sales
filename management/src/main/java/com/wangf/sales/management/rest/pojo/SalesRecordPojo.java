@@ -17,6 +17,7 @@ public class SalesRecordPojo {
 	private String installDepartment;
 	private String orderDepartment;
 	private int quantity;
+	private String hospitalLevel;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
@@ -109,12 +110,20 @@ public class SalesRecordPojo {
 		this.date = date;
 	}
 
+	public String getHospitalLevel() {
+		return hospitalLevel;
+	}
+
+	public void setHospitalLevel(String hospitalLevel) {
+		this.hospitalLevel = hospitalLevel;
+	}
+
 	@Override
 	public String toString() {
 		return "SalesRecordPojo [id=" + id + ", region=" + region + ", province=" + province + ", manager=" + manager
 				+ ", salesPerson=" + salesPerson + ", hospital=" + hospital + ", product=" + product
 				+ ", installDepartment=" + installDepartment + ", orderDepartment=" + orderDepartment + ", quantity="
-				+ quantity + ", date=" + date + "]";
+				+ quantity + ", hospitalLevel=" + hospitalLevel + ", date=" + date + "]";
 	}
 
 	public static SalesRecordPojo from(SalesRecord record) {
@@ -135,6 +144,7 @@ public class SalesRecordPojo {
 		pojo.setOrderDepartment(record.getOrderDepartment().getName().getName());
 		pojo.setQuantity(record.getQuantity());
 		pojo.setDate(record.getDate());
+		pojo.setHospitalLevel(record.getInstallLocation().getDepartment().getHospital().getLevel().getName());
 
 		return pojo;
 	}

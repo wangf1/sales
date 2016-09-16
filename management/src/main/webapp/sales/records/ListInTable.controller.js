@@ -3,6 +3,10 @@ sap.ui.define([
 ], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils) {
     "use strict";
 
+    var columNames = [
+        "region", "province", "manager", "salesPerson", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment", "quantity", "date"
+    ];
+
     var viewModelData = {
         salesRecords: [],
         regions: [],
@@ -104,7 +108,26 @@ sap.ui.define([
         this.getView().setModel(oViewModel);
     };
 
-    function onFilterRecords() {
+    function onFilterRecords(e) {
+        var table = this.byId("recordsTable");
+        var binding = table.getBinding('items');
+        if (!binding) {
+            return;
+        }
+        var value = e.getSource().getValue();
+        if (value.trim() === '') {
+            binding.filter([]);
+        } else {
+            var fs = [];
+            columNames.forEach(function(column) {
+                if (column === "quantity" || column === "date") {
+                    return;
+                }
+                fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
+            });
+            var filters = new sap.ui.model.Filter(fs, false);
+            binding.filter(filters);
+        }
     }
 
     function getAllOwnPropertyAsArray(object) {
@@ -175,7 +198,8 @@ sap.ui.define([
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
-        onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord
+        onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord,
+        columNames: columNames
     });
     return controller;
 });

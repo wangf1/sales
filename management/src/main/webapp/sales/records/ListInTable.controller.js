@@ -195,11 +195,54 @@ sap.ui.define([
         doAdvanceSearchSalesRecord(selectedHospitals, selectedInstallDepartments, selectedOrderDepartments, selectedProducts);
     }
 
+    function doSaveSalesRecord(salesRecord) {
+        // TODO
+        console.log(salesRecord);
+    }
+
+    function onAddSalesRecord() {
+        var view = sap.ui.view({
+            type: sap.ui.core.mvc.ViewType.JS,
+            viewName: "sales.records.CreateSalesRecord"
+        });
+
+        var dlg = new sap.m.Dialog({
+            contentWidth: "100%",
+            contentHeight: "45%",
+            title: "{i18n>add}",
+            horizontalScrolling: false,
+            verticalScrolling: true,
+            content: [
+                view
+            ],
+            afterClose: function() {
+                dlg.destroy();
+            }
+        });
+        dlg.addButton(new sap.m.Button({
+            text: "{i18n>save}",
+            press: function() {
+                var salesRecord = view.getModel("salesRecord").getData();
+                doSaveSalesRecord(salesRecord);
+                dlg.close();
+            }
+        }));
+        dlg.addButton(new sap.m.Button({
+            text: "{i18n>cancel}",
+            press: function() {
+                dlg.close();
+            }
+        }));
+        dlg.setModel(oViewModel);
+        dlg.open();
+    }
+
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
         onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord,
-        columNames: columNames
+        columNames: columNames,
+        onAddSalesRecord: onAddSalesRecord
     });
     return controller;
 });

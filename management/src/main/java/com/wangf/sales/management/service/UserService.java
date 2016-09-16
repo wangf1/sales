@@ -14,6 +14,7 @@ import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
+import com.wangf.sales.management.utils.SecurityUtils;
 
 @Service
 public class UserService {
@@ -55,5 +56,11 @@ public class UserService {
 			pojos.add(pojo);
 		}
 		return pojos;
+	}
+
+	public User getCurrentUserEntity() {
+		String currentUserName = SecurityUtils.getCurrentUserName();
+		User currentUser = userRepository.findOne(currentUserName);
+		return currentUser;
 	}
 }

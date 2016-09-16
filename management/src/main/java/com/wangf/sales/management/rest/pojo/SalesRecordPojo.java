@@ -2,7 +2,6 @@ package com.wangf.sales.management.rest.pojo;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 
@@ -19,7 +18,6 @@ public class SalesRecordPojo {
 	private int quantity;
 	private String hospitalLevel;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date date;
 
 	public long getId() {

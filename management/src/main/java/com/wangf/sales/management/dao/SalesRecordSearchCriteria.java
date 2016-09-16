@@ -3,17 +3,13 @@ package com.wangf.sales.management.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 public class SalesRecordSearchCriteria {
 	private List<String> productNames;
 	private List<String> salesPersonNames;
 	private List<String> hospitalNames;
 	private List<String> locationDepartmentNames;
 	private List<String> orderDepartNames;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date startAt;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date endAt;
 
 	public List<String> getProductNames() {

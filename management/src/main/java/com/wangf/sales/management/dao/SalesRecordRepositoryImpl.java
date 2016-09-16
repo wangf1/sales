@@ -122,4 +122,9 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 		return records;
 	}
 
+	@Override
+	public EntityManager getEntityManager() {
+		return em;
+	}
+
 }

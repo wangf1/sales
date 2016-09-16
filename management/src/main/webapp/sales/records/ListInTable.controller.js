@@ -1,5 +1,6 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils", "sales/common/DateTimeUtils"
+    "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
+    "sales/common/DateTimeUtils"
 ], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils) {
     "use strict";
 
@@ -110,12 +111,12 @@ sap.ui.define([
 
     function onFilterRecords(e) {
         var table = this.byId("recordsTable");
-        var binding = table.getBinding('items');
+        var binding = table.getBinding("items");
         if (!binding) {
             return;
         }
         var value = e.getSource().getValue();
-        if (value.trim() === '') {
+        if (value.trim() === "") {
             binding.filter([]);
         } else {
             var fs = [];
@@ -165,13 +166,18 @@ sap.ui.define([
         var locationDepartmentNames = getAllOwnPropertyAsArray(installDepartments);
         var orderDepartNames = getAllOwnPropertyAsArray(orderDepartments);
 
+        // Increase the endAt by 1 day, in order to search the newest record of user choosen endAt date
+        var endAtDate = new Date(viewModelData.endAt);
+        endAtDate.setDate(endAtDate.getDate() + 1);
+        var endAt = DateTimeUtils.yyyyMMdd(endAtDate);
+
         var searchCriteria = {
             "productNames": productNames,
             "hospitalNames": hospitalNames,
             "locationDepartmentNames": locationDepartmentNames,
             "orderDepartNames": orderDepartNames,
             "startAt": viewModelData.startAt,
-            "endAt": viewModelData.endAt
+            "endAt": endAt
         };
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
@@ -196,8 +202,17 @@ sap.ui.define([
     }
 
     function doSaveSalesRecord(salesRecord) {
-        // TODO
-        console.log(salesRecord);
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "saveSalesRecord",
+            data: JSON.stringify(salesRecord),
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            viewModelData.salesRecords.unshift(result.data);
+            oViewModel.refresh();
+        });
     }
 
     function onAddSalesRecord() {
@@ -223,6 +238,10 @@ sap.ui.define([
             text: "{i18n>save}",
             press: function() {
                 var salesRecord = view.getModel("salesRecord").getData();
+                var valid = view.getController().validateSalesRecord();
+                if (!valid) {
+                    return;
+                }
                 doSaveSalesRecord(salesRecord);
                 dlg.close();
             }

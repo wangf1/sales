@@ -141,4 +141,27 @@ public class SalesRecordsController {
 		return records;
 	}
 
+	/**
+	 * POST http://localhost:8090/management/saveSalesRecord<br>
+	 * Content-Type = application/json<br>
+	 * Body:
+	 * 
+	 * <pre>
+	{
+	   "hospital":"长征",
+	   "installDepartment":"ICU",
+	   "orderDepartment":"ICU",
+	   "product":"PCT-Q",
+	   "quantity":"15"
+	}
+	 * </pre>
+	 * 
+	 * @param pojo
+	 */
+	@RequestMapping(path = "/saveSalesRecord", method = RequestMethod.POST)
+	public SalesRecordPojo saveSalesRecord(@RequestBody SalesRecordPojo pojo) {
+		SalesRecordPojo savedPojo = salesRecordsService.save(pojo);
+		return savedPojo;
+	}
+
 }

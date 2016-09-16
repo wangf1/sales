@@ -58,7 +58,7 @@ public class UserService {
 		return pojos;
 	}
 
-	public User getCurrentUserEntity() {
+	public User getCurrentUser() {
 		String currentUserName = SecurityUtils.getCurrentUserName();
 		User currentUser = userRepository.findOne(currentUserName);
 		return currentUser;

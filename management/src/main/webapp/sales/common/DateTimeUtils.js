@@ -14,12 +14,17 @@ sales.common.DateTimeUtils = (function() {
         return dateString;
     }
 
+    function yyyyMMdd(date) {
+        var isoString = date.toISOString();
+        var dateString = isoString.substr(0, 10);
+        return dateString;
+    }
+
     function firstDayOfCurrentMonth() {
         var current = new Date();
         current.setDate(1);
-        var isoString = current.toISOString();
-        var dateString = isoString.substr(0, 10);
-        return dateString;
+        var isoString = yyyyMMdd(current);
+        return isoString;
     }
 
     function today() {
@@ -32,7 +37,8 @@ sales.common.DateTimeUtils = (function() {
     var toExpose = {
         firstDayOfPreviousMonth: firstDayOfPreviousMonth,
         firstDayOfCurrentMonth: firstDayOfCurrentMonth,
-        today: today
+        today: today,
+        yyyyMMdd: yyyyMMdd
     };
     return toExpose;
 })();

@@ -21,7 +21,8 @@ sap.ui.define([
         products: [],
         startAt: DateTimeUtils.firstDayOfCurrentMonth(),
         endAt: DateTimeUtils.today(),
-        selectedRecords: []
+        selectedRecords: [],
+        inlineChangedRecords: []
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -198,17 +199,17 @@ sap.ui.define([
         doAdvanceSearchSalesRecord(selectedHospitals, selectedInstallDepartments, selectedOrderDepartments, selectedProducts);
     }
 
-    function removeSalesRecordFromModel(savedRecordId) {
+    function removeSalesRecordFrom(salesRecords, savedRecordId) {
         var theIndex;
-        for (var i = 0; i < viewModelData.salesRecords.length; i++) {
-            var record = viewModelData.salesRecords[i];
+        for (var i = 0; i < salesRecords.length; i++) {
+            var record = salesRecords[i];
             if (savedRecordId === record.id) {
                 theIndex = i;
                 break;
             }
         }
         if (theIndex !== undefined) {
-            viewModelData.salesRecords.splice(theIndex, 1);
+            salesRecords.splice(theIndex, 1);
         }
     }
 
@@ -224,7 +225,7 @@ sap.ui.define([
             var savedRecord = result.data;
             var message;
             if (savedRecord.alreadyExisting) {
-                removeSalesRecordFromModel(savedRecord.id);
+                removeSalesRecordFrom(viewModelData.salesRecords, savedRecord.id);
             }
             // put the saved record at fist of the table
             viewModelData.salesRecords.unshift(savedRecord);
@@ -310,7 +311,7 @@ sap.ui.define([
             UIUtils.showMessageToast(message);
             var removedIds = result.data;
             removedIds.forEach(function(id) {
-                removeSalesRecordFromModel(id);
+                removeSalesRecordFrom(viewModelData.salesRecords, id);
             });
             oViewModel.refresh();
         });
@@ -352,6 +353,38 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
+    function onQuantityLiveChange(e) {
+        var record = e.getSource().getBindingContext().getObject();
+        // Remove before add, to avoid duplicate add
+        removeSalesRecordFrom(viewModelData.inlineChangedRecords, record.id);
+        /* The reason why create a new array rather than use existing array is if use existing array, the save button enable status binding "{=
+         ${/inlineChangedRecords}.length>0 }" just not work.*/
+        var allChangedRecords = [
+            record
+        ];
+        viewModelData.inlineChangedRecords.forEach(function(item) {
+            allChangedRecords.push(item)
+        });
+        viewModelData.inlineChangedRecords = allChangedRecords;
+        oViewModel.refresh();
+    }
+
+    function onSaveAllSalesRecords() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "saveSalesRecords",
+            data: JSON.stringify(viewModelData.inlineChangedRecords),
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            viewModelData.inlineChangedRecords = [];
+            var message = resBundle.getText("salesOrderSaved");
+            UIUtils.showMessageToast(message);
+            oViewModel.refresh();
+        });
+    }
+
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
@@ -360,7 +393,9 @@ sap.ui.define([
         onAddOrEditSalesRecord: onAddOrEditSalesRecord,
         onDeleteSalesRecord: onDeleteSalesRecord,
         onRecordTableSelectionChange: onRecordTableSelectionChange,
-        onResetSearchCondition: onResetSearchCondition
+        onResetSearchCondition: onResetSearchCondition,
+        onQuantityLiveChange: onQuantityLiveChange,
+        onSaveAllSalesRecords: onSaveAllSalesRecords
     });
     return controller;
 });

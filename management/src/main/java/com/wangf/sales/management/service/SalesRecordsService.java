@@ -106,6 +106,18 @@ public class SalesRecordsService {
 	}
 
 	@Transactional
+	public List<Long> insertOrUpdate(List<SalesRecordPojo> pojos) {
+		for (SalesRecordPojo pojo : pojos) {
+			insertOrUpdate(pojo);
+		}
+		List<Long> allIds = new ArrayList<>();
+		for (SalesRecordPojo pojo : pojos) {
+			allIds.add(pojo.getId());
+		}
+		return allIds;
+	}
+
+	@Transactional
 	public void deleteSalesRecords(List<Long> salesRecordIds) {
 		for (Long id : salesRecordIds) {
 			salesRecordRepository.delete(id);

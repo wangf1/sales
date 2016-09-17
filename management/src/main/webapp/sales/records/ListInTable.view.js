@@ -117,9 +117,17 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
-            enabled: "{= ${/selectedRecords}.length>=1 }",
+            enabled: "{= ${/selectedRecords}.length>0 }",
             press: function() {
                 oController.onDeleteSalesRecord();
+            }
+        }));
+        toolbarContent.push(new sap.m.Button({
+            text: "{i18n>save}",
+            icon: "sap-icon://save",
+            enabled: "{= ${/inlineChangedRecords}.length>0 }",
+            press: function() {
+                oController.onSaveAllSalesRecords();
             }
         }));
 
@@ -141,9 +149,18 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                     })
                 ]
             }));
-            tableCells.push(new sap.m.Text({
-                text: "{" + name + "}"
-            }));
+            if (name === "quantity") {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + name + "}",
+                    liveChange: function(e) {
+                        oController.onQuantityLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
+            } else {
+                tableCells.push(new sap.m.Text({
+                    text: "{" + name + "}"
+                }));
+            }
         });
 
         var table = new sap.m.Table({

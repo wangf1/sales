@@ -77,13 +77,28 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
             icon: "sap-icon://add",
-            press: function() {
-                oController.onAddSalesRecord();
+            customData: [
+                new sap.ui.core.CustomData({
+                    key: "action",
+                    value: "add"
+                })
+            ],
+            press: function(e) {
+                oController.onAddOrEditSalesRecord(e);
             }
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>edit}",
-            icon: "sap-icon://edit"
+            icon: "sap-icon://edit",
+            customData: [
+                new sap.ui.core.CustomData({
+                    key: "action",
+                    value: "edit"
+                })
+            ],
+            press: function(e) {
+                oController.onAddOrEditSalesRecord(e);
+            }
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",

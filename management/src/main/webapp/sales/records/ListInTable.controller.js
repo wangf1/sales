@@ -218,7 +218,7 @@ sap.ui.define([
         }
     }
 
-    function doSaveSalesRecord(salesRecord) {
+    function doSaveSalesRecord(salesRecord, isEditMode) {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "saveSalesRecord",
@@ -230,28 +230,40 @@ sap.ui.define([
             var savedRecord = result.data;
             var message;
             if (savedRecord.alreadyExisting) {
+                removeSalesRecordFromModel(savedRecord.id);
+            }
+            // put the saved record at fist of the table
+            viewModelData.salesRecords.unshift(savedRecord);
+            if (savedRecord.alreadyExisting && !isEditMode) {
                 message = resBundle.getText("salesRecordAlreadyExisting");
                 UIUtils.showMessageToast(message);
-                removeSalesRecordFromModel(savedRecord.id);
             } else {
                 message = resBundle.getText("salesOrderSaved");
                 UIUtils.showMessageToast(message);
             }
-            viewModelData.salesRecords.unshift(savedRecord);
             oViewModel.refresh();
         });
     }
 
-    function onAddSalesRecord() {
+    function onAddOrEditSalesRecord(e) {
         var view = sap.ui.view({
             type: sap.ui.core.mvc.ViewType.JS,
             viewName: "sales.records.CreateSalesRecord"
         });
 
+        var action = e.getSource().getCustomData()[0].getValue();
+        var isEditMode = action === "edit";
+        var dlgTitle = resBundle.getText("add");
+        if (isEditMode) {
+            var toEdit = viewModelData.selectedRecords[0];
+            view.getController().refreshUIForEditedRecord(toEdit);
+            dlgTitle = resBundle.getText("edit");
+        }
+
         var dlg = new sap.m.Dialog({
             contentWidth: "100%",
             contentHeight: "45%",
-            title: "{i18n>add}",
+            title: dlgTitle,
             horizontalScrolling: false,
             verticalScrolling: true,
             content: [
@@ -269,7 +281,7 @@ sap.ui.define([
                 if (!valid) {
                     return;
                 }
-                doSaveSalesRecord(salesRecord);
+                doSaveSalesRecord(salesRecord, isEditMode);
                 dlg.close();
             }
         }));
@@ -332,9 +344,9 @@ sap.ui.define([
         onFilterRecords: onFilterRecords,
         onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord,
         columNames: columNames,
-        onAddSalesRecord: onAddSalesRecord,
+        onAddOrEditSalesRecord: onAddOrEditSalesRecord,
         onDeleteSalesRecord: onDeleteSalesRecord,
-        onRecordTableSelectionChange: onRecordTableSelectionChange
+        onRecordTableSelectionChange: onRecordTableSelectionChange,
     });
     return controller;
 });

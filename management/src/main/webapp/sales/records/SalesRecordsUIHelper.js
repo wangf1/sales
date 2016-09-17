@@ -21,7 +21,7 @@ sales.records.SalesRecordsUIHelper = (function() {
         }).bindItems({
             path: "/provinces",
             template: new sap.m.FacetFilterItem({
-                key: "{id}",
+                key: "{name}",
                 text: "{name}"
             })
         }));
@@ -31,7 +31,7 @@ sales.records.SalesRecordsUIHelper = (function() {
         }).bindItems({
             path: "/hospitals",
             template: new sap.m.FacetFilterItem({
-                key: "{id}",
+                key: "{name}",
                 text: "{name}"
             })
         }));
@@ -41,7 +41,7 @@ sales.records.SalesRecordsUIHelper = (function() {
         }).bindItems({
             path: "/departments",
             template: new sap.m.FacetFilterItem({
-                key: "{id}",
+                key: "{name}",
                 text: "{name}"
             })
         }));
@@ -51,7 +51,7 @@ sales.records.SalesRecordsUIHelper = (function() {
         }).bindItems({
             path: "/departments",
             template: new sap.m.FacetFilterItem({
-                key: "{id}",
+                key: "{name}",
                 text: "{name}"
             })
         }));
@@ -61,7 +61,7 @@ sales.records.SalesRecordsUIHelper = (function() {
         }).bindItems({
             path: "/products",
             template: new sap.m.FacetFilterItem({
-                key: "{id}",
+                key: "{name}",
                 text: "{name}"
             })
         }));

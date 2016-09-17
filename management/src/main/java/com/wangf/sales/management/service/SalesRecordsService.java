@@ -67,10 +67,17 @@ public class SalesRecordsService {
 		Department orderDepartment = departmentServcie
 				.findOrCreateByDepartNameAndHospitalName(pojo.getOrderDepartment(), pojo.getHospital());
 		User salesPerson = userService.getCurrentUser();
-
-		SalesRecord record = salesRecordRepository.searchByLocationOrderDepartPersonMonth(installLocation.getId(),
-				orderDepartment.getId(), salesPerson.getUserName(), new Date());
-
+		/*
+		 * Firstly find by ID, if not exist, find by (installLocation,
+		 * orderDepartment, salesPerson, month). The purpose of search two times
+		 * is: 1). Search by ID to avoid treat update case as insert. 2). Search
+		 * by columns to avoid insert duplicate record
+		 */
+		SalesRecord record = salesRecordRepository.findOne(pojo.getId());
+		if (record == null) {
+			record = salesRecordRepository.searchByLocationOrderDepartPersonMonth(installLocation.getId(),
+					orderDepartment.getId(), salesPerson.getUserName(), new Date());
+		}
 		boolean alreadyExisting = true;
 		if (record == null) {
 			record = new SalesRecord();

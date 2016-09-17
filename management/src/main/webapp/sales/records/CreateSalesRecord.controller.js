@@ -5,11 +5,14 @@ sap.ui.define([
     "use strict";
 
     var salesRecordData = {
+        id: 0,
+        region: "",
+        province: "",
         hospital: "",
         installDepartment: "",
         orderDepartment: "",
         product: "",
-        quantity: 0
+        quantity: 0,
     };
 
     var selectedKeysBackup = {
@@ -64,10 +67,6 @@ sap.ui.define([
         }
     }
 
-    function onSave() {
-        console.log("On Save...");
-    }
-
     function getFirstOwnProperty(object) {
         for ( var key in object) {
             if (!object.hasOwnProperty(key)) {
@@ -108,11 +107,31 @@ sap.ui.define([
         }
     }
 
+    function refreshUIForEditedRecord(recordToEdit) {
+        salesRecordData.id = recordToEdit.id;
+        salesRecordData.hospital = recordToEdit.hospital;
+        salesRecordData.installDepartment = recordToEdit.installDepartment;
+        salesRecordData.orderDepartment = recordToEdit.orderDepartment;
+        salesRecordData.product = recordToEdit.product;
+        salesRecordData.quantity = recordToEdit.quantity;
+        salesRecordModel.refresh();
+
+        selectedKeysBackup.region[recordToEdit.region] = recordToEdit.region;
+        selectedKeysBackup.province[recordToEdit.province] = recordToEdit.province;
+        selectedKeysBackup.hospital[recordToEdit.hospital] = recordToEdit.hospital;
+        selectedKeysBackup.installDepartment[recordToEdit.installDepartment] = recordToEdit.installDepartment;
+        selectedKeysBackup.orderDepartment[recordToEdit.orderDepartment] = recordToEdit.orderDepartment;
+        selectedKeysBackup.product[recordToEdit.product] = recordToEdit.product;
+
+        initSelectedItems(this);
+    }
+
     var controller = Controller.extend("sales.records.CreateSalesRecord", {
         onInit: init,
-        onSave: onSave,
         onFilterListClose: onFilterListClose,
-        validateSalesRecord: validateSalesRecord
+        validateSalesRecord: validateSalesRecord,
+        salesRecordModel: salesRecordModel,
+        refreshUIForEditedRecord: refreshUIForEditedRecord
     });
     return controller;
 });

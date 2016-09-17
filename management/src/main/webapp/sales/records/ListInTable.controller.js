@@ -252,11 +252,15 @@ sap.ui.define([
             var toEdit = viewModelData.selectedRecords[0];
             view.getController().refreshUIForEditedRecord(toEdit);
             dlgTitle = resBundle.getText("edit");
+        } else {
+            // In add mode, must clear the salesRecord ID which remains last time
+            var salesRecordToAdd = view.getModel("salesRecord").getData();
+            salesRecordToAdd.id = 0;
         }
 
         var dlg = new sap.m.Dialog({
-            contentWidth: "100%",
-            contentHeight: "45%",
+            contentWidth: "60%",
+            contentHeight: "30%",
             title: dlgTitle,
             horizontalScrolling: false,
             verticalScrolling: true,

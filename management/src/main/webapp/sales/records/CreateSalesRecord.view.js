@@ -10,18 +10,15 @@ sap.ui.jsview("sales.records.CreateSalesRecord", (function() {
     var createContent = function(oController) {
         var form = new sap.ui.layout.form.SimpleForm({
             layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
-            labelSpanL: 1,
-            labelSpanM: 1,
+            labelSpanL: 2,
+            labelSpanM: 2,
             emptySpanL: 1,
             emptySpanM: 1,
             editable: true,
         });
 
-        form.addContent(new sap.ui.core.Title({
-            text: "{i18n>selectHospitalAndDepartment}"
-        }));
         form.addContent(new sap.m.Label({
-            text: ""
+            text: "{i18n>selectHospitalAndDepartment}"
         }));
         var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
         var filterLists = facetFilter.getLists();
@@ -35,11 +32,8 @@ sap.ui.jsview("sales.records.CreateSalesRecord", (function() {
         });
         form.addContent(facetFilter);
 
-        form.addContent(new sap.ui.core.Title({
-            text: "{i18n>inputQuantity}"
-        }));
         form.addContent(new sap.m.Label({
-            text: "{i18n>quantity}"
+            text: "{i18n>inputQuantity}"
         }));
         form.addContent(new sap.m.Input({
             value: "{salesRecord>/quantity}"

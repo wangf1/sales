@@ -26,8 +26,10 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
 
         var hBox = new sap.m.HBox();
         hBox.setAlignItems(sap.m.FlexAlignItems.Center);
+
         var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
         hBox.addItem(facetFilter);
+
         hBox.addItem(new sap.m.Label({
             text: "{i18n>startAt}"
         }));
@@ -46,6 +48,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         }));
 
         var form = new sap.ui.layout.form.SimpleForm({
+            // Must explicitly set layout type, otherwise in non-debug mode in Chrome browser, the UI will no response. Should be a UI5 bug.
+            layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
             editable: true,
             minWidth: 1024,
             toolbar: toolBar

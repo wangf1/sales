@@ -9,8 +9,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wangf.sales.management.dao.DepartmentRepository;
-import com.wangf.sales.management.dao.ProductInstallLocationRepository;
 import com.wangf.sales.management.dao.SalesRecordRepository;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.entity.Department;
@@ -24,9 +22,9 @@ public class SalesRecordsService {
 	@Autowired
 	private SalesRecordRepository salesRecordRepository;
 	@Autowired
-	private ProductInstallLocationRepository installLocationRepository;
+	private ProductInstallLocationService installLocationService;
 	@Autowired
-	private DepartmentRepository departmentRepository;
+	private DepartmentService departmentServcie;
 
 	@Autowired
 	private UserService userService;
@@ -64,12 +62,10 @@ public class SalesRecordsService {
 
 	@Transactional
 	public SalesRecordPojo insertOrUpdate(SalesRecordPojo pojo) {
-		// FIXME!!! in one month, should not insert duplicate record for same
-		// (hospital,installDepart, orderDepart, product)
-		ProductInstallLocation installLocation = installLocationRepository
-				.findByProductDepartmentHospital(pojo.getProduct(), pojo.getInstallDepartment(), pojo.getHospital());
-		Department orderDepartment = departmentRepository.findByDepartmentNameHospitalName(pojo.getOrderDepartment(),
-				pojo.getHospital());
+		ProductInstallLocation installLocation = installLocationService.findOrCreateByProductDepartmentHospital(
+				pojo.getProduct(), pojo.getInstallDepartment(), pojo.getHospital());
+		Department orderDepartment = departmentServcie
+				.findOrCreateByDepartNameAndHospitalName(pojo.getOrderDepartment(), pojo.getHospital());
 		User salesPerson = userService.getCurrentUser();
 
 		SalesRecord record = salesRecordRepository.searchByLocationOrderDepartPersonMonth(installLocation.getId(),

@@ -1,7 +1,5 @@
 package com.wangf.sales.management.test.dao;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -18,12 +16,9 @@ public class DepartmentNameRepositoryTests extends TestBase {
 	private DepartmentNameRepository repository;
 
 	@Test
-	public void findsAllHospital() {
-		List<DepartmentName> results = this.repository.findByName("ICU");
-		for (DepartmentName departName : results) {
-			System.out.println(departName.getName());
-			System.out.println(departName.getDepartments());
-		}
+	public void findByName() {
+		DepartmentName result = this.repository.findByName("ICU");
+		System.out.println(result);
 	}
 
 }

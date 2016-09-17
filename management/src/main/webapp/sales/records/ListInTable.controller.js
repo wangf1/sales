@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/UIUtils"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils) {
+    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox) {
     "use strict";
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -18,7 +18,8 @@ sap.ui.define([
         departments: [],
         products: [],
         startAt: DateTimeUtils.firstDayOfCurrentMonth(),
-        endAt: DateTimeUtils.today()
+        endAt: DateTimeUtils.today(),
+        selectedRecords: []
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -203,11 +204,11 @@ sap.ui.define([
         doAdvanceSearchSalesRecord(selectedHospitals, selectedInstallDepartments, selectedOrderDepartments, selectedProducts);
     }
 
-    function removeSalesRecordFromModel(toRemove) {
+    function removeSalesRecordFromModel(savedRecordId) {
         var theIndex;
         for (var i = 0; i < viewModelData.salesRecords.length; i++) {
             var record = viewModelData.salesRecords[i];
-            if (toRemove.id === record.id) {
+            if (savedRecordId === record.id) {
                 theIndex = i;
                 break;
             }
@@ -231,7 +232,7 @@ sap.ui.define([
             if (savedRecord.alreadyExisting) {
                 message = resBundle.getText("salesRecordAlreadyExisting");
                 UIUtils.showMessageToast(message);
-                removeSalesRecordFromModel(savedRecord);
+                removeSalesRecordFromModel(savedRecord.id);
             } else {
                 message = resBundle.getText("salesOrderSaved");
                 UIUtils.showMessageToast(message);
@@ -282,12 +283,58 @@ sap.ui.define([
         dlg.open();
     }
 
+    function doDeleteSalesRecords() {
+        var recordIds = [];
+        viewModelData.selectedRecords.forEach(function(record) {
+            recordIds.push(record.id);
+        });
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "deleteSalesRecords",
+            data: JSON.stringify(recordIds),
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            var message = resBundle.getText("deleteSuccess");
+            UIUtils.showMessageToast(message);
+            var removedIds = result.data;
+            removedIds.forEach(function(id) {
+                removeSalesRecordFromModel(id);
+            });
+            oViewModel.refresh();
+        });
+    }
+
+    function onDeleteSalesRecord() {
+        MessageBox.confirm(resBundle.getText("confirmDelete"), {
+            title: resBundle.getText("confirm"),
+            onClose: function(flgValue) {
+                if (flgValue === sap.m.MessageBox.Action.OK) {
+                    doDeleteSalesRecords();
+                }
+            }
+        });
+    }
+
+    function onRecordTableSelectionChange() {
+        var table = this.byId("recordsTable");
+        var rows = table.getSelectedContexts();
+        var selectedRecords = [];
+        rows.forEach(function(row) {
+            selectedRecords.push(row.getObject());
+        });
+        viewModelData.selectedRecords = selectedRecords;
+    }
+
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
         onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord,
         columNames: columNames,
-        onAddSalesRecord: onAddSalesRecord
+        onAddSalesRecord: onAddSalesRecord,
+        onDeleteSalesRecord: onDeleteSalesRecord,
+        onRecordTableSelectionChange: onRecordTableSelectionChange
     });
     return controller;
 });

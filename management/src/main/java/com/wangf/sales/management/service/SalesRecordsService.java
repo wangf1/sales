@@ -97,4 +97,11 @@ public class SalesRecordsService {
 		savedPojo.setAlreadyExisting(alreadyExisting);
 		return savedPojo;
 	}
+
+	@Transactional
+	public void deleteSalesRecords(List<Long> salesRecordIds) {
+		for (Long id : salesRecordIds) {
+			salesRecordRepository.delete(id);
+		}
+	}
 }

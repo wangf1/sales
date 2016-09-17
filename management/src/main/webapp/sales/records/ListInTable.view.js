@@ -87,7 +87,10 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
-            icon: "sap-icon://delete"
+            icon: "sap-icon://delete",
+            press: function() {
+                oController.onDeleteSalesRecord();
+            }
         }));
 
         var toolBar = new sap.m.Toolbar({
@@ -116,7 +119,11 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var table = new sap.m.Table({
             id: oController.createId("recordsTable"),
             headerText: "{i18n>salesRecords}",
+            mode: sap.m.ListMode.MultiSelect,
             width: "auto",
+            selectionChange: function() {
+                oController.onRecordTableSelectionChange();
+            },
             headerToolbar: createTableHeaderToolBar(oController),
             items: {
                 path: "/salesRecords",

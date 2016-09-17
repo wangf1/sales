@@ -164,4 +164,10 @@ public class SalesRecordsController {
 		return savedPojo;
 	}
 
+	@RequestMapping(path = "/deleteSalesRecords", method = RequestMethod.POST)
+	public List<Long> deleteSalesRecords(@RequestBody List<Long> salesRecordIds) {
+		salesRecordsService.deleteSalesRecords(salesRecordIds);
+		return salesRecordIds;
+	}
+
 }

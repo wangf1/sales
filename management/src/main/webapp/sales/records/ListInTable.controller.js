@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox) {
+    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox", "sales/common/ObjectUtils"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox, ObjectUtils) {
     "use strict";
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -14,7 +14,9 @@ sap.ui.define([
         salesRecords: [],
         regions: [],
         provinces: [],
+        allProvinces: [],
         hospitals: [],
+        allHospitals: [],
         departments: [],
         products: [],
         startAt: DateTimeUtils.firstDayOfCurrentMonth(),
@@ -62,6 +64,7 @@ sap.ui.define([
         });
         promise.then(function(result) {
             oViewModel.setProperty("/provinces", result.data);
+            oViewModel.setProperty("/allProvinces", result.data);
         });
     }
     function setHospitalsModel() {
@@ -73,6 +76,7 @@ sap.ui.define([
         });
         promise.then(function(result) {
             oViewModel.setProperty("/hospitals", result.data);
+            oViewModel.setProperty("/allHospitals", result.data);
         });
     }
     function setDepartmentsModel() {
@@ -134,16 +138,6 @@ sap.ui.define([
         }
     }
 
-    function getAllOwnPropertyAsArray(object) {
-        var props = [];
-        for ( var key in object) {
-            if (!object.hasOwnProperty(key)) {
-                continue;
-            }
-            props.push(object[key]);
-        }
-        return props;
-    }
     function doAdvanceSearchSalesRecord(hospitals, installDepartments, orderDepartments, products) {
         /*
         searchCriteriaFormatExample:
@@ -164,10 +158,10 @@ sap.ui.define([
             "endAt": "2016-09-17"
         }
         */
-        var productNames = getAllOwnPropertyAsArray(products);
-        var hospitalNames = getAllOwnPropertyAsArray(hospitals);
-        var locationDepartmentNames = getAllOwnPropertyAsArray(installDepartments);
-        var orderDepartNames = getAllOwnPropertyAsArray(orderDepartments);
+        var productNames = ObjectUtils.getAllOwnPropertyAsArray(products);
+        var hospitalNames = ObjectUtils.getAllOwnPropertyAsArray(hospitals);
+        var locationDepartmentNames = ObjectUtils.getAllOwnPropertyAsArray(installDepartments);
+        var orderDepartNames = ObjectUtils.getAllOwnPropertyAsArray(orderDepartments);
 
         // Increase the endAt by 1 day, in order to search the newest record of user choosen endAt date
         var endAtDate = new Date(viewModelData.endAt);
@@ -337,6 +331,21 @@ sap.ui.define([
             selectedRecords.push(row.getObject());
         });
         viewModelData.selectedRecords = selectedRecords;
+        oViewModel.refresh();
+    }
+
+    function onResetSearchCondition() {
+        this.byId("filterRegion").removeSelectedKeys();
+        this.byId("filterProvince").removeSelectedKeys();
+        this.byId("filterHospital").removeSelectedKeys();
+        this.byId("filterInstallDepartment").removeSelectedKeys();
+        this.byId("filterOrderDepartment").removeSelectedKeys();
+        this.byId("filterProduct").removeSelectedKeys();
+        this.byId("facetFilter").rerender();// call rerender otherwise the facetFilter cannot refresh
+
+        viewModelData.startAt = DateTimeUtils.firstDayOfCurrentMonth();
+        viewModelData.endAt = DateTimeUtils.today();
+        oViewModel.refresh();
     }
 
     var controller = Controller.extend("sales.records.ListInTable", {
@@ -347,6 +356,7 @@ sap.ui.define([
         onAddOrEditSalesRecord: onAddOrEditSalesRecord,
         onDeleteSalesRecord: onDeleteSalesRecord,
         onRecordTableSelectionChange: onRecordTableSelectionChange,
+        onResetSearchCondition: onResetSearchCondition
     });
     return controller;
 });

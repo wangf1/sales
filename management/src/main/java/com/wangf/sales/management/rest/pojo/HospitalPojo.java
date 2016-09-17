@@ -6,6 +6,7 @@ public class HospitalPojo {
 	private long id;
 	private String name;
 	private String level;
+	private String province;
 
 	public long getId() {
 		return id;
@@ -31,6 +32,14 @@ public class HospitalPojo {
 		this.level = level;
 	}
 
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
 	@Override
 	public String toString() {
 		return "HospitalPojo [id=" + id + ", name=" + name + ", level=" + level + "]";
@@ -41,6 +50,7 @@ public class HospitalPojo {
 		pojo.setId(hospital.getId());
 		pojo.setName(hospital.getName());
 		pojo.setLevel(hospital.getLevel().getName());
+		pojo.setProvince(hospital.getProvince().getName());
 		return pojo;
 	}
 

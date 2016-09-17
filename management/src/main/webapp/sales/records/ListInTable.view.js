@@ -23,6 +23,13 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 oController.onAdvanceSearchSalesRecord();
             }
         }));
+        toolBar.addContent(new sap.m.Button({
+            text: "{i18n>resetSearchCondition}",
+            icon: "sap-icon://reset",
+            press: function() {
+                oController.onResetSearchCondition();
+            }
+        }));
 
         var hBox = new sap.m.HBox();
         hBox.setAlignItems(sap.m.FlexAlignItems.Center);
@@ -36,7 +43,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         hBox.addItem(new sap.m.DatePicker({
             value: "{/startAt}",
             valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
         }));
         hBox.addItem(new sap.m.Label({
             text: "{i18n>endAt}"
@@ -44,17 +51,23 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         hBox.addItem(new sap.m.DatePicker({
             value: "{/endAt}",
             valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
         }));
 
         var form = new sap.ui.layout.form.SimpleForm({
             // Must explicitly set layout type, otherwise in non-debug mode in Chrome browser, the UI will no response. Should be a UI5 bug.
             layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+            labelSpanL: 2,
+            labelSpanM: 2,
+            emptySpanL: 1,
+            emptySpanM: 1,
             editable: true,
             minWidth: 1024,
             toolbar: toolBar
         });
+        form.addContent(new sap.m.Label());
         form.addContent(facetFilter);
+        form.addContent(new sap.m.Label());
         form.addContent(hBox);
 
         return form;
@@ -90,6 +103,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>edit}",
             icon: "sap-icon://edit",
+            enabled: "{= ${/selectedRecords}.length===1 }",
             customData: [
                 new sap.ui.core.CustomData({
                     key: "action",
@@ -103,6 +117,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
+            enabled: "{= ${/selectedRecords}.length>=1 }",
             press: function() {
                 oController.onDeleteSalesRecord();
             }

@@ -13,11 +13,18 @@ delete from users
 
 
 insert into Province (id, name, region) values (1, '上海', '华东')
+insert into Province (id, name, region) values (2, '浙江', '华东')
+insert into Province (id, name, region) values (3, '北京', '华北')
+insert into Province (id, name, region) values (4, '河北', '华北')
 
 insert into Hospital_Level(id, name) values(1, '三甲')
 
 insert into Hospital(id, name, level_id, province_id) values (1, '长征', 1, 1)
 insert into Hospital(id, name, level_id, province_id) values (2, '长海', 1, 1)
+insert into Hospital(id, name, level_id, province_id) values (3, '北医三院', 1, 3)
+insert into Hospital(id, name, level_id, province_id) values (4, '北医五院', 1, 3)
+insert into Hospital(id, name, level_id, province_id) values (5, '石家庄人民医院', 1, 4)
+insert into Hospital(id, name, level_id, province_id) values (6, '唐山人民医院', 1, 4)
 
 insert into DEPARTMENT_NAME(id, name) values(1, 'ICU')
 insert into DEPARTMENT_NAME(id, name) values(2, '检验科')
@@ -39,7 +46,11 @@ insert into AUTHORITIES(username, authority) values('Stella', 'User')
 
 insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1)
 insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 2)
+insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 3)
+insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 4)
+insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 5)
 insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1)
+insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 6)
 
 insert into product_install_location(id, product_id, department_id) values(1, 1, 1)
 insert into product_install_location(id, product_id, department_id) values(2, 1, 2)

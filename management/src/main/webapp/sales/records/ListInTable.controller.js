@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox", "sales/common/ObjectUtils"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox, ObjectUtils) {
+    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox", "sales/common/ObjectUtils", "sales/common/ValidateUtils"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox, ObjectUtils, ValidateUtils) {
     "use strict";
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -355,6 +355,16 @@ sap.ui.define([
 
     function onQuantityLiveChange(e) {
         var record = e.getSource().getBindingContext().getObject();
+        var quantity = e.getSource().getValue();
+        var quantityValid = ValidateUtils.validateIntegerGreaterThan0(quantity);
+        if (!quantityValid) {
+            e.getSource().setValueState(sap.ui.core.ValueState.Error);
+            e.getSource().setValueStateText(resBundle.getText("quantityRequired"));
+            removeSalesRecordFrom(viewModelData.inlineChangedRecords, record.id);
+            return;
+        } else {
+            e.getSource().setValueState(sap.ui.core.ValueState.None);
+        }
         // Remove before add, to avoid duplicate add
         removeSalesRecordFrom(viewModelData.inlineChangedRecords, record.id);
         /* The reason why create a new array rather than use existing array is if use existing array, the save button enable status binding "{=

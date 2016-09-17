@@ -3,6 +3,8 @@ package com.wangf.sales.management.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 
 @Service
+@Transactional
 public class DepartmentService {
 	@Autowired
 	private DepartmentNameRepository departmentNameRepository;

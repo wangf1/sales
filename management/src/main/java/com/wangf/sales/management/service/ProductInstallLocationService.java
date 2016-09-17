@@ -14,6 +14,7 @@ import com.wangf.sales.management.entity.Product;
 import com.wangf.sales.management.entity.ProductInstallLocation;
 
 @Service
+@Transactional
 public class ProductInstallLocationService {
 	@Autowired
 	private ProductInstallLocationRepository locationRepository;
@@ -24,7 +25,6 @@ public class ProductInstallLocationService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	@Transactional
 	public ProductInstallLocation findOrCreateByProductDepartmentHospital(String productName, String installDepartment,
 			String hospital) {
 		ProductInstallLocation location = locationRepository.findByProductDepartmentHospital(productName,

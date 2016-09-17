@@ -18,6 +18,7 @@ import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
 
 @Service
+@Transactional
 public class SalesRecordsService {
 	@Autowired
 	private SalesRecordRepository salesRecordRepository;
@@ -60,7 +61,6 @@ public class SalesRecordsService {
 		return result;
 	}
 
-	@Transactional
 	public SalesRecordPojo insertOrUpdate(SalesRecordPojo pojo) {
 		ProductInstallLocation installLocation = installLocationService.findOrCreateByProductDepartmentHospital(
 				pojo.getProduct(), pojo.getInstallDepartment(), pojo.getHospital());
@@ -87,25 +87,16 @@ public class SalesRecordsService {
 		record.setOrderDepartment(orderDepartment);
 		record.setSalesPerson(salesPerson);
 		record.setQuantity(pojo.getQuantity());
-		if (alreadyExisting) {
-			// salesRecordRepository.save(record) method cannot update, possibly
-			// because the record is a detached one from other entity manager
-			// context. So user "merge" to resolve the issue.
-			salesRecordRepository.getEntityManager().merge(record);
-		} else {
-			// For new entity, merge method will throw exception, should use
-			// save
-			salesRecordRepository.save(record);
-			// Refresh record in order to get the date of a new created record
-			salesRecordRepository.getEntityManager().refresh(record);
-		}
+
+		salesRecordRepository.save(record);
+		// Refresh record in order to get the date of a new created record
+		salesRecordRepository.getEntityManager().refresh(record);
 
 		SalesRecordPojo savedPojo = SalesRecordPojo.from(record);
 		savedPojo.setAlreadyExisting(alreadyExisting);
 		return savedPojo;
 	}
 
-	@Transactional
 	public List<Long> insertOrUpdate(List<SalesRecordPojo> pojos) {
 		for (SalesRecordPojo pojo : pojos) {
 			insertOrUpdate(pojo);
@@ -117,7 +108,6 @@ public class SalesRecordsService {
 		return allIds;
 	}
 
-	@Transactional
 	public void deleteSalesRecords(List<Long> salesRecordIds) {
 		for (Long id : salesRecordIds) {
 			salesRecordRepository.delete(id);

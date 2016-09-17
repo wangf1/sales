@@ -6,3 +6,10 @@
 .input-in-table-cell input {
 	height: 1.5rem !important;
 }
+
+.icon-tab-bar {
+    width: 100% !important;
+    margin: auto !important;
+    height: 90% !important;
+    padding-top: 1.1rem !important;
+}

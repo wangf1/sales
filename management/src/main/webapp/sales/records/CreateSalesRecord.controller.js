@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sap/m/MessageToast"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, MessageToast) {
+    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sales/common/UIUtils"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils) {
     "use strict";
 
     var salesRecordData = {
@@ -59,11 +59,7 @@ sap.ui.define([
         if (!errorMessage) {
             return true;
         } else {
-            MessageToast.show(errorMessage, {
-                duration: 5000,
-                width: "25em",
-                closeOnBrowserNavigation: false
-            });
+            UIUtils.showMessageToast(errorMessage);
             return false;
         }
     }

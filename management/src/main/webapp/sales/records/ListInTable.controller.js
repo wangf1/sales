@@ -1,8 +1,10 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils) {
+    "sales/common/DateTimeUtils", "sales/common/UIUtils"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils) {
     "use strict";
+
+    var resBundle = i18nUtils.initAndGetResourceBundle();
 
     var columNames = [
         "region", "province", "manager", "salesPerson", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment", "quantity", "date"
@@ -201,6 +203,20 @@ sap.ui.define([
         doAdvanceSearchSalesRecord(selectedHospitals, selectedInstallDepartments, selectedOrderDepartments, selectedProducts);
     }
 
+    function removeSalesRecordFromModel(toRemove) {
+        var theIndex;
+        for (var i = 0; i < viewModelData.salesRecords.length; i++) {
+            var record = viewModelData.salesRecords[i];
+            if (toRemove.id === record.id) {
+                theIndex = i;
+                break;
+            }
+        }
+        if (theIndex !== undefined) {
+            viewModelData.salesRecords.splice(theIndex, 1);
+        }
+    }
+
     function doSaveSalesRecord(salesRecord) {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
@@ -210,7 +226,17 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            viewModelData.salesRecords.unshift(result.data);
+            var savedRecord = result.data;
+            var message;
+            if (savedRecord.alreadyExisting) {
+                message = resBundle.getText("salesRecordAlreadyExisting");
+                UIUtils.showMessageToast(message);
+                removeSalesRecordFromModel(savedRecord);
+            } else {
+                message = resBundle.getText("salesOrderSaved");
+                UIUtils.showMessageToast(message);
+            }
+            viewModelData.salesRecords.unshift(savedRecord);
             oViewModel.refresh();
         });
     }

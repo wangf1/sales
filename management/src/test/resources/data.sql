@@ -20,9 +20,11 @@ insert into Hospital(id, name, level_id, province_id) values (1, '长征', 1, 1)
 insert into Hospital(id, name, level_id, province_id) values (2, '长海', 1, 1)
 
 insert into DEPARTMENT_NAME(id, name) values(1, 'ICU')
+insert into DEPARTMENT_NAME(id, name) values(2, '检验科')
 
 insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (1, 1, 1)
-insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (2, 1, 2)
+insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (2, 2, 1)
+insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (3, 1, 2)
 
 
 insert into Company(id, name) values(1, 'Thermo')

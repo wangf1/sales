@@ -160,7 +160,7 @@ public class SalesRecordsController {
 	 */
 	@RequestMapping(path = "/saveSalesRecord", method = RequestMethod.POST)
 	public SalesRecordPojo saveSalesRecord(@RequestBody SalesRecordPojo pojo) {
-		SalesRecordPojo savedPojo = salesRecordsService.save(pojo);
+		SalesRecordPojo savedPojo = salesRecordsService.insertOrUpdate(pojo);
 		return savedPojo;
 	}
 

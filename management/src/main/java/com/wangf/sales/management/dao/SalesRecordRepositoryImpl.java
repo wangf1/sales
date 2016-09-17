@@ -1,5 +1,6 @@
 package com.wangf.sales.management.dao;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +126,47 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 	@Override
 	public EntityManager getEntityManager() {
 		return em;
+	}
+
+	@Override
+	public SalesRecord searchByLocationOrderDepartPersonMonth(long locationId, long orderDepartId, String userName,
+			Date month) {
+		Calendar firstDayOfCurrentMonth = Calendar.getInstance();
+		firstDayOfCurrentMonth.set(Calendar.DAY_OF_MONTH, 1);
+		firstDayOfCurrentMonth.set(Calendar.HOUR_OF_DAY, 0);
+		firstDayOfCurrentMonth.set(Calendar.MINUTE, 0);
+		firstDayOfCurrentMonth.set(Calendar.SECOND, 0);
+		firstDayOfCurrentMonth.set(Calendar.MILLISECOND, 0);
+		Date startDate = firstDayOfCurrentMonth.getTime();
+
+		Calendar firstDayOfNextMonth = Calendar.getInstance();
+		firstDayOfNextMonth.add(Calendar.MONTH, 1);
+		firstDayOfCurrentMonth.set(Calendar.DAY_OF_MONTH, 1);
+		firstDayOfCurrentMonth.set(Calendar.HOUR_OF_DAY, 0);
+		firstDayOfCurrentMonth.set(Calendar.MINUTE, 0);
+		firstDayOfCurrentMonth.set(Calendar.SECOND, 0);
+		firstDayOfCurrentMonth.set(Calendar.MILLISECOND, 0);
+		Date endDate = firstDayOfNextMonth.getTime();
+
+		String queryString = "select record from SalesRecord record " + " join record.installLocation location "
+				+ " join record.orderDepartment orderDep " + " join record.salesPerson person "
+				+ " where location.id = :locationId " + " and orderDep.id = :orderDepartId "
+				+ " and record.salesPerson.userName = :userName "
+				+ " and record.date  BETWEEN :startDate AND :endDate ";
+
+		TypedQuery<SalesRecord> query = em.createQuery(queryString, SalesRecord.class);
+		query.setParameter("locationId", locationId);
+		query.setParameter("orderDepartId", orderDepartId);
+		query.setParameter("userName", userName);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+
+		List<SalesRecord> records = query.getResultList();
+		SalesRecord record = null;
+		if (!records.isEmpty()) {
+			record = records.get(0);
+		}
+		return record;
 	}
 
 }

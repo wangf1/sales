@@ -2,6 +2,8 @@ package com.wangf.sales.management.rest.pojo;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 
@@ -17,6 +19,9 @@ public class SalesRecordPojo {
 	private String orderDepartment;
 	private int quantity;
 	private String hospitalLevel;
+
+	@Transient
+	private boolean alreadyExisting;
 
 	private Date date;
 
@@ -114,6 +119,14 @@ public class SalesRecordPojo {
 
 	public void setHospitalLevel(String hospitalLevel) {
 		this.hospitalLevel = hospitalLevel;
+	}
+
+	public boolean isAlreadyExisting() {
+		return alreadyExisting;
+	}
+
+	public void setAlreadyExisting(boolean alreadyExisting) {
+		this.alreadyExisting = alreadyExisting;
 	}
 
 	@Override

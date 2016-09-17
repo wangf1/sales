@@ -63,7 +63,7 @@ public class SalesRecordsService {
 	}
 
 	@Transactional
-	public SalesRecordPojo save(SalesRecordPojo pojo) {
+	public SalesRecordPojo insertOrUpdate(SalesRecordPojo pojo) {
 		// FIXME!!! in one month, should not insert duplicate record for same
 		// (hospital,installDepart, orderDepart, product)
 		ProductInstallLocation installLocation = installLocationRepository
@@ -72,16 +72,33 @@ public class SalesRecordsService {
 				pojo.getHospital());
 		User salesPerson = userService.getCurrentUser();
 
-		SalesRecord record = new SalesRecord();
+		SalesRecord record = salesRecordRepository.searchByLocationOrderDepartPersonMonth(installLocation.getId(),
+				orderDepartment.getId(), salesPerson.getUserName(), new Date());
+
+		boolean alreadyExisting = true;
+		if (record == null) {
+			record = new SalesRecord();
+			alreadyExisting = false;
+		}
 		record.setInstallLocation(installLocation);
 		record.setOrderDepartment(orderDepartment);
 		record.setSalesPerson(salesPerson);
 		record.setQuantity(pojo.getQuantity());
-		SalesRecord saved = salesRecordRepository.save(record);
-		// Refresh in order to get the date property
-		salesRecordRepository.getEntityManager().refresh(saved);
+		if (alreadyExisting) {
+			// salesRecordRepository.save(record) method cannot update, possibly
+			// because the record is a detached one from other entity manager
+			// context. So user "merge" to resolve the issue.
+			salesRecordRepository.getEntityManager().merge(record);
+		} else {
+			// For new entity, merge method will throw exception, should use
+			// save
+			salesRecordRepository.save(record);
+			// Refresh record in order to get the date of a new created record
+			salesRecordRepository.getEntityManager().refresh(record);
+		}
 
-		SalesRecordPojo savedPojo = SalesRecordPojo.from(saved);
+		SalesRecordPojo savedPojo = SalesRecordPojo.from(record);
+		savedPojo.setAlreadyExisting(alreadyExisting);
 		return savedPojo;
 	}
 }

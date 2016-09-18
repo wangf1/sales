@@ -36,9 +36,21 @@ public class BasicDataController {
 		return departNames;
 	}
 
+	@RequestMapping(path = "/listAllProvinces", method = RequestMethod.GET)
+	public List<ProvincePojo> listAllProvinces() {
+		List<ProvincePojo> provincePojos = provinceServcie.listAll();
+		return provincePojos;
+	}
+
 	@RequestMapping(path = "/saveProvinces", method = RequestMethod.POST)
 	public List<Long> saveProvinces(@RequestBody List<ProvincePojo> pojos) {
 		List<Long> ids = provinceServcie.insertOrUpdate(pojos);
+		return ids;
+	}
+
+	@RequestMapping(path = "/deleteProvinces", method = RequestMethod.POST)
+	public List<Long> deleteProvinces(@RequestBody List<Long> ids) {
+		provinceServcie.deleteByIds(ids);
 		return ids;
 	}
 }

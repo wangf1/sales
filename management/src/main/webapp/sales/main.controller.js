@@ -7,7 +7,12 @@ sap.ui.define([
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
     function init() {
-
+        // initial screen is the salesRecords page
+        onTabSelect.bind(this, {
+            getParameter: function(key) {
+                return "salesRecords";
+            }
+        })();
     }
 
     function createPageByTabKey(key, thisController) {
@@ -45,7 +50,7 @@ sap.ui.define([
 
     function onTabSelect(e) {
         var container = this.byId("pageContainer");
-        var key = e.getSource().getSelectedKey();
+        var key = e.getParameter("selectedKey");
         var selectedPage;
         var pages = container.getPages();
         pages.forEach(function(page) {
@@ -55,8 +60,8 @@ sap.ui.define([
         })
         if (!selectedPage) {
             selectedPage = createPageByTabKey(key, this);
+            container.addPage(selectedPage);
         }
-        container.addPage(selectedPage);
         container.to(selectedPage);
     }
 

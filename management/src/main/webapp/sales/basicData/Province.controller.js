@@ -19,10 +19,14 @@ sap.ui.define([
 
     var oViewModel = new JSONModel(viewModelData);
 
-    function setProvincesModel() {
+    function setProvincesModel(thisController) {
+        // must clear table selection status
+        var table = thisController.byId("theTable");
+        table.removeSelections();
+
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getProvincesByCurrentUser",
+            url: "listAllProvinces",
             dataType: "json",
             contentType: "application/json"
         });
@@ -32,7 +36,7 @@ sap.ui.define([
     }
 
     function init() {
-        setProvincesModel();
+        setProvincesModel(this);
         this.getView().setModel(oViewModel);
     }
 
@@ -116,7 +120,9 @@ sap.ui.define([
             dataType: "json",
             contentType: "application/json"
         });
+        var that = this;
         promise.then(function(result) {
+            setProvincesModel(that);// Refresh all province in order to have ID for new added record
             viewModelData.inlineChangedRecords = [];
             viewModelData.newAddedRecords = [];
             var message = resBundle.getText("save_success");
@@ -157,7 +163,7 @@ sap.ui.define([
             UIUtils.showMessageToast(message);
             var removedIds = result.data;
             removedIds.forEach(function(id) {
-                ArrayUtils.removeFromById(viewModelData.provinces, record.id);
+                ArrayUtils.removeFromById(viewModelData.provinces, id);
             });
             oViewModel.refresh();
         });
@@ -175,7 +181,7 @@ sap.ui.define([
     }
 
     function onRefresh() {
-        setProvincesModel();
+        setProvincesModel(this);
     }
 
     function onTableSelectionChange() {

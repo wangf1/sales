@@ -52,4 +52,20 @@ public class ProvinceService {
 		return allIds;
 	}
 
+	public List<ProvincePojo> listAll() {
+		Iterable<Province> provinces = provinceRepository.findAll();
+		List<ProvincePojo> pojos = new ArrayList<>();
+		for (Province province : provinces) {
+			ProvincePojo pojo = ProvincePojo.from(province);
+			pojos.add(pojo);
+		}
+		return pojos;
+	}
+
+	public void deleteByIds(List<Long> ids) {
+		for (Long id : ids) {
+			provinceRepository.delete(id);
+		}
+	}
+
 }

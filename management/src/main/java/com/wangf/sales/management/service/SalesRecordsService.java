@@ -87,10 +87,18 @@ public class SalesRecordsService {
 		record.setOrderDepartment(orderDepartment);
 		record.setSalesPerson(salesPerson);
 		record.setQuantity(pojo.getQuantity());
-
-		salesRecordRepository.save(record);
-		// Refresh record in order to get the date of a new created record
-		salesRecordRepository.getEntityManager().refresh(record);
+		if (alreadyExisting) {
+			// salesRecordRepository.save(record) method cannot update, possibly
+			// because the record is a detached one from other entity manager
+			// context. So user "merge" to resolve the issue.
+			salesRecordRepository.getEntityManager().merge(record);
+		} else {
+			// For new entity, merge method will throw exception, should use
+			// save
+			salesRecordRepository.save(record);
+			// Refresh record in order to get the date of a new created record
+			salesRecordRepository.getEntityManager().refresh(record);
+		}
 
 		SalesRecordPojo savedPojo = SalesRecordPojo.from(record);
 		savedPojo.setAlreadyExisting(alreadyExisting);

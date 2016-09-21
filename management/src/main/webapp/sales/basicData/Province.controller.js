@@ -195,6 +195,20 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
+    function sortTable(e) {
+        var table = this.byId("theTable");
+        var binding = table.getBinding("items");
+        var columnName = e.getSource().getCustomData()[0].getValue();
+        var customDataDescending = e.getSource().getCustomData()[1];
+        var oldDescendingValue = customDataDescending.getValue();
+        var newDescendingValue = !oldDescendingValue;
+        customDataDescending.setValue(newDescendingValue);
+        var nameSorter = new sap.ui.model.Sorter(columnName, newDescendingValue);
+        binding.sort([
+            nameSorter
+        ]);
+    }
+
     var controller = Controller.extend("sales.basicData.Province", {
         onInit: init,
         onCellLiveChange: onCellLiveChange,
@@ -204,7 +218,8 @@ sap.ui.define([
         onSaveAll: onSaveAll,
         onRefresh: onRefresh,
         onTableSelectionChange: onTableSelectionChange,
-        columnNames: columnNames
+        columnNames: columnNames,
+        sortTable: sortTable
     });
     return controller;
 });

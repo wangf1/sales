@@ -63,11 +63,21 @@ sap.ui.jsview("sales.basicData.Province", (function() {
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
-                header: [
-                    new sap.m.Text({
-                        text: "{i18n>" + columName + "}"
-                    })
-                ]
+                header: new sap.m.Button({
+                    text: "{i18n>" + columName + "}",
+                    press: function(e) {
+                        oController.sortTable(e);
+                    },
+                    customData: [
+                        new sap.ui.core.CustomData({
+                            key: "column",
+                            value: columName
+                        }), new sap.ui.core.CustomData({
+                            key: "descending",
+                            value: true
+                        })
+                    ]
+                })
             }));
             tableCells.push(new sap.m.Input({
                 value: "{" + columName + "}",

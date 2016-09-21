@@ -143,11 +143,21 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
-                header: [
-                    new sap.m.Text({
-                        text: "{i18n>" + name + "}"
-                    })
-                ]
+                header: new sap.m.Button({
+                    text: "{i18n>" + name + "}",
+                    press: function(e) {
+                        oController.sortTable(e);
+                    },
+                    customData: [
+                        new sap.ui.core.CustomData({
+                            key: "column",
+                            value: name
+                        }), new sap.ui.core.CustomData({
+                            key: "descending",
+                            value: true
+                        })
+                    ]
+                })
             }));
             if (name === "quantity") {
                 tableCells.push(new sap.m.Input({

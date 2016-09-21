@@ -395,6 +395,20 @@ sap.ui.define([
         });
     }
 
+    function sortTable(e) {
+        var table = this.byId("recordsTable");
+        var binding = table.getBinding('items');
+        var columnName = e.getSource().getCustomData()[0].getValue();
+        var customDataDescending = e.getSource().getCustomData()[1];
+        var oldDescendingValue = customDataDescending.getValue();
+        var newDescendingValue = !oldDescendingValue;
+        customDataDescending.setValue(newDescendingValue);
+        var nameSorter = new sap.ui.model.Sorter(columnName, newDescendingValue);
+        binding.sort([
+            nameSorter
+        ]);
+    }
+
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
@@ -405,7 +419,8 @@ sap.ui.define([
         onRecordTableSelectionChange: onRecordTableSelectionChange,
         onResetSearchCondition: onResetSearchCondition,
         onQuantityLiveChange: onQuantityLiveChange,
-        onSaveAllSalesRecords: onSaveAllSalesRecords
+        onSaveAllSalesRecords: onSaveAllSalesRecords,
+        sortTable: sortTable
     });
     return controller;
 });

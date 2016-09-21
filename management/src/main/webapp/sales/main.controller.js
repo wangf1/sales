@@ -24,6 +24,9 @@ sap.ui.define([
             case "province":
                 viewName = "sales.basicData.Province"
                 break;
+            case "hospital":
+                viewName = "sales.basicData.Hospital"
+                break;
             default:
                 break;
         }

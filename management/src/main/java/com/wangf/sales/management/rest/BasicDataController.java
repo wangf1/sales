@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
+import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProductPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
 import com.wangf.sales.management.service.DepartmentService;
+import com.wangf.sales.management.service.HospitalService;
 import com.wangf.sales.management.service.ProductService;
 import com.wangf.sales.management.service.ProvinceService;
+import com.wangf.sales.management.utils.SecurityUtils;
 
 @RestController
 public class BasicDataController {
@@ -23,6 +26,8 @@ public class BasicDataController {
 	private ProductService productService;
 	@Autowired
 	private ProvinceService provinceServcie;
+	@Autowired
+	private HospitalService hospitalService;
 
 	@RequestMapping(path = "/listAllDepartments", method = RequestMethod.GET)
 	public List<DepartmentNamePojo> listAllDepartments() {
@@ -51,6 +56,19 @@ public class BasicDataController {
 	@RequestMapping(path = "/deleteProvinces", method = RequestMethod.POST)
 	public List<Long> deleteProvinces(@RequestBody List<Long> ids) {
 		provinceServcie.deleteByIds(ids);
+		return ids;
+	}
+
+	@RequestMapping(path = "/saveHospitals", method = RequestMethod.POST)
+	public List<Long> saveHospitals(@RequestBody List<HospitalPojo> pojos) {
+		String currentUser = SecurityUtils.getCurrentUserName();
+		List<Long> ids = hospitalService.insertOrUpdateForUser(pojos, currentUser);
+		return ids;
+	}
+
+	@RequestMapping(path = "/deleteHospitals", method = RequestMethod.POST)
+	public List<Long> deleteHospitals(@RequestBody List<Long> ids) {
+		hospitalService.deleteByIds(ids);
 		return ids;
 	}
 }

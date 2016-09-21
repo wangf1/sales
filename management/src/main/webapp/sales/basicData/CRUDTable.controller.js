@@ -6,12 +6,13 @@ sap.ui.define([
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
-    var columnNames = [
-        "name", "region"
-    ];
+    var urlForListAll = "";
+    var urlForSaveAll = "";
+    var urlForDeleteAll = "";
+    var columnNames = [];
 
     var viewModelData = {
-        provinces: [],
+        tableData: [],
         selectedRecords: [],
         inlineChangedRecords: [],
         newAddedRecords: []
@@ -19,24 +20,24 @@ sap.ui.define([
 
     var oViewModel = new JSONModel(viewModelData);
 
-    function setProvincesModel(thisController) {
+    function setTableModel(thisController) {
         // must clear table selection status
         var table = thisController.byId("theTable");
         table.removeSelections();
 
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProvinces",
+            url: urlForListAll,
             dataType: "json",
             contentType: "application/json"
         });
         promise.then(function(result) {
-            oViewModel.setProperty("/provinces", result.data);
+            oViewModel.setProperty("/tableData", result.data);
         });
     }
 
     function init() {
-        setProvincesModel(this);
+        setTableModel(this);
         this.getView().setModel(oViewModel);
     }
 
@@ -54,7 +55,7 @@ sap.ui.define([
             record
         ];
         viewModelData.inlineChangedRecords.forEach(function(item) {
-            allChangedRecords.push(item)
+            allChangedRecords.push(item);
         });
         viewModelData.inlineChangedRecords = allChangedRecords;
         oViewModel.refresh();
@@ -80,34 +81,51 @@ sap.ui.define([
     }
 
     function onAdd() {
-        var newAdded = {
-            name: "",
-            region: ""
-        };
-        viewModelData.provinces.unshift(newAdded);
+        var newAdded = {};
+        columnNames.forEach(function(property) {
+            newAdded[property] = "";
+        });
+        viewModelData.tableData.unshift(newAdded);
 
         /* The reason why create a new array rather than use existing array is if use existing array, the button enable status binding just not work.*/
         var allAddedRecords = [
             newAdded
         ];
         viewModelData.newAddedRecords.forEach(function(item) {
-            allAddedRecords.push(item)
+            allAddedRecords.push(item);
         });
         viewModelData.newAddedRecords = allAddedRecords;
         oViewModel.refresh();
     }
 
+    function validateEachPropertyNotEmpty(object) {
+        for ( var key in object) {
+            if (!object.hasOwnProperty(key)) {
+                continue;
+            }
+            if (key === "id") {
+                // Do not verify id, it should be a integer or null
+                continue;
+            }
+            var value = object[key];
+            if (value.trim() === "") {
+                return false;
+            }
+        }
+        return true;
+    }
+
     function onSaveAll() {
         var allNeedSave = [];
         viewModelData.inlineChangedRecords.forEach(function(item) {
-            if (item.name.trim() === "" || item.region.trim() === "") {
+            if (!validateEachPropertyNotEmpty(item)) {
                 // do very basic validate
                 return;
             }
             allNeedSave.push(item);
         });
         viewModelData.newAddedRecords.forEach(function(item) {
-            if (item.name.trim() === "" || item.region.trim() === "") {
+            if (!validateEachPropertyNotEmpty(item)) {
                 // do very basic validate
                 return;
             }
@@ -115,14 +133,14 @@ sap.ui.define([
         });
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: "saveProvinces",
+            url: urlForSaveAll,
             data: JSON.stringify(allNeedSave),
             dataType: "json",
             contentType: "application/json"
         });
         var that = this;
         promise.then(function(result) {
-            setProvincesModel(that);// Refresh all province in order to have ID for new added record
+            setTableModel(that);// Refresh all in order to have ID for new added record
             viewModelData.inlineChangedRecords = [];
             viewModelData.newAddedRecords = [];
             var message = resBundle.getText("save_success");
@@ -136,8 +154,8 @@ sap.ui.define([
         viewModelData.selectedRecords.forEach(function(record) {
             if (record.id === undefined) {
                 // Remove the new added record
-                var i = viewModelData.provinces.indexOf(record);
-                viewModelData.provinces.splice(i, 1);
+                var i = viewModelData.tableData.indexOf(record);
+                viewModelData.tableData.splice(i, 1);
                 i = viewModelData.newAddedRecords.indexOf(record);
                 viewModelData.newAddedRecords.splice(i, 1);
                 return;
@@ -153,7 +171,7 @@ sap.ui.define([
         }
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: "deleteProvinces",
+            url: urlForDeleteAll,
             data: JSON.stringify(recordIds),
             dataType: "json",
             contentType: "application/json"
@@ -163,25 +181,26 @@ sap.ui.define([
             UIUtils.showMessageToast(message);
             var removedIds = result.data;
             removedIds.forEach(function(id) {
-                ArrayUtils.removeFromById(viewModelData.provinces, id);
+                ArrayUtils.removeFromById(viewModelData.tableData, id);
             });
             oViewModel.refresh();
         });
     }
 
     function onDelete() {
+        var that = this;
         MessageBox.confirm(resBundle.getText("confirmDelete"), {
             title: resBundle.getText("confirm"),
             onClose: function(flgValue) {
                 if (flgValue === sap.m.MessageBox.Action.OK) {
-                    doDeleteRecords();
+                    doDeleteRecords(that);
                 }
             }
         });
     }
 
     function onRefresh() {
-        setProvincesModel(this);
+        setTableModel(this);
     }
 
     function onTableSelectionChange() {
@@ -209,7 +228,15 @@ sap.ui.define([
         ]);
     }
 
-    var controller = Controller.extend("sales.basicData.Province", {
+    function setUrlsAndColumnNames(settings) {
+        urlForListAll = settings.urlForListAll;
+        urlForSaveAll = settings.urlForSaveAll;
+        urlForDeleteAll = settings.urlForDeleteAll;
+        columnNames = settings.columnNames;
+    }
+
+    var controller = Controller.extend("sales.basicData.CRUDTable", {
+        setUrlsAndColumnNames: setUrlsAndColumnNames,
         onInit: init,
         onCellLiveChange: onCellLiveChange,
         onQuickFilter: onQuickFilter,
@@ -218,7 +245,6 @@ sap.ui.define([
         onSaveAll: onSaveAll,
         onRefresh: onRefresh,
         onTableSelectionChange: onTableSelectionChange,
-        columnNames: columnNames,
         sortTable: sortTable
     });
     return controller;

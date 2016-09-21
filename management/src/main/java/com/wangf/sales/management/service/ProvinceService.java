@@ -21,10 +21,9 @@ public class ProvinceService {
 	public ProvincePojo insertOrUpdate(ProvincePojo pojo) {
 
 		/*
-		 * Firstly find by ID, if not exist, find by (installLocation,
-		 * orderDepartment, salesPerson, month). The purpose of search two times
-		 * is: 1). Search by ID to avoid treat update case as insert. 2). Search
-		 * by columns to avoid insert duplicate record
+		 * Firstly find by ID, if not exist, find by property. The purpose of
+		 * search two times is: 1). Search by ID to avoid treat update case as
+		 * insert. 2). Search by columns to avoid insert duplicate record
 		 */
 		Province province = provinceRepository.findOne(pojo.getId());
 		if (province == null) {

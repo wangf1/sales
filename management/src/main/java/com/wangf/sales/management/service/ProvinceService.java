@@ -63,6 +63,8 @@ public class ProvinceService {
 
 	public void deleteByIds(List<Long> ids) {
 		for (Long id : ids) {
+			// If there is hospitals belong to this province, delete will not be
+			// allowed.
 			provinceRepository.delete(id);
 		}
 	}

@@ -1,5 +1,6 @@
 package com.wangf.sales.management.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -34,7 +35,7 @@ public class Hospital {
 	private Province province;
 
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<Department> departments;
 
@@ -90,11 +91,36 @@ public class Hospital {
 	}
 
 	public List<User> getUsers() {
+		if (users == null) {
+			return new ArrayList<>();
+		}
 		return users;
 	}
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Hospital other = (Hospital) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 
 	@Override

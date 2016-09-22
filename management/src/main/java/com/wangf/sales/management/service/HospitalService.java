@@ -68,9 +68,18 @@ public class HospitalService {
 		return allIds;
 	}
 
+	/**
+	 * Delete the entity.
+	 * 
+	 * @param ids
+	 */
 	public void deleteByIds(List<Long> ids) {
 		for (Long id : ids) {
-			hospitalRepository.delete(id);
+			Hospital hospital = hospitalRepository.findOne(id);
+			hospital.setLevel(null);
+			hospital.setProvince(null);
+			hospitalRepository.delete(hospital);
 		}
 	}
+
 }

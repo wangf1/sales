@@ -117,7 +117,7 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
         oController.setUrlsAndColumnNames({
             urlForListAll: "getHospitalsByCurrentUser",
             urlForSaveAll: "saveHospitals",
-            utlForDeleteAll: "deleteHospitals",
+            urlForDeleteAll: "deleteUserHospitalRelationship",
             columnNames: columnNames
         });
     }

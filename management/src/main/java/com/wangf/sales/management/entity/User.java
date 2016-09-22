@@ -1,5 +1,6 @@
 package com.wangf.sales.management.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -133,6 +134,9 @@ public class User {
 	}
 
 	public List<Hospital> getHospitals() {
+		if (hospitals == null) {
+			hospitals = new ArrayList<>();
+		}
 		return hospitals;
 	}
 

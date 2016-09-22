@@ -24,7 +24,7 @@ public class Department {
 	@JoinColumn(name = "DEPARTMENT_NAME_ID", referencedColumnName = "ID")
 	private DepartmentName name;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	private Hospital hospital;
 
 	@JsonIgnore

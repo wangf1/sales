@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangf.sales.management.dao.HospitalRepository;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.Province;
@@ -23,6 +24,9 @@ import com.wangf.sales.management.utils.SecurityUtils;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private HospitalRepository hospitalRepository;
 
 	public Set<String> listRegionsForUser(String userName) {
 		User user = userRepository.findOne(userName);
@@ -65,5 +69,19 @@ public class UserService {
 		String currentUserName = SecurityUtils.getCurrentUserName();
 		User currentUser = userRepository.findOne(currentUserName);
 		return currentUser;
+	}
+
+	/**
+	 * Only delete the relationship.
+	 * 
+	 * @param ids
+	 */
+	public void deleteUserHospitalRelationship(List<Long> hostpitalIds) {
+		for (Long id : hostpitalIds) {
+			Hospital hospital = hospitalRepository.findOne(id);
+			User user = getCurrentUser();
+			user.getHospitals().remove(hospital);
+			userRepository.save(user);
+		}
 	}
 }

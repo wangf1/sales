@@ -1,7 +1,5 @@
 package com.wangf.sales.management.test.dao;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -19,11 +17,8 @@ public class HospitalLevalRepositoryTests extends TestBase {
 
 	@Test
 	public void findsHospitalByName() {
-		List<HospitalLevel> results = this.repository.findByName("三甲");
-		// Assert.assertTrue(results.size() >= 1);
-		for (HospitalLevel level : results) {
-			System.out.println(level.getHospitals());
-		}
+		HospitalLevel result = this.repository.findByName("三甲");
+		System.out.println(result);
 	}
 
 }

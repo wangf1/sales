@@ -66,9 +66,4 @@ public class BasicDataController {
 		return ids;
 	}
 
-	@RequestMapping(path = "/deleteHospitals", method = RequestMethod.POST)
-	public List<Long> deleteHospitals(@RequestBody List<Long> ids) {
-		hospitalService.deleteByIds(ids);
-		return ids;
-	}
 }

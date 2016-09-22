@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,12 @@ public class QueryByUserController {
 	public List<ProvincePojo> getProvincesByCurrentUser() {
 		List<ProvincePojo> result = userService.listProvincesForUser(SecurityUtils.getCurrentUserName());
 		return result;
+	}
+
+	@RequestMapping(path = "/deleteUserHospitalRelationship", method = RequestMethod.POST)
+	public List<Long> deleteUserHospitalRelationship(@RequestBody List<Long> ids) {
+		userService.deleteUserHospitalRelationship(ids);
+		return ids;
 	}
 
 }

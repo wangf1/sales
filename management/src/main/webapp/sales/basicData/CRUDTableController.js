@@ -96,6 +96,7 @@ sap.ui.define([
         });
         viewModelData.newAddedRecords = allAddedRecords;
         oViewModel.refresh();
+        return newAdded;
     }
 
     function validateEachPropertyNotEmpty(object) {
@@ -235,7 +236,8 @@ sap.ui.define([
         columnNames = settings.columnNames;
     }
 
-    var controller = Controller.extend("sales.basicData.CRUDTable", {
+    var controller = Controller.extend("sales.basicData.CRUDTableController", {
+        oViewModel: oViewModel,
         setUrlsAndColumnNames: setUrlsAndColumnNames,
         onInit: init,
         onCellLiveChange: onCellLiveChange,

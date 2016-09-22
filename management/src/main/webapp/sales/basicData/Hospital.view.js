@@ -6,7 +6,7 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
     ];
 
     var getControllerName = function() {
-        return "sales.basicData.CRUDTable";
+        return "sales.basicData.Hospital";
     };
 
     var createTableHeaderToolBar = function(oController) {
@@ -83,12 +83,35 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                     ]
                 })
             }));
-            tableCells.push(new sap.m.Input({
-                value: "{" + columName + "}",
-                liveChange: function(e) {
-                    oController.onCellLiveChange(e);
-                }
-            }).addStyleClass("input-in-table-cell"));
+            if (columName === "level") {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
+            } else if (columName === "province") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/provinces",
+                        template: new sap.ui.core.Item({
+                            key: "{name}",
+                            text: "{name}"
+                        })
+                    }
+                }));
+            } else {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
+            }
         });
 
         var table = new sap.m.Table({

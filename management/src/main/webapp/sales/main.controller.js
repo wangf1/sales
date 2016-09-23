@@ -33,6 +33,9 @@ sap.ui.define([
             case "product":
                 viewName = "sales.basicData.Product"
                 break;
+            case "user":
+                viewName = "sales.basicData.User"
+                break;
             default:
                 break;
         }

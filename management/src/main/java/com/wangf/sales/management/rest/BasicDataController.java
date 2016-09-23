@@ -16,10 +16,12 @@ import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProductPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
+import com.wangf.sales.management.rest.pojo.UserPojo;
 import com.wangf.sales.management.service.DepartmentService;
 import com.wangf.sales.management.service.HospitalService;
 import com.wangf.sales.management.service.ProductService;
 import com.wangf.sales.management.service.ProvinceService;
+import com.wangf.sales.management.service.UserService;
 import com.wangf.sales.management.utils.SecurityUtils;
 
 @RestController
@@ -34,6 +36,9 @@ public class BasicDataController {
 	private HospitalService hospitalService;
 	@Autowired
 	private HospitalLevelRepository hospitalLevelRepository;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private CompanyRepository companyRepository;
@@ -109,6 +114,24 @@ public class BasicDataController {
 	public Iterable<Company> listAllConpanies() {
 		Iterable<Company> companies = companyRepository.findAll();
 		return companies;
+	}
+
+	@RequestMapping(path = "/listAllUsers", method = RequestMethod.GET)
+	public Iterable<UserPojo> listAllUsers() {
+		Iterable<UserPojo> users = userService.listAllUsers();
+		return users;
+	}
+
+	@RequestMapping(path = "/saveUsers", method = RequestMethod.POST)
+	public List<UserPojo> saveUsers(@RequestBody List<UserPojo> users) {
+		userService.insertOrUpdate(users);
+		return users;
+	}
+
+	@RequestMapping(path = "/deleteUsers", method = RequestMethod.POST)
+	public List<String> deleteUsers(@RequestBody List<String> userNames) {
+		userService.deleteUsers(userNames);
+		return userNames;
 	}
 
 }

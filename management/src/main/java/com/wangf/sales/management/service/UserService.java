@@ -17,6 +17,7 @@ import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
+import com.wangf.sales.management.rest.pojo.UserPojo;
 import com.wangf.sales.management.utils.SecurityUtils;
 
 @Service
@@ -84,4 +85,45 @@ public class UserService {
 			userRepository.save(user);
 		}
 	}
+
+	public List<UserPojo> listAllUsers() {
+		Iterable<User> users = userRepository.findAll();
+		List<UserPojo> pojos = new ArrayList<>();
+		for (User user : users) {
+			pojos.add(UserPojo.from(user));
+		}
+		return pojos;
+	}
+
+	public UserPojo insertOrUpdate(UserPojo pojo) {
+		User toSave = userRepository.findOne(pojo.getId());
+		if (toSave == null) {
+			toSave = new User();
+		}
+		toSave.setUserName(pojo.getId());
+		toSave.setFirstName(pojo.getFirstName());
+		toSave.setLastName(pojo.getLastName());
+		toSave.setPassword(pojo.getPassword());
+		userRepository.save(toSave);
+		UserPojo result = UserPojo.from(toSave);
+		return result;
+	}
+
+	public List<UserPojo> insertOrUpdate(List<UserPojo> pojos) {
+		List<UserPojo> allSaved = new ArrayList<>();
+		for (UserPojo pojo : pojos) {
+			UserPojo saved = insertOrUpdate(pojo);
+			allSaved.add(saved);
+		}
+		return allSaved;
+	}
+
+	public void deleteUsers(List<String> userNames) {
+		for (String id : userNames) {
+			// If there are relationships, such as hospital, salesRecord, etc,
+			// delete will fail.
+			userRepository.delete(id);
+		}
+	}
+
 }

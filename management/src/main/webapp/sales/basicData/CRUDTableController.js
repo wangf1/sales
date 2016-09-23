@@ -99,13 +99,11 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "id") {
-                // Do not verify id, it should be a integer or null
-                continue;
-            }
             var value = object[key];
-            if (value.trim() === "") {
-                return false;
+            if (value.trim) {
+                if (value.trim() === "") {
+                    return false;
+                }
             }
         }
         return true;

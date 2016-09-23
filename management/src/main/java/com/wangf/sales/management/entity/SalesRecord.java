@@ -20,15 +20,15 @@ public class SalesRecord {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "INSTALL_LOCATION_ID", referencedColumnName = "ID")
 	private ProductInstallLocation installLocation;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "ORDER_DEPARTMENT_ID", referencedColumnName = "ID")
 	private Department orderDepartment;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
 	private User salesPerson;
 

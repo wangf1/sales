@@ -6,11 +6,6 @@ sap.ui.define([
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
-    var urlForListAll = "";
-    var urlForSaveAll = "";
-    var urlForDeleteAll = "";
-    var columnNames = [];
-
     var viewModelData = {
         tableData: [],
         selectedRecords: [],
@@ -27,7 +22,7 @@ sap.ui.define([
 
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: urlForListAll,
+            url: thisController.urlForListAll,
             dataType: "json",
             contentType: "application/json"
         });
@@ -37,7 +32,7 @@ sap.ui.define([
     }
 
     function init() {
-        setTableModel(this);
+// setTableModel(this);
         this.getView().setModel(oViewModel);
     }
 
@@ -72,7 +67,7 @@ sap.ui.define([
             binding.filter([]);
         } else {
             var fs = [];
-            columnNames.forEach(function(column) {
+            this.columnNames.forEach(function(column) {
                 fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
             });
             var filters = new sap.ui.model.Filter(fs, false);
@@ -82,7 +77,7 @@ sap.ui.define([
 
     function onAdd() {
         var newAdded = {};
-        columnNames.forEach(function(property) {
+        this.columnNames.forEach(function(property) {
             newAdded[property] = "";
         });
         viewModelData.tableData.unshift(newAdded);
@@ -134,7 +129,7 @@ sap.ui.define([
         });
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: urlForSaveAll,
+            url: this.urlForSaveAll,
             data: JSON.stringify(allNeedSave),
             dataType: "json",
             contentType: "application/json"
@@ -150,7 +145,7 @@ sap.ui.define([
         });
     }
 
-    function doDeleteRecords() {
+    function doDeleteRecords(thisController) {
         var recordIds = [];
         viewModelData.selectedRecords.forEach(function(record) {
             if (record.id === undefined) {
@@ -172,7 +167,7 @@ sap.ui.define([
         }
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: urlForDeleteAll,
+            url: thisController.urlForDeleteAll,
             data: JSON.stringify(recordIds),
             dataType: "json",
             contentType: "application/json"
@@ -229,16 +224,19 @@ sap.ui.define([
         ]);
     }
 
-    function setUrlsAndColumnNames(settings) {
-        urlForListAll = settings.urlForListAll;
-        urlForSaveAll = settings.urlForSaveAll;
-        urlForDeleteAll = settings.urlForDeleteAll;
-        columnNames = settings.columnNames;
+    function afterShow() {
+        // Get model data in afterShow method instead of init method, to make sure refresh data every time when the tab selected
+        // The major reason is multiple view share same controller prototype, the viewModel is different,
+        // so must rebuilt the view model when the view changed
+        this.onRefresh();
     }
 
     var controller = Controller.extend("sales.basicData.CRUDTableController", {
+        urlForListAll: "",
+        urlForSaveAll: "",
+        urlForDeleteAll: "",
+        columnNames: [],
         oViewModel: oViewModel,
-        setUrlsAndColumnNames: setUrlsAndColumnNames,
         onInit: init,
         onCellLiveChange: onCellLiveChange,
         onQuickFilter: onQuickFilter,
@@ -247,7 +245,8 @@ sap.ui.define([
         onSaveAll: onSaveAll,
         onRefresh: onRefresh,
         onTableSelectionChange: onTableSelectionChange,
-        sortTable: sortTable
+        sortTable: sortTable,
+        afterShow: afterShow
     });
     return controller;
 });

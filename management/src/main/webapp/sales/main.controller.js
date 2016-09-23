@@ -27,6 +27,9 @@ sap.ui.define([
             case "hospital":
                 viewName = "sales.basicData.Hospital"
                 break;
+            case "department":
+                viewName = "sales.basicData.Department"
+                break;
             default:
                 break;
         }
@@ -66,6 +69,9 @@ sap.ui.define([
             container.addPage(selectedPage);
         }
         container.to(selectedPage);
+        if (selectedPage.getContent()[0].getController().afterShow) {
+            selectedPage.getContent()[0].getController().afterShow();
+        }
     }
 
     var controller = Controller.extend("sales.main", {

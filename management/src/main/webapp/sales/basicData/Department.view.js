@@ -1,8 +1,8 @@
-sap.ui.jsview("sales.basicData.Hospital", (function() {
+sap.ui.jsview("sales.basicData.Department", (function() {
     "use strict";
 
     var getControllerName = function() {
-        return "sales.basicData.Hospital";
+        return "sales.basicData.Department";
     };
 
     var createTableHeaderToolBar = function(oController) {
@@ -79,45 +79,12 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                     ]
                 })
             }));
-            if (columName === "level") {
-                tableCells.push(new sap.m.ComboBox({
-                    change: function(e) {
-                        oController.onCellLiveChange(e);
-                    },
-                    value: "{" + columName + "}",
-                    selectedKey: "{" + columName + "}",
-                    items: {
-                        path: "/levels",
-                        template: new sap.ui.core.Item({
-                            key: "{name}",
-                            text: "{name}"
-                        }),
-                        templateShareable: true
-                    }
-                }));
-            } else if (columName === "province") {
-                tableCells.push(new sap.m.Select({
-                    change: function(e) {
-                        oController.onCellLiveChange(e);
-                    },
-                    selectedKey: "{" + columName + "}",
-                    items: {
-                        path: "/provinces",
-                        template: new sap.ui.core.Item({
-                            key: "{name}",
-                            text: "{name}"
-                        }),
-                        templateShareable: true
-                    }
-                }));
-            } else {
-                tableCells.push(new sap.m.Input({
-                    value: "{" + columName + "}",
-                    liveChange: function(e) {
-                        oController.onCellLiveChange(e);
-                    }
-                }).addStyleClass("input-in-table-cell"));
-            }
+            tableCells.push(new sap.m.Input({
+                value: "{" + columName + "}",
+                liveChange: function(e) {
+                    oController.onCellLiveChange(e);
+                }
+            }).addStyleClass("input-in-table-cell"));
         });
 
         var table = new sap.m.Table({

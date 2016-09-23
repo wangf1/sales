@@ -27,8 +27,8 @@ sap.ui.define([
 
     function init() {
         CRUDTableController.prototype.onInit.call(this);
-        refreshAvailableProvinces();
-        refreshAvailableLevels();
+// refreshAvailableProvinces();
+// refreshAvailableLevels();
     }
 
     function refreshAvailableLevels() {
@@ -50,6 +50,12 @@ sap.ui.define([
     }
 
     var controller = CRUDTableController.extend("sales.basicData.Hospital", {
+        columnNames: [
+            "name", "level", "province"
+        ],
+        urlForListAll: "getHospitalsByCurrentUser",
+        urlForSaveAll: "saveHospitals",
+        urlForDeleteAll: "deleteUserHospitalRelationship",
         onInit: init,
         onAdd: onAdd,
         onRefresh: onRefresh

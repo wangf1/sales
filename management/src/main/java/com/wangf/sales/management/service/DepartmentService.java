@@ -51,4 +51,36 @@ public class DepartmentService {
 		departmentRepository.save(department);
 		return department;
 	}
+
+	public DepartmentNamePojo insertOrUpdateDepartmentName(DepartmentNamePojo pojo) {
+		DepartmentName entity = departmentNameRepository.findOne(pojo.getId());
+		if (entity == null) {
+			entity = departmentNameRepository.findByName(pojo.getName());
+		}
+		if (entity == null) {
+			entity = new DepartmentName();
+		}
+		entity.setName(pojo.getName());
+		departmentNameRepository.save(entity);
+
+		DepartmentNamePojo savedPojo = DepartmentNamePojo.from(entity);
+		return savedPojo;
+	}
+
+	public List<DepartmentNamePojo> insertOrUpdateDepartmentName(List<DepartmentNamePojo> pojos) {
+		List<DepartmentNamePojo> results = new ArrayList<>();
+		for (DepartmentNamePojo pojo : pojos) {
+			DepartmentNamePojo result = insertOrUpdateDepartmentName(pojo);
+			results.add(result);
+		}
+		return results;
+	}
+
+	public void deleteDepartmentNameByIds(List<Long> ids) {
+		for (Long id : ids) {
+			// If there is departments use this department name, delete will not
+			// be allowed.
+			departmentNameRepository.delete(id);
+		}
+	}
 }

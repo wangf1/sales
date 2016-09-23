@@ -39,6 +39,18 @@ public class BasicDataController {
 		return departNames;
 	}
 
+	@RequestMapping(path = "/saveDepartmentNames", method = RequestMethod.POST)
+	public List<DepartmentNamePojo> saveDepartmentNams(@RequestBody List<DepartmentNamePojo> pojos) {
+		List<DepartmentNamePojo> results = departmentService.insertOrUpdateDepartmentName(pojos);
+		return results;
+	}
+
+	@RequestMapping(path = "/deleteDepartmentNams", method = RequestMethod.POST)
+	public List<Long> deleteDepartmentNams(@RequestBody List<Long> ids) {
+		departmentService.deleteDepartmentNameByIds(ids);
+		return ids;
+	}
+
 	@RequestMapping(path = "/listAllProducts", method = RequestMethod.GET)
 	public List<ProductPojo> listAllProducts() {
 		List<ProductPojo> departNames = productService.listAllProductNames();

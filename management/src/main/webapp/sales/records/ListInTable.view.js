@@ -19,6 +19,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolBar.addContent(new sap.m.Button({
             text: "{i18n>search}",
             icon: "sap-icon://search",
+            type: sap.m.ButtonType.Emphasized,
             press: function() {
                 oController.onAdvanceSearchSalesRecord();
             }

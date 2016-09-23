@@ -18,22 +18,92 @@ sap.ui.jsview("sales.records.CreateSalesRecord", (function() {
         });
 
         form.addContent(new sap.m.Label({
-            text: "{i18n>selectHospitalAndDepartment}"
+            text: "{i18n>region}"
         }));
-        var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
-        var filterLists = facetFilter.getLists();
-        filterLists.forEach(function(list) {
-            // For creation, the facetFilter should be single select
-            list.setMode(sap.m.ListMode.SingleSelectMaster);
-            // attach list close event hanlder
-            list.attachListClose(function(e) {
-                oController.onFilterListClose(e);
-            });
-        });
-        form.addContent(facetFilter);
+        form.addContent(new sap.m.Select(oController.createId("selectRegion"), {
+            selectedKey: "{salesRecord>/region}",
+            change: function(e) {
+                oController.onRegionChanged();
+            },
+            items: {
+                path: "/regions",
+                template: new sap.ui.core.Item({
+                    key: "{}",
+                    text: "{}"
+                })
+            }
+        }));
+        form.addContent(new sap.m.Label({
+            text: "{i18n>province}"
+        }));
+        form.addContent(new sap.m.Select(oController.createId("selectProvince"), {
+            selectedKey: "{salesRecord>/province}",
+            change: function(e) {
+                oController.onProvinceChanged();
+            },
+            items: {
+                path: "/provinces",
+                template: new sap.ui.core.Item({
+                    key: "{name}",
+                    text: "{name}"
+                })
+            }
+        }));
+        form.addContent(new sap.m.Label({
+            text: "{i18n>hospital}"
+        }));
+        form.addContent(new sap.m.Select(oController.createId("selectHospital"), {
+            selectedKey: "{salesRecord>/hospital}",
+            items: {
+                path: "/hospitals",
+                template: new sap.ui.core.Item({
+                    key: "{name}",
+                    text: "{name}"
+                })
+            }
+        }));
+        form.addContent(new sap.m.Label({
+            text: "{i18n>installDepartment}"
+        }));
+        form.addContent(new sap.m.Select(oController.createId("selectInstallDepartment"), {
+            selectedKey: "{salesRecord>/installDepartment}",
+            items: {
+                path: "/departments",
+                template: new sap.ui.core.Item({
+                    key: "{name}",
+                    text: "{name}"
+                })
+            }
+        }));
+        form.addContent(new sap.m.Label({
+            text: "{i18n>orderDepartment}"
+        }));
+        form.addContent(new sap.m.Select(oController.createId("selectOrderDepartment"), {
+            selectedKey: "{salesRecord>/orderDepartment}",
+            items: {
+                path: "/departments",
+                template: new sap.ui.core.Item({
+                    key: "{name}",
+                    text: "{name}"
+                })
+            }
+        }));
+        form.addContent(new sap.m.Label({
+            text: "{i18n>product}"
+        }));
+        form.addContent(new sap.m.Select(oController.createId("selectProduct"), {
+            selectedKey: "{salesRecord>/product}",
+            items: {
+                path: "/products",
+                template: new sap.ui.core.Item({
+                    key: "{name}",
+                    text: "{name}"
+                })
+            }
+        }));
 
         form.addContent(new sap.m.Label({
-            text: "{i18n>inputQuantity}"
+            text: "{i18n>quantity}"
         }));
         form.addContent(new sap.m.Input({
             value: "{salesRecord>/quantity}"

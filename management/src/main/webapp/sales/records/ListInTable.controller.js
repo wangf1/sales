@@ -261,7 +261,7 @@ sap.ui.define([
 
         var dlg = new sap.m.Dialog({
             contentWidth: "60%",
-            contentHeight: "30%",
+            contentHeight: "50%",
             title: dlgTitle,
             horizontalScrolling: false,
             verticalScrolling: true,
@@ -291,6 +291,7 @@ sap.ui.define([
             }
         }));
         dlg.setModel(oViewModel);
+        view.getController().doInitialSelectFilter();
         dlg.open();
     }
 

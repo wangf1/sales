@@ -26,19 +26,8 @@ sap.ui.define([
 
     var salesRecordModel = new JSONModel(salesRecordData);
 
-    // restore last time selection to save user input
-    function initSelectedItems(thisController) {
-        thisController.byId("filterRegion").setSelectedKeys(selectedKeysBackup.region);
-        thisController.byId("filterProvince").setSelectedKeys(selectedKeysBackup.province);
-        thisController.byId("filterHospital").setSelectedKeys(selectedKeysBackup.hospital);
-        thisController.byId("filterInstallDepartment").setSelectedKeys(selectedKeysBackup.installDepartment);
-        thisController.byId("filterOrderDepartment").setSelectedKeys(selectedKeysBackup.orderDepartment);
-        thisController.byId("filterProduct").setSelectedKeys(selectedKeysBackup.product);
-    }
-
     function init() {
         this.getView().setModel(salesRecordModel, "salesRecord");
-        initSelectedItems(this);
     }
 
     function validateSalesRecord() {
@@ -76,36 +65,6 @@ sap.ui.define([
             return value;
         }
     }
-    function onFilterListClose(e) {
-        var key = e.getSource().getKey();
-        var selectedKeys = e.getSource().getSelectedKeys();
-        switch (key) {
-            case "region":
-                selectedKeysBackup.region = selectedKeys;
-                break;
-            case "province":
-                selectedKeysBackup.province = selectedKeys;
-                break;
-            case "hospital":
-                salesRecordData.hospital = getFirstOwnProperty(selectedKeys);
-                selectedKeysBackup.hospital = selectedKeys;
-                break;
-            case "installDepartment":
-                salesRecordData.installDepartment = getFirstOwnProperty(selectedKeys);
-                selectedKeysBackup.installDepartment = selectedKeys;
-                break;
-            case "orderDepartment":
-                salesRecordData.orderDepartment = getFirstOwnProperty(selectedKeys);
-                selectedKeysBackup.orderDepartment = selectedKeys;
-                break;
-            case "product":
-                salesRecordData.product = getFirstOwnProperty(selectedKeys);
-                selectedKeysBackup.product = selectedKeys;
-                break;
-            default:
-                break;
-        }
-    }
 
     function refreshUIForEditedRecord(recordToEdit) {
         salesRecordData.id = recordToEdit.id;
@@ -115,23 +74,69 @@ sap.ui.define([
         salesRecordData.product = recordToEdit.product;
         salesRecordData.quantity = recordToEdit.quantity;
         salesRecordModel.refresh();
+    }
 
-        selectedKeysBackup.region[recordToEdit.region] = recordToEdit.region;
-        selectedKeysBackup.province[recordToEdit.province] = recordToEdit.province;
-        selectedKeysBackup.hospital[recordToEdit.hospital] = recordToEdit.hospital;
-        selectedKeysBackup.installDepartment[recordToEdit.installDepartment] = recordToEdit.installDepartment;
-        selectedKeysBackup.orderDepartment[recordToEdit.orderDepartment] = recordToEdit.orderDepartment;
-        selectedKeysBackup.product[recordToEdit.product] = recordToEdit.product;
+    function filterProvinceAndHospital(thisController) {
+        filterProvinceByRegion(thisController);
+        filterHospitalByProvince(thisController);
+    }
 
-        initSelectedItems(this);
+    function filterProvinceByRegion(thisController) {
+        var viewModel = thisController.getView().getModel();
+        var region = thisController.byId("selectRegion").getSelectedKey();
+        if (region === "") {
+            region = viewModel.getData().regions[0];
+        }
+        var filteredProvinces = [];
+        viewModel.getData().allProvinces.forEach(function(province) {
+            if (province.region === region) {
+                filteredProvinces.push(province);
+            }
+        });
+        viewModel.getData().provinces = filteredProvinces;
+        // Set the province to a new province in order to filterHospitalByProvince() function can works against new province
+        thisController.byId("selectProvince").setSelectedKey(filteredProvinces[0].name);
+        viewModel.refresh();
+    }
+
+    function filterHospitalByProvince(thisController) {
+        var viewModel = thisController.getView().getModel();
+        var province = thisController.byId("selectProvince").getSelectedKey();
+        if (province === "") {
+            province = viewModel.getData().provinces[0].name;
+        }
+        var filteredHospitals = [];
+        viewModel.getData().allHospitals.forEach(function(hospital) {
+            if (hospital.province === province) {
+                filteredHospitals.push(hospital);
+            }
+        });
+        viewModel.getData().hospitals = filteredHospitals;
+        viewModel.refresh();
+    }
+
+    function doInitialSelectFilter() {
+        filterProvinceAndHospital(this);
+    }
+
+    function onRegionChanged() {
+        filterProvinceByRegion(this);
+        filterHospitalByProvince(this);
+    }
+
+    function onProvinceChanged() {
+        filterHospitalByProvince(this);
     }
 
     var controller = Controller.extend("sales.records.CreateSalesRecord", {
         onInit: init,
-        onFilterListClose: onFilterListClose,
         validateSalesRecord: validateSalesRecord,
         salesRecordModel: salesRecordModel,
-        refreshUIForEditedRecord: refreshUIForEditedRecord
+        refreshUIForEditedRecord: refreshUIForEditedRecord,
+        doInitialSelectFilter: doInitialSelectFilter,
+        onRegionChanged: onRegionChanged,
+        onProvinceChanged: onProvinceChanged
+
     });
     return controller;
 });

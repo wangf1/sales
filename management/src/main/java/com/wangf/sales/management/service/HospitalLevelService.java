@@ -21,7 +21,6 @@ public class HospitalLevelService {
 			entity = new HospitalLevel();
 		}
 		entity.setName(name);
-		;
 		hospitalLevelRepository.save(entity);
 		return entity;
 	}

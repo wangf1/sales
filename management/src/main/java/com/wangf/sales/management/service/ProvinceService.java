@@ -52,7 +52,7 @@ public class ProvinceService {
 	}
 
 	public List<ProvincePojo> listAll() {
-		Iterable<Province> provinces = provinceRepository.findAll();
+		Iterable<Province> provinces = provinceRepository.findAllByOrderByNameAsc();
 		List<ProvincePojo> pojos = new ArrayList<>();
 		for (Province province : provinces) {
 			ProvincePojo pojo = ProvincePojo.from(province);

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangf.sales.management.dao.HospitalLevelRepository;
+import com.wangf.sales.management.entity.HospitalLevel;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProductPojo;
@@ -28,6 +30,8 @@ public class BasicDataController {
 	private ProvinceService provinceServcie;
 	@Autowired
 	private HospitalService hospitalService;
+	@Autowired
+	private HospitalLevelRepository hospitalLevelRepository;
 
 	@RequestMapping(path = "/listAllDepartments", method = RequestMethod.GET)
 	public List<DepartmentNamePojo> listAllDepartments() {
@@ -64,6 +68,12 @@ public class BasicDataController {
 		String currentUser = SecurityUtils.getCurrentUserName();
 		List<Long> ids = hospitalService.insertOrUpdateForUser(pojos, currentUser);
 		return ids;
+	}
+
+	@RequestMapping(path = "/listAllHospitalLevels", method = RequestMethod.GET)
+	public Iterable<HospitalLevel> listAllHospitalLevels() {
+		Iterable<HospitalLevel> levels = hospitalLevelRepository.findAll();
+		return levels;
 	}
 
 }

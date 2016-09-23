@@ -21,17 +21,38 @@ sap.ui.define([
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["province"] = oViewModel.getProperty("/provinces")[0];
+        newAdded["level"] = oViewModel.getProperty("/levels")[0];
         return newAdded;
     }
 
     function init() {
         CRUDTableController.prototype.onInit.call(this);
         refreshAvailableProvinces();
+        refreshAvailableLevels();
+    }
+
+    function refreshAvailableLevels() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "listAllHospitalLevels",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            CRUDTableController.prototype.oViewModel.setProperty("/levels", result.data);
+        });
+    }
+
+    function onRefresh() {
+        CRUDTableController.prototype.onRefresh.call(this);
+        refreshAvailableProvinces();
+        refreshAvailableLevels();
     }
 
     var controller = CRUDTableController.extend("sales.basicData.Hospital", {
         onInit: init,
-        onAdd: onAdd
+        onAdd: onAdd,
+        onRefresh: onRefresh
     });
     return controller;
 });

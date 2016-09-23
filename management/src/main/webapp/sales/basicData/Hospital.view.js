@@ -84,12 +84,21 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                 })
             }));
             if (columName === "level") {
-                tableCells.push(new sap.m.Input({
-                    value: "{" + columName + "}",
-                    liveChange: function(e) {
+                tableCells.push(new sap.m.ComboBox({
+                    change: function(e) {
                         oController.onCellLiveChange(e);
+                    },
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/levels",
+                        template: new sap.ui.core.Item({
+                            key: "{name}",
+                            text: "{name}"
+                        }),
+                        templateShareable: true
                     }
-                }).addStyleClass("input-in-table-cell"));
+                }));
             } else if (columName === "province") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
@@ -101,7 +110,8 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                         template: new sap.ui.core.Item({
                             key: "{name}",
                             text: "{name}"
-                        })
+                        }),
+                        templateShareable: true
                     }
                 }));
             } else {

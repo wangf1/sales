@@ -79,12 +79,30 @@ sap.ui.jsview("sales.basicData.Province", (function() {
                     ]
                 })
             }));
-            tableCells.push(new sap.m.Input({
-                value: "{" + columName + "}",
-                liveChange: function(e) {
-                    oController.onCellLiveChange(e);
-                }
-            }).addStyleClass("input-in-table-cell"));
+            if (columName === "region") {
+                tableCells.push(new sap.m.ComboBox({
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    items: {
+                        path: "/regions",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
+            }
         });
 
         var table = new sap.m.Table({

@@ -14,7 +14,8 @@ sap.ui.define([
         provinces: [],
         selectedRecords: [],
         inlineChangedRecords: [],
-        newAddedRecords: []
+        newAddedRecords: [],
+        regions: []
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -32,7 +33,18 @@ sap.ui.define([
         });
         promise.then(function(result) {
             oViewModel.setProperty("/provinces", result.data);
+            setAllRegionsModel(result.data);
         });
+    }
+
+    function setAllRegionsModel(procinces) {
+        var regions = [];
+        procinces.forEach(function(province) {
+            if (regions.indexOf(province.region) < 0) {
+                regions.push(province.region);
+            }
+        });
+        oViewModel.setProperty("/regions", regions);
     }
 
     function init() {

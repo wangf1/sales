@@ -1,10 +1,13 @@
 package com.wangf.sales.management.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.HospitalRepository;
 import com.wangf.sales.management.dao.UserRepository;
+import com.wangf.sales.management.entity.Authority;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
@@ -25,9 +29,13 @@ import com.wangf.sales.management.utils.SecurityUtils;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private HospitalRepository hospitalRepository;
+	@Autowired
+	private AuthorityServcie authorityServcie;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public Set<String> listRegionsForUser(String userName) {
 		User user = userRepository.findOne(userName);
@@ -96,17 +104,39 @@ public class UserService {
 	}
 
 	public UserPojo insertOrUpdate(UserPojo pojo) {
-		User toSave = userRepository.findOne(pojo.getId());
+		User toSave = userRepository.findOne(pojo.getUserName());
 		if (toSave == null) {
 			toSave = new User();
 		}
-		toSave.setUserName(pojo.getId());
+		toSave.setUserName(pojo.getUserName());
 		toSave.setFirstName(pojo.getFirstName());
 		toSave.setLastName(pojo.getLastName());
 		toSave.setPassword(pojo.getPassword());
 		userRepository.save(toSave);
+		em.flush();
+		// em.detach(toSave);
+
+		updateRoles(pojo);
+
 		UserPojo result = UserPojo.from(toSave);
 		return result;
+	}
+
+	private void updateRoles(UserPojo pojo) {
+		String[] rolesArray = pojo.getRoles().split(",");
+		List<String> newRoles = Arrays.asList(rolesArray);
+		List<Authority> authorities = authorityServcie.findByUserName(pojo.getUserName());
+		if (authorities != null) {
+			for (Authority auth : authorities) {
+				if (newRoles.contains(auth.getAuthority())) {
+					continue;
+				}
+				authorityServcie.delete(auth);
+			}
+		}
+		for (String role : newRoles) {
+			authorityServcie.findOrCreateByUserNameRoleName(pojo.getUserName(), role);
+		}
 	}
 
 	public List<UserPojo> insertOrUpdate(List<UserPojo> pojos) {
@@ -122,7 +152,12 @@ public class UserService {
 		for (String id : userNames) {
 			// If there are relationships, such as hospital, salesRecord, etc,
 			// delete will fail.
-			userRepository.delete(id);
+			authorityServcie.deleteByUserName(id);
+			em.flush();
+			User user = userRepository.findOne(id);
+			em.refresh(user);
+			user.getAuthorities().clear();
+			userRepository.delete(user);
 		}
 	}
 

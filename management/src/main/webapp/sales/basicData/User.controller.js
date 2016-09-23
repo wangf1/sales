@@ -8,7 +8,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.basicData.User", {
         columnNames: [
-            "id", "password", "firstName", "lastName"
+            "userName", "password", "firstName", "lastName", "roles"
         ],
         urlForListAll: "listAllUsers",
         urlForSaveAll: "saveUsers",

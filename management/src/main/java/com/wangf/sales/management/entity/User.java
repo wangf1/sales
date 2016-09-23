@@ -3,6 +3,7 @@ package com.wangf.sales.management.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,7 +48,7 @@ public class User {
 	 * Sales persons who manage these hospitals.
 	 */
 	@JsonIgnore
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
 			@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, inverseJoinColumns = {
 					@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, uniqueConstraints = {
@@ -60,7 +61,7 @@ public class User {
 	 * appendix-schema.html
 	 */
 	@JsonIgnore
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
 	private List<Authority> authorities;
 
@@ -126,6 +127,9 @@ public class User {
 	}
 
 	public List<Authority> getAuthorities() {
+		if (authorities == null) {
+			authorities = new ArrayList<>();
+		}
 		return authorities;
 	}
 

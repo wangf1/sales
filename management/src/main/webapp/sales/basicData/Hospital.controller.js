@@ -20,8 +20,8 @@ sap.ui.define([
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
-        newAdded["province"] = oViewModel.getProperty("/provinces")[0];
-        newAdded["level"] = oViewModel.getProperty("/levels")[0];
+        newAdded["province"] = oViewModel.getProperty("/provinces")[0].name;
+        newAdded["level"] = oViewModel.getProperty("/levels")[0].name;
         return newAdded;
     }
 

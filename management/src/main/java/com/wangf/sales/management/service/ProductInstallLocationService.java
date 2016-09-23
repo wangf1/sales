@@ -1,7 +1,5 @@
 package com.wangf.sales.management.service;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +32,10 @@ public class ProductInstallLocationService {
 		}
 
 		Department department = departmentService.findOrCreateByDepartNameAndHospitalName(installDepartment, hospital);
-		List<Product> products = productRepository.findByName(productName);
+		Product product = productRepository.findByName(productName);
 		location = new ProductInstallLocation();
 		location.setDepartment(department);
-		location.setProduct(products.get(0));
+		location.setProduct(product);
 		locationRepository.save(location);
 		return location;
 	}

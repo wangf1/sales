@@ -1,10 +1,7 @@
 package com.wangf.sales.management.test.dao;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,12 +17,9 @@ public class CompanyRepositoryTests extends TestBase {
 
 	@Test
 	public void findsAllHospital() {
-		List<Company> results = this.repository.findByName("Thermo");
-		Assert.assertTrue(results.size() >= 1);
-		for (Company hospital : results) {
-			System.out.println(hospital.getName());
-			System.out.println(hospital.getProducts());
-		}
+		Company result = this.repository.findByName("Thermo");
+		System.out.println(result.getName());
+		System.out.println(result.getProducts());
 	}
 
 }

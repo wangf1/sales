@@ -27,8 +27,6 @@ sap.ui.define([
 
     function init() {
         CRUDTableController.prototype.onInit.call(this);
-// refreshAvailableProvinces();
-// refreshAvailableLevels();
     }
 
     function refreshAvailableLevels() {

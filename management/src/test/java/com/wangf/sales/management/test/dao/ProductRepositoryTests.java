@@ -1,7 +1,5 @@
 package com.wangf.sales.management.test.dao;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.junit.Assert;
@@ -20,14 +18,11 @@ public class ProductRepositoryTests extends TestBase {
 
 	@Test
 	public void findByName() {
-		List<Product> results = this.repository.findByName("PCT-Q");
-		Assert.assertTrue(results.size() >= 1);
-		for (Product product : results) {
-			System.out.println(product.getName());
-			System.out.println(product.getCompany().getName());
-			Assert.assertTrue(product.getInstallLocations().size() >= 1);
-			Assert.assertTrue(product.getInstallLocations().get(0).getSalesRecords().size() >= 1);
-		}
+		Product product = this.repository.findByName("PCT-Q");
+		System.out.println(product.getName());
+		System.out.println(product.getCompany().getName());
+		Assert.assertTrue(product.getInstallLocations().size() >= 1);
+		Assert.assertTrue(product.getInstallLocations().get(0).getSalesRecords().size() >= 1);
 	}
 
 }

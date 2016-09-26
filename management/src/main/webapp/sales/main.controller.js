@@ -4,9 +4,28 @@ sap.ui.define([
 ], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils) {
     "use strict";
 
+    var viewModelData = {
+        userName: ""
+    };
+
+    var oViewModel = new JSONModel(viewModelData);
+
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
+    function getCurrentUserName() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getCurrentUserName",
+        });
+        promise.then(function(result) {
+            viewModelData.userName = result.data;
+            oViewModel.refresh();
+        });
+    }
+
     function init() {
+        getCurrentUserName();
+        this.getView().setModel(oViewModel);
         // initial screen is the salesRecords page
         onTabSelect.bind(this, {
             getParameter: function(key) {
@@ -80,9 +99,20 @@ sap.ui.define([
         }
     }
 
+    function onLogout() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "logout",
+        });
+        promise.then(function(result) {
+            window.location.href = "login";
+        });
+    }
+
     var controller = Controller.extend("sales.main", {
         onInit: init,
-        onTabSelect: onTabSelect
+        onTabSelect: onTabSelect,
+        onLogout: onLogout
     });
     return controller;
 });

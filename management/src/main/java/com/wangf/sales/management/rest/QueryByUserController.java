@@ -46,4 +46,10 @@ public class QueryByUserController {
 		return ids;
 	}
 
+	@RequestMapping(path = "/getCurrentUserName", method = RequestMethod.GET)
+	public String getCurrentUserName() {
+		String userName = userService.getCurrentReadableUserName();
+		return userName;
+	}
+
 }

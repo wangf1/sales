@@ -80,6 +80,12 @@ public class UserService {
 		return currentUser;
 	}
 
+	public String getCurrentReadableUserName() {
+		User user = getCurrentUser();
+		String userName = user.getFirstName() + " " + user.getLastName() + " (" + user.getUserName() + ")";
+		return userName;
+	}
+
 	/**
 	 * Only delete the relationship.
 	 * 

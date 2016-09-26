@@ -1,7 +1,6 @@
 package com.wangf.sales.management.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -130,7 +129,10 @@ public class UserService {
 
 	private void updateRoles(UserPojo pojo) {
 		String[] rolesArray = pojo.getRoles().split(",");
-		List<String> newRoles = Arrays.asList(rolesArray);
+		List<String> newRoles = new ArrayList<>();
+		for (String role : rolesArray) {
+			newRoles.add(role.trim());
+		}
 		List<Authority> authorities = authorityServcie.findByUserName(pojo.getUserName());
 		if (authorities != null) {
 			for (Authority auth : authorities) {

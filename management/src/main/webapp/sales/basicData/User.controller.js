@@ -4,6 +4,23 @@ sap.ui.define([
 ], function(CRUDTableController, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox) {
     "use strict";
 
+    function refreshAllRoles() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "listAllRoles",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            CRUDTableController.prototype.oViewModel.setProperty("/allRoles", result.data);
+        });
+    }
+
+    function onRefresh() {
+        refreshAllRoles();
+        CRUDTableController.prototype.onRefresh.call(this);
+    }
+
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
     var controller = CRUDTableController.extend("sales.basicData.User", {
@@ -13,6 +30,7 @@ sap.ui.define([
         urlForListAll: "listAllUsers",
         urlForSaveAll: "saveUsers",
         urlForDeleteAll: "deleteUsers",
+        onRefresh: onRefresh
     });
     return controller;
 });

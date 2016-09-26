@@ -24,4 +24,9 @@ public interface AuthorityRepository extends PagingAndSortingRepository<Authorit
 	@Query(query_findByUserName)
 	List<Authority> findByUserName(@Param("userName") String userName);
 
+	String query_listAllRoles = "select distinct auth.authority from Authority auth";
+
+	@Query(query_listAllRoles)
+	List<String> listAllRoles();
+
 }

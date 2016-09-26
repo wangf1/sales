@@ -17,6 +17,7 @@ import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProductPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
 import com.wangf.sales.management.rest.pojo.UserPojo;
+import com.wangf.sales.management.service.AuthorityServcie;
 import com.wangf.sales.management.service.DepartmentService;
 import com.wangf.sales.management.service.HospitalService;
 import com.wangf.sales.management.service.ProductService;
@@ -42,6 +43,9 @@ public class BasicDataController {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+
+	@Autowired
+	private AuthorityServcie authorityServcie;
 
 	@RequestMapping(path = "/listAllDepartments", method = RequestMethod.GET)
 	public List<DepartmentNamePojo> listAllDepartments() {
@@ -132,6 +136,12 @@ public class BasicDataController {
 	public List<String> deleteUsers(@RequestBody List<String> userNames) {
 		userService.deleteUsers(userNames);
 		return userNames;
+	}
+
+	@RequestMapping(path = "/listAllRoles", method = RequestMethod.GET)
+	public List<String> listAllRoles() {
+		List<String> roles = authorityServcie.listAllRoles();
+		return roles;
 	}
 
 }

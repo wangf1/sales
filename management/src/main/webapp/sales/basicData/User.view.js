@@ -79,12 +79,32 @@ sap.ui.jsview("sales.basicData.User", (function() {
                     ]
                 })
             }));
-            tableCells.push(new sap.m.Input({
-                value: "{" + columName + "}",
-                liveChange: function(e) {
-                    oController.onCellLiveChange(e);
-                }
-            }).addStyleClass("input-in-table-cell"));
+
+            if (columName === "roles") {
+                tableCells.push(new sap.m.ComboBox({
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/allRoles",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
+            }
+
         });
 
         var table = new sap.m.Table({

@@ -134,12 +134,11 @@ sap.ui.define([
         });
         var that = this;
         promise.then(function(result) {
-            setTableModel(that);// Refresh all in order to have ID for new added record
+            that.onRefresh();// Refresh all in order to have ID for new added record
             viewModelData.inlineChangedRecords = [];
             viewModelData.newAddedRecords = [];
             var message = resBundle.getText("save_success");
             UIUtils.showMessageToast(message);
-            oViewModel.refresh();
         });
     }
 
@@ -173,11 +172,7 @@ sap.ui.define([
         promise.then(function(result) {
             var message = resBundle.getText("deleteSuccess");
             UIUtils.showMessageToast(message);
-            var removedIds = result.data;
-            removedIds.forEach(function(id) {
-                ArrayUtils.removeFromById(viewModelData.tableData, id);
-            });
-            oViewModel.refresh();
+            thisController.onRefresh();
         });
     }
 
@@ -195,6 +190,7 @@ sap.ui.define([
 
     function onRefresh() {
         setTableModel(this);
+        oViewModel.refresh();
     }
 
     function onTableSelectionChange() {

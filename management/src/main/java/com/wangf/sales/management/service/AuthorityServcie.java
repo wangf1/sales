@@ -63,4 +63,9 @@ public class AuthorityServcie {
 		List<Authority> authorities = authorityRepository.findByUserName(userName);
 		return authorities;
 	}
+
+	public List<String> listAllRoles() {
+		List<String> roles = authorityRepository.listAllRoles();
+		return roles;
+	}
 }

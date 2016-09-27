@@ -71,7 +71,11 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 	@Override
 	public List<SalesRecord> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
 		String queryString = "select record from SalesRecord record " + " join record.installLocation location "
-				+ " join record.orderDepartment orderDep " + " join record.salesPerson person " + " where 1=1 ";
+				+ " join record.orderDepartment orderDep ";
+		if (CollectionUtils.isNotEmpty(criteria.getSalesPersonNames())) {
+			queryString = queryString + " join record.salesPerson person ";
+		}
+		queryString = queryString + " where 1=1 ";
 		if (CollectionUtils.isNotEmpty(criteria.getProductNames())) {
 			queryString = queryString + " and location.product.name in :products ";
 		}

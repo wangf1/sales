@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangf.sales.management.auth.ResourcePermission;
 import com.wangf.sales.management.dao.CompanyRepository;
 import com.wangf.sales.management.dao.HospitalLevelRepository;
 import com.wangf.sales.management.entity.Company;
@@ -144,4 +145,9 @@ public class BasicDataController {
 		return roles;
 	}
 
+	@RequestMapping(path = "/getRoleResourcePermissionMapping", method = RequestMethod.GET)
+	public ResourcePermission getRoleResourcePermissionMapping() {
+		ResourcePermission result = userService.getResourcePermissionForCurrentUser();
+		return result;
+	}
 }

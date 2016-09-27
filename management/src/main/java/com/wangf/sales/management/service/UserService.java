@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangf.sales.management.auth.ResourcePermission;
+import com.wangf.sales.management.auth.RoleResourcePermissions;
 import com.wangf.sales.management.dao.HospitalRepository;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Authority;
@@ -77,12 +79,6 @@ public class UserService {
 		String currentUserName = SecurityUtils.getCurrentUserName();
 		User currentUser = userRepository.findOne(currentUserName);
 		return currentUser;
-	}
-
-	public String getCurrentReadableUserName() {
-		User user = getCurrentUser();
-		String userName = user.getFirstName() + " " + user.getLastName() + " (" + user.getUserName() + ")";
-		return userName;
 	}
 
 	/**
@@ -167,6 +163,12 @@ public class UserService {
 			user.getAuthorities().clear();
 			userRepository.delete(user);
 		}
+	}
+
+	public ResourcePermission getResourcePermissionForCurrentUser() {
+		List<String> currentUserRoles = SecurityUtils.getCurrentUserRoles();
+		ResourcePermission permission = RoleResourcePermissions.getResourcePermissionForRoles(currentUserRoles);
+		return permission;
 	}
 
 }

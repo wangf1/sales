@@ -5,7 +5,7 @@ sap.ui.define([
     "use strict";
 
     var viewModelData = {
-        userName: ""
+        currentUser: {}
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -15,16 +15,28 @@ sap.ui.define([
     function getCurrentUserName() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getCurrentUserName",
+            url: "getCurrentUser",
         });
         promise.then(function(result) {
-            viewModelData.userName = result.data;
+            viewModelData.currentUser = result.data;
             oViewModel.refresh();
+        });
+    }
+
+    function getResourcePermissionForCurrentUser() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getResourcePermissionForCurrentUser",
+        });
+        promise.then(function(result) {
+            var permissionModel = new JSONModel(result.data);
+            sap.ui.getCore().setModel(permissionModel, "permissionModel");
         });
     }
 
     function init() {
         getCurrentUserName();
+        getResourcePermissionForCurrentUser();
         this.getView().setModel(oViewModel);
         // initial screen is the salesRecords page
         onTabSelect.bind(this, {

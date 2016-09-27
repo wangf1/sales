@@ -45,7 +45,7 @@ sap.ui.jsview("sales.main", (function() {
                     new sap.m.Text({
                         text: "{i18n>app_header}"
                     }), new sap.m.ToolbarSpacer(), new sap.m.Text({
-                        text: "{i18n>hi} {/userName}"
+                        text: "{i18n>hi} {/currentUser/fullNameWithLoginName}"
                     }), new sap.m.Button({
                         text: '{i18n>log_out}',
                         icon: 'sap-icon://log',

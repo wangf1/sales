@@ -27,24 +27,6 @@ sap.ui.define([
 
     var oViewModel = new JSONModel(viewModelData);
 
-    function getSalesRecordsPromise() {
-        var lastMonthFirstDayString = DateTimeUtils.firstDayOfPreviousMonth();
-        var promise = AjaxUtils.ajaxCallAsPromise({
-            method: "GET",
-            url: "salesRecordsAdvanceSearch?startFrom=" + lastMonthFirstDayString,
-            dataType: "json",
-            contentType: "application/json"
-        });
-        return promise;
-    }
-
-    function setSalesRecordsModel() {
-        var promise = getSalesRecordsPromise();
-        promise.then(function(result) {
-            oViewModel.setProperty("/salesRecords", result.data);
-        });
-    }
-
     function setRegionsModel() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
@@ -107,7 +89,7 @@ sap.ui.define([
         // set i18n model
         i18nUtils.initAndGetResourceBundle();
         // populate view model date
-        setSalesRecordsModel(this);
+        this.onAdvanceSearchSalesRecord();
         setRegionsModel();
         setProvincesModel();
         setHospitalsModel();

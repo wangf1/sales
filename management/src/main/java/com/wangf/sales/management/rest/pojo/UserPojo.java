@@ -15,6 +15,8 @@ public class UserPojo {
 	private String firstName;
 	private String lastName;
 
+	private String fullNameWithLoginName;
+
 	private String roles;
 
 	public String getPassword() {
@@ -57,6 +59,22 @@ public class UserPojo {
 		this.roles = roles;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getFullNameWithLoginName() {
+		return fullNameWithLoginName;
+	}
+
+	public void setFullNameWithLoginName(String fullNameWithLoginName) {
+		this.fullNameWithLoginName = fullNameWithLoginName;
+	}
+
 	public static UserPojo from(User user) {
 		UserPojo pojo = new UserPojo();
 		pojo.setId(user.getUserName());
@@ -75,15 +93,9 @@ public class UserPojo {
 			roles = roles.substring(0, roles.length() - 1);
 		}
 		pojo.setRoles(roles);
+		String fullNameWithLoginName = user.getFirstName() + " " + user.getLastName() + " (" + user.getUserName() + ")";
+		pojo.setFullNameWithLoginName(fullNameWithLoginName);
 		return pojo;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 }

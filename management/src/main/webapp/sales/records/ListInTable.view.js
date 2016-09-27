@@ -141,9 +141,15 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var tableColumns = [];
         var tableCells = [];
         oController.columNames.forEach(function(name) {
+            var columnVisible = true;
+            if (name === "manager" || name === "salesPerson") {
+                // Each sales person do not need see mamager and salesPerson columns
+                columnVisible = "{permissionModel>/user/delete}";
+            }
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
+                visible: columnVisible,
                 header: new sap.m.Button({
                     text: "{i18n>" + name + "}",
                     press: function(e) {
@@ -169,7 +175,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 }).addStyleClass("input-in-table-cell"));
             } else {
                 tableCells.push(new sap.m.Text({
-                    text: "{" + name + "}"
+                    text: "{" + name + "}",
                 }));
             }
         });

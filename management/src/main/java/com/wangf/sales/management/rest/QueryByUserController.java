@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangf.sales.management.auth.ResourcePermission;
+import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
+import com.wangf.sales.management.rest.pojo.UserPojo;
 import com.wangf.sales.management.service.UserService;
 import com.wangf.sales.management.utils.SecurityUtils;
 
@@ -46,10 +49,17 @@ public class QueryByUserController {
 		return ids;
 	}
 
-	@RequestMapping(path = "/getCurrentUserName", method = RequestMethod.GET)
-	public String getCurrentUserName() {
-		String userName = userService.getCurrentReadableUserName();
-		return userName;
+	@RequestMapping(path = "/getCurrentUser", method = RequestMethod.GET)
+	public UserPojo getCurrentUserName() {
+		User user = userService.getCurrentUser();
+		UserPojo pojo = UserPojo.from(user);
+		return pojo;
+	}
+
+	@RequestMapping(path = "/getResourcePermissionForCurrentUser", method = RequestMethod.GET)
+	public ResourcePermission getResourcePermissionForCurrentUser() {
+		ResourcePermission permission = userService.getResourcePermissionForCurrentUser();
+		return permission;
 	}
 
 }

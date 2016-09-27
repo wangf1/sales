@@ -18,19 +18,23 @@ sap.ui.jsview("sales.main", (function() {
                     key: "salesRecords"
                 }), new sap.m.IconTabFilter(this.createId("tb_province"), {
                     text: "{i18n>province}",
-                    key: "province"
+                    key: "province",
+                    visible: "{permissionModel>/province/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_hospital"), {
                     text: "{i18n>hospital}",
                     key: "hospital"
                 }), new sap.m.IconTabFilter(this.createId("tb_department"), {
                     text: "{i18n>department}",
-                    key: "department"
+                    key: "department",
+                    visible: "{permissionModel>/departmentName/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_product"), {
                     text: "{i18n>product}",
-                    key: "product"
+                    key: "product",
+                    visible: "{permissionModel>/product/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_user"), {
                     text: "{i18n>user}",
-                    key: "user"
+                    key: "user",
+                    visible: "{permissionModel>/user/update}"
                 })
             ]
         });

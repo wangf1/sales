@@ -123,7 +123,7 @@ public class BasicDataController {
 
 	@RequestMapping(path = "/listAllUsers", method = RequestMethod.GET)
 	public Iterable<UserPojo> listAllUsers() {
-		Iterable<UserPojo> users = userService.listAllUsers();
+		Iterable<UserPojo> users = userService.listAllUsersByCurrentUserRole();
 		return users;
 	}
 

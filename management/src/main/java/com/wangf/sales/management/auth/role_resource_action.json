@@ -20,7 +20,7 @@
             "department": {"create":true,"delete":true,"read":true,"update":true},
             "departmentName": {"create":false,"delete":false,"read":true,"update":false},
             "product": {"create":false,"delete":false,"read":true,"update":false},
-            "user": {"create":false,"delete":false,"read":false,"update":false}
+            "user": {"create":false,"delete":false,"read":false,"update":true}
         }
     }
 ]

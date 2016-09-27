@@ -65,8 +65,17 @@ public class UserService {
 	}
 
 	public List<HospitalPojo> listHospitalsForUser(String userName) {
-		User user = userRepository.findOne(userName);
-		List<Hospital> hospitals = user.getHospitals();
+		List<Hospital> hospitals;
+		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+			Iterable<Hospital> all = hospitalRepository.findAll();
+			hospitals = new ArrayList<>();
+			for (Hospital hospital : all) {
+				hospitals.add(hospital);
+			}
+		} else {
+			User user = userRepository.findOne(userName);
+			hospitals = user.getHospitals();
+		}
 		List<HospitalPojo> pojos = new ArrayList<>();
 		for (Hospital hospital : hospitals) {
 			HospitalPojo pojo = HospitalPojo.from(hospital);
@@ -95,8 +104,21 @@ public class UserService {
 		}
 	}
 
-	public List<UserPojo> listAllUsers() {
-		Iterable<User> users = userRepository.findAll();
+	/**
+	 * For Admin, list all users, for User, only list himself.
+	 * 
+	 * @return
+	 */
+	public List<UserPojo> listAllUsersByCurrentUserRole() {
+		Iterable<User> users;
+		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+			users = userRepository.findAll();
+		} else {
+			List<User> userList = new ArrayList<>();
+			User user = getCurrentUser();
+			userList.add(user);
+			users = userList;
+		}
 		List<UserPojo> pojos = new ArrayList<>();
 		for (User user : users) {
 			pojos.add(UserPojo.from(user));

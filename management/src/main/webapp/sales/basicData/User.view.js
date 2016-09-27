@@ -28,13 +28,15 @@ sap.ui.jsview("sales.basicData.User", (function() {
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
+            visible: "{permissionModel>/user/create}",
             icon: "sap-icon://add",
             press: function(e) {
                 oController.onAdd(e);
-            }
+            },
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
+            visible: "{permissionModel>/user/delete}",
             icon: "sap-icon://delete",
             enabled: "{= ${/selectedRecords}.length>0 }",
             press: function() {
@@ -43,6 +45,7 @@ sap.ui.jsview("sales.basicData.User", (function() {
         }));
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>save}",
+            visible: "{permissionModel>/user/update}",
             icon: "sap-icon://save",
             enabled: "{= ${/inlineChangedRecords}.length>0 || ${/newAddedRecords}.length>0}",
             press: function() {
@@ -79,9 +82,14 @@ sap.ui.jsview("sales.basicData.User", (function() {
                     ]
                 })
             }));
-
+            var cellEnabled = true;
+            if (columName === "userName" || columName === "roles") {
+                // Each sales person do not need see mamager and salesPerson columns
+                var cellEnabled = "{permissionModel>/user/create}";
+            }
             if (columName === "roles") {
                 tableCells.push(new sap.m.ComboBox({
+                    enabled: cellEnabled,
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
@@ -98,6 +106,7 @@ sap.ui.jsview("sales.basicData.User", (function() {
                 }));
             } else {
                 tableCells.push(new sap.m.Input({
+                    enabled: cellEnabled,
                     value: "{" + columName + "}",
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);

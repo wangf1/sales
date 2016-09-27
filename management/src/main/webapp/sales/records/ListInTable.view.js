@@ -175,7 +175,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 }).addStyleClass("input-in-table-cell"));
             } else {
                 tableCells.push(new sap.m.Text({
-                    text: "{" + name + "}",
+                    text: "{" + name + "}"
                 }));
             }
         });

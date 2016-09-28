@@ -3,6 +3,8 @@ package com.wangf.sales.management.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class HospitalService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@PersistenceContext
+	private EntityManager em;
+
 	public HospitalPojo insertOrUpdateForUser(HospitalPojo pojo, String currentUser) {
 		/*
 		 * Firstly find by ID, if not exist, find by property. The purpose of
@@ -42,6 +47,9 @@ public class HospitalService {
 		if (entity == null) {
 			entity = new Hospital();
 		}
+
+		HospitalLevel origionalLevel = entity.getLevel();
+
 		entity.setName(pojo.getName());
 		HospitalLevel level = hospitalLevelService.findOrCreate(pojo.getLevel());
 		entity.setLevel(level);
@@ -52,6 +60,14 @@ public class HospitalService {
 			entity.getUsers().add(user);
 		}
 		hospitalRepository.save(entity);
+		// Must flush otherwise delete origionalLevel will fail
+		em.flush();
+
+		if (origionalLevel != null) {
+			// Must explicitly remove
+			origionalLevel.getHospitals().remove(entity);
+			hospitalLevelService.deleteIfNoChildHospital(origionalLevel);
+		}
 
 		HospitalPojo savedPojo = HospitalPojo.from(entity);
 		return savedPojo;
@@ -76,9 +92,11 @@ public class HospitalService {
 	public void deleteByIds(List<Long> ids) {
 		for (Long id : ids) {
 			Hospital hospital = hospitalRepository.findOne(id);
-			hospital.setLevel(null);
-			hospital.setProvince(null);
-			hospitalRepository.delete(hospital);
+			HospitalLevel level = hospital.getLevel();
+
+			hospitalRepository.deleteById(id);
+
+			hospitalLevelService.deleteIfNoChildHospital(level);
 		}
 	}
 

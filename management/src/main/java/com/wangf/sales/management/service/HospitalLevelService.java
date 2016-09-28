@@ -24,4 +24,18 @@ public class HospitalLevelService {
 		hospitalLevelRepository.save(entity);
 		return entity;
 	}
+
+	public void deleteIfNoChildHospital(String name) {
+		HospitalLevel entity = hospitalLevelRepository.findByName(name);
+		deleteIfNoChildHospital(entity);
+	}
+
+	public void deleteIfNoChildHospital(HospitalLevel hospitalLevel) {
+		if (hospitalLevel == null) {
+			return;
+		}
+		if (hospitalLevel.getHospitals().isEmpty()) {
+			hospitalLevelRepository.deleteById(hospitalLevel.getId());
+		}
+	}
 }

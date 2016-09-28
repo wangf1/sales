@@ -1,5 +1,8 @@
 package com.wangf.sales.management.test.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -19,6 +22,18 @@ public class HospitalRepositoryTests extends TestBase {
 	public void findsHospitalByName() {
 		Hospital result = this.repository.findByName("长征");
 		System.out.println(result);
+	}
+
+	@Test
+	public void deleteByIds() throws Exception {
+		Hospital hospital = repository.findOne(1L);
+		System.out.println(hospital);
+		List<Long> ids = new ArrayList<>();
+		ids.add(1L);
+		repository.deleteByIds(ids);
+
+		Hospital shouldDeleted = repository.findOne(1L);
+		System.out.println(shouldDeleted);
 	}
 
 }

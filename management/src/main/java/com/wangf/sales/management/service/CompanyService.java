@@ -24,4 +24,13 @@ public class CompanyService {
 		companyRepository.save(company);
 		return company;
 	}
+
+	public void deleteIfNoChildProduct(Company company) {
+		if (company == null) {
+			return;
+		}
+		if (company.getProducts().isEmpty()) {
+			companyRepository.deleteById(company.getId());
+		}
+	}
 }

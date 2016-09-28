@@ -18,6 +18,7 @@ public class HospitalLevalRepositoryTests extends TestBase {
 	@Test
 	public void findsHospitalByName() {
 		HospitalLevel result = this.repository.findByName("三甲");
+		System.out.println(result.getHospitals().size());
 		System.out.println(result);
 	}
 

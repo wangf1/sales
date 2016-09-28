@@ -35,6 +35,9 @@ public class UserService {
 	@Autowired
 	private AuthorityServcie authorityServcie;
 
+	@Autowired
+	private HospitalService hospitalService;
+
 	@PersistenceContext
 	private EntityManager em;
 
@@ -96,11 +99,16 @@ public class UserService {
 	 * @param ids
 	 */
 	public void deleteUserHospitalRelationship(List<Long> hostpitalIds) {
-		for (Long id : hostpitalIds) {
-			Hospital hospital = hospitalRepository.findOne(id);
-			User user = getCurrentUser();
-			user.getHospitals().remove(hospital);
-			userRepository.save(user);
+		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+			// For Admin, really delete the hospitals
+			hospitalService.deleteByIds(hostpitalIds);
+		} else {
+			for (Long id : hostpitalIds) {
+				Hospital hospital = hospitalRepository.findOne(id);
+				User user = getCurrentUser();
+				user.getHospitals().remove(hospital);
+				userRepository.save(user);
+			}
 		}
 	}
 

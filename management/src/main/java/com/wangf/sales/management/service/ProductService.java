@@ -3,12 +3,13 @@ package com.wangf.sales.management.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wangf.sales.management.dao.CompanyRepository;
 import com.wangf.sales.management.dao.ProductRepository;
 import com.wangf.sales.management.entity.Company;
 import com.wangf.sales.management.entity.Product;
@@ -21,8 +22,9 @@ public class ProductService {
 	private ProductRepository productRepository;
 	@Autowired
 	private CompanyService companyService;
-	@Autowired
-	private CompanyRepository companyRepository;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public List<ProductPojo> listAllProductNames() {
 		Iterable<Product> products = productRepository.findAll();
@@ -48,10 +50,21 @@ public class ProductService {
 		if (product == null) {
 			product = new Product();
 		}
+
+		Company origionalCompany = product.getCompany();
+
 		product.setName(pojo.getName());
 		Company company = companyService.findOrCreateByName(pojo.getCompany());
 		product.setCompany(company);
 		productRepository.save(product);
+		// Must flush otherwise delete origionalCompany will fail
+		em.flush();
+
+		if (origionalCompany != null) {
+			// Must explicitly remove
+			origionalCompany.getProducts().remove(product);
+			companyService.deleteIfNoChildProduct(origionalCompany);
+		}
 
 		ProductPojo savedPojo = ProductPojo.from(product);
 		return savedPojo;
@@ -68,14 +81,12 @@ public class ProductService {
 
 	public void deleteByIds(List<Long> ids) {
 		for (Long id : ids) {
-			Product toDelete = productRepository.findOne(id);
-			Company company = toDelete.getCompany();
-			toDelete.setCompany(null);
-			productRepository.delete(toDelete);
-			if (company.getProducts().isEmpty()) {
-				// Delete company that have no product
-				companyRepository.delete(company);
-			}
+			Product hospital = productRepository.findOne(id);
+			Company company = hospital.getCompany();
+
+			productRepository.deleteById(id);
+
+			companyService.deleteIfNoChildProduct(company);
 		}
 	}
 }

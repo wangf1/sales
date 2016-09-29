@@ -60,7 +60,7 @@ public class ProductService {
 		// Must flush otherwise delete origionalCompany will fail
 		em.flush();
 
-		if (origionalCompany != null) {
+		if (origionalCompany != null && origionalCompany.getId() != company.getId()) {
 			// Must explicitly remove
 			origionalCompany.getProducts().remove(product);
 			companyService.deleteIfNoChildProduct(origionalCompany);

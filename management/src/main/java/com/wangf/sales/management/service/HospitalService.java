@@ -63,7 +63,7 @@ public class HospitalService {
 		// Must flush otherwise delete origionalLevel will fail
 		em.flush();
 
-		if (origionalLevel != null) {
+		if (origionalLevel != null && origionalLevel.getId() != level.getId()) {
 			// Must explicitly remove
 			origionalLevel.getHospitals().remove(entity);
 			hospitalLevelService.deleteIfNoChildHospital(origionalLevel);

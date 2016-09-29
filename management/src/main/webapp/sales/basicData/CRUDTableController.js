@@ -15,20 +15,21 @@ sap.ui.define([
 
     var oViewModel = new JSONModel(viewModelData);
 
-    function setTableModel(thisController) {
+    function setTableModel() {
         // must clear table selection status
-        var table = thisController.byId("theTable");
+        var table = this.byId("theTable");
         table.removeSelections();
 
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: thisController.urlForListAll,
+            url: this.urlForListAll,
             dataType: "json",
             contentType: "application/json"
         });
-        promise.then(function(result) {
+        var promiseAfterSetTableModel = promise.then(function(result) {
             oViewModel.setProperty("/tableData", result.data);
         });
+        return promiseAfterSetTableModel;
     }
 
     function init() {
@@ -189,7 +190,7 @@ sap.ui.define([
     }
 
     function onRefresh() {
-        setTableModel(this);
+        this.setTableModel();
         oViewModel.refresh();
     }
 
@@ -240,7 +241,8 @@ sap.ui.define([
         onRefresh: onRefresh,
         onTableSelectionChange: onTableSelectionChange,
         sortTable: sortTable,
-        afterShow: afterShow
+        afterShow: afterShow,
+        setTableModel: setTableModel
     });
     return controller;
 });

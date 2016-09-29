@@ -13,14 +13,15 @@ sap.ui.define([
             dataType: "json",
             contentType: "application/json"
         });
-        promise.then(function(result) {
-            CRUDTableController.prototype.oViewModel.setProperty("/provinces", result.data);
+        var promiseAfterGetAllProvinces = promise.then(function(result) {
+            oViewModel.setProperty("/allProvinces", result.data);
         });
+        return promiseAfterGetAllProvinces;
     }
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
-        newAdded["province"] = oViewModel.getProperty("/provinces")[0].name;
+        newAdded["province"] = oViewModel.getProperty("/filteredProvinces")[0].name;
         newAdded["level"] = oViewModel.getProperty("/levels")[0].name;
         return newAdded;
     }
@@ -37,26 +38,74 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            CRUDTableController.prototype.oViewModel.setProperty("/levels", result.data);
+            oViewModel.setProperty("/levels", result.data);
+        });
+    }
+
+    function refreshAvailableRegions() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getRegionsByCurrentUser",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            oViewModel.setProperty("/regions", result.data);
+        });
+    }
+
+    function setTableModel() {
+        var promiseAfterSetTableModel = CRUDTableController.prototype.setTableModel.call(this);
+        promiseAfterSetTableModel.then(function() {
+            var hospitals = oViewModel.getProperty("/tableData");
+            hospitals.forEach(function(hospital) {
+                hospital["filteredProvinces"] = filterProvinceByRegion(hospital);
+            });
+            // Must refresh model for each hospital, otherwise UI will not update
+            oViewModel.refresh();
         });
     }
 
     function onRefresh() {
-        CRUDTableController.prototype.onRefresh.call(this);
-        refreshAvailableProvinces();
+        var that = this;
+        var promiseAfterGetAllProvinces = refreshAvailableProvinces();
+        promiseAfterGetAllProvinces.then(function() {
+            CRUDTableController.prototype.onRefresh.call(that);
+        });
+
+        refreshAvailableRegions();
         refreshAvailableLevels();
+    }
+
+    function filterProvinceByRegion(hospital) {
+        var region = hospital.region;
+        var filteredProvinces = [];
+        oViewModel.getProperty("/allProvinces").forEach(function(province) {
+            if (province.region === region) {
+                filteredProvinces.push(province);
+            }
+        });
+        return filteredProvinces;
+    }
+
+    function onRegionChanged(e) {
+        var hospital = e.getSource().getBindingContext().getObject()
+        hospital["filteredProvinces"] = filterProvinceByRegion(hospital);
+        CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
     var controller = CRUDTableController.extend("sales.basicData.Hospital", {
         columnNames: [
-            "name", "level", "province"
+            "name", "level", "region", "province"
         ],
         urlForListAll: "getHospitalsByCurrentUser",
         urlForSaveAll: "saveHospitals",
         urlForDeleteAll: "deleteUserHospitalRelationship",
         onInit: init,
         onAdd: onAdd,
-        onRefresh: onRefresh
+        onRefresh: onRefresh,
+        onRegionChanged: onRegionChanged,
+        setTableModel: setTableModel
     });
     return controller;
 });

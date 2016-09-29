@@ -102,13 +102,28 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                     },
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/provinces",
+                        path: "filteredProvinces",
                         template: new sap.ui.core.Item({
                             key: "{name}",
                             text: "{name}"
                         }),
                         templateShareable: true
                     }
+                }));
+            } else if (columName === "region") {
+                tableCells.push(new sap.m.Select(oController.createId("selectRegion"), {
+                    selectedKey: "{" + columName + "}",
+                    change: function(e) {
+                        oController.onRegionChanged(e);
+                    },
+                    items: {
+                        path: "/regions",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    },
                 }));
             } else {
                 tableCells.push(new sap.m.Input({

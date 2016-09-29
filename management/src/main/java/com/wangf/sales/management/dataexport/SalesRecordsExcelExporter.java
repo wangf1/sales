@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 
 import org.jxls.common.Context;
@@ -21,8 +20,8 @@ public class SalesRecordsExcelExporter {
 	@Autowired
 	private SalesRecordsService salesRecordsService;
 
-	public byte[] export(Date start, Date end) throws FileNotFoundException, IOException {
-		List<SalesRecordPojo> records = getSalesRecordsByDate(start, end);
+	public byte[] export(SalesRecordSearchCriteria searchCriteria) throws FileNotFoundException, IOException {
+		List<SalesRecordPojo> records = salesRecordsService.searchAgainstMultipleValues(searchCriteria);
 		try (InputStream template = getClass().getResourceAsStream("/sales_records_template.xlsx")) {
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 				Context context = new Context();
@@ -32,14 +31,6 @@ public class SalesRecordsExcelExporter {
 				return result;
 			}
 		}
-	}
-
-	private List<SalesRecordPojo> getSalesRecordsByDate(Date start, Date end) {
-		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
-		criteria.setStartAt(start);
-		criteria.setEndAt(end);
-		List<SalesRecordPojo> records = salesRecordsService.searchAgainstMultipleValues(criteria);
-		return records;
 	}
 
 }

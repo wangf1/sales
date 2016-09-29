@@ -1,16 +1,29 @@
 package com.wangf.sales.management.rest;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.net.MediaType;
 import com.wangf.sales.management.auth.ResourcePermission;
 import com.wangf.sales.management.dao.CompanyRepository;
 import com.wangf.sales.management.dao.HospitalLevelRepository;
+import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
+import com.wangf.sales.management.dataexport.SalesRecordsExcelExporter;
 import com.wangf.sales.management.entity.Company;
 import com.wangf.sales.management.entity.HospitalLevel;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
@@ -38,6 +51,8 @@ public class BasicDataController {
 	private HospitalService hospitalService;
 	@Autowired
 	private HospitalLevelRepository hospitalLevelRepository;
+	@Autowired
+	private SalesRecordsExcelExporter salesRecordsExcelExporter;
 
 	@Autowired
 	private UserService userService;
@@ -47,6 +62,8 @@ public class BasicDataController {
 
 	@Autowired
 	private AuthorityServcie authorityServcie;
+
+	private Map<String, byte[]> excelFileCache = new HashMap<>();
 
 	@RequestMapping(path = "/listAllDepartments", method = RequestMethod.GET)
 	public List<DepartmentNamePojo> listAllDepartments() {
@@ -149,5 +166,25 @@ public class BasicDataController {
 	public ResourcePermission getRoleResourcePermissionMapping() {
 		ResourcePermission result = userService.getResourcePermissionForCurrentUser();
 		return result;
+	}
+
+	@RequestMapping(value = "/exportSalesRecords", method = RequestMethod.POST)
+	public String getFileDownloadUrl(SalesRecordSearchCriteria searchCriteria, HttpServletResponse response)
+			throws FileNotFoundException, IOException {
+		byte[] bytes = salesRecordsExcelExporter.export(searchCriteria);
+		String key = searchCriteria.toString();
+		String downloadUrl = "exportSalesRecords/" + key;
+		excelFileCache.put(key, bytes);
+		return downloadUrl;
+	}
+
+	@RequestMapping(value = "/exportSalesRecords/{url}", method = RequestMethod.GET)
+	public void getFile(@PathVariable("url") String url, HttpServletResponse response)
+			throws FileNotFoundException, IOException {
+		byte[] bytes = excelFileCache.remove(url);
+		InputStream in = new ByteArrayInputStream(bytes);
+		IOUtils.copy(in, response.getOutputStream());
+		response.setContentType(MediaType.OOXML_SHEET.toString());
+		response.flushBuffer();
 	}
 }

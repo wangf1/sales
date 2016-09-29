@@ -131,6 +131,14 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 oController.onSaveAllSalesRecords();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            text: "{i18n>export}",
+            icon: "sap-icon://action",
+            enabled: "{= ${/salesRecords}.length>0 }",
+            press: function() {
+                oController.onExportSalesRecords();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent

@@ -121,7 +121,21 @@ sap.ui.define([
         }
     }
 
-    function doAdvanceSearchSalesRecord(hospitals, installDepartments, orderDepartments, products) {
+    function buildSearchCriteria(thisController) {
+        var selectedHospitals = thisController.byId("filterHospital").getSelectedKeys();
+        var selectedInstallDepartments = thisController.byId("filterInstallDepartment").getSelectedKeys();
+        var selectedOrderDepartments = thisController.byId("filterOrderDepartment").getSelectedKeys();
+        var selectedProducts = thisController.byId("filterProduct").getSelectedKeys();
+
+        var productNames = ObjectUtils.getAllOwnPropertyAsArray(selectedProducts);
+        var hospitalNames = ObjectUtils.getAllOwnPropertyAsArray(selectedHospitals);
+        var locationDepartmentNames = ObjectUtils.getAllOwnPropertyAsArray(selectedInstallDepartments);
+        var orderDepartNames = ObjectUtils.getAllOwnPropertyAsArray(selectedOrderDepartments);
+
+        // Increase the endAt by 1 day, in order to search the newest record of user choosen endAt date
+        var endAtDate = new Date(viewModelData.endAt);
+        endAtDate.setDate(endAtDate.getDate() + 1);
+        var endAt = DateTimeUtils.yyyyMMdd(endAtDate);
         /*
         searchCriteriaFormatExample:
         {
@@ -141,16 +155,6 @@ sap.ui.define([
             "endAt": "2016-09-17"
         }
         */
-        var productNames = ObjectUtils.getAllOwnPropertyAsArray(products);
-        var hospitalNames = ObjectUtils.getAllOwnPropertyAsArray(hospitals);
-        var locationDepartmentNames = ObjectUtils.getAllOwnPropertyAsArray(installDepartments);
-        var orderDepartNames = ObjectUtils.getAllOwnPropertyAsArray(orderDepartments);
-
-        // Increase the endAt by 1 day, in order to search the newest record of user choosen endAt date
-        var endAtDate = new Date(viewModelData.endAt);
-        endAtDate.setDate(endAtDate.getDate() + 1);
-        var endAt = DateTimeUtils.yyyyMMdd(endAtDate);
-
         var searchCriteria = {
             "productNames": productNames,
             "hospitalNames": hospitalNames,
@@ -159,6 +163,11 @@ sap.ui.define([
             "startAt": viewModelData.startAt,
             "endAt": endAt
         };
+        return searchCriteria;
+    }
+
+    function onAdvanceSearchSalesRecord() {
+        var searchCriteria = buildSearchCriteria(this);
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "salesRecordsAdvanceSearch",
@@ -169,16 +178,6 @@ sap.ui.define([
         promise.then(function(result) {
             oViewModel.setProperty("/salesRecords", result.data);
         });
-    }
-
-    function onAdvanceSearchSalesRecord() {
-// var selectedRegins = this.byId("filterRegion").getSelectedKeys();
-// var selectedProvinces = this.byId("filterProvince").getSelectedKeys();
-        var selectedHospitals = this.byId("filterHospital").getSelectedKeys();
-        var selectedInstallDepartments = this.byId("filterInstallDepartment").getSelectedKeys();
-        var selectedOrderDepartments = this.byId("filterOrderDepartment").getSelectedKeys();
-        var selectedProducts = this.byId("filterProduct").getSelectedKeys();
-        doAdvanceSearchSalesRecord(selectedHospitals, selectedInstallDepartments, selectedOrderDepartments, selectedProducts);
     }
 
     function removeSalesRecordFrom(salesRecords, savedRecordId) {
@@ -356,7 +355,7 @@ sap.ui.define([
             record
         ];
         viewModelData.inlineChangedRecords.forEach(function(item) {
-            allChangedRecords.push(item)
+            allChangedRecords.push(item);
         });
         viewModelData.inlineChangedRecords = allChangedRecords;
         oViewModel.refresh();
@@ -380,7 +379,7 @@ sap.ui.define([
 
     function sortTable(e) {
         var table = this.byId("recordsTable");
-        var binding = table.getBinding('items');
+        var binding = table.getBinding("items");
         var columnName = e.getSource().getCustomData()[0].getValue();
         var customDataDescending = e.getSource().getCustomData()[1];
         var oldDescendingValue = customDataDescending.getValue();
@@ -390,6 +389,29 @@ sap.ui.define([
         binding.sort([
             nameSorter
         ]);
+    }
+
+    function onExportSalesRecords() {
+        var searchCriteria = buildSearchCriteria(this);
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "exportSalesRecords",
+            data: JSON.stringify(searchCriteria),
+            dataType: "text",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("src", result.data);
+            iframe.setAttribute("style", "display: none");
+            document.body.appendChild(iframe);
+        });
+// $.post("exportSalesRecords", JSON.stringify(searchCriteria), function(retData) {
+// var iframe = document.createElement("iframe");
+// iframe.setAttribute("src", retData.data);
+// iframe.setAttribute("style", "display: none");
+// document.body.appendChild(iframe);
+// });
     }
 
     var controller = Controller.extend("sales.records.ListInTable", {
@@ -403,7 +425,8 @@ sap.ui.define([
         onResetSearchCondition: onResetSearchCondition,
         onQuantityLiveChange: onQuantityLiveChange,
         onSaveAllSalesRecords: onSaveAllSalesRecords,
-        sortTable: sortTable
+        sortTable: sortTable,
+        onExportSalesRecords: onExportSalesRecords
     });
     return controller;
 });

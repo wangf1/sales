@@ -69,7 +69,7 @@ public class UserService {
 
 	public List<HospitalPojo> listHospitalsForUser(String userName) {
 		List<Hospital> hospitals;
-		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+		if (SecurityUtils.isCurrentUserAdmin()) {
 			Iterable<Hospital> all = hospitalRepository.findAll();
 			hospitals = new ArrayList<>();
 			for (Hospital hospital : all) {
@@ -99,7 +99,7 @@ public class UserService {
 	 * @param ids
 	 */
 	public void deleteUserHospitalRelationship(List<Long> hostpitalIds) {
-		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+		if (SecurityUtils.isCurrentUserAdmin()) {
 			// For Admin, really delete the hospitals
 			hospitalService.deleteByIds(hostpitalIds);
 		} else {
@@ -119,7 +119,7 @@ public class UserService {
 	 */
 	public List<UserPojo> listAllUsersByCurrentUserRole() {
 		Iterable<User> users;
-		if (SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN)) {
+		if (SecurityUtils.isCurrentUserAdmin()) {
 			users = userRepository.findAll();
 		} else {
 			List<User> userList = new ArrayList<>();

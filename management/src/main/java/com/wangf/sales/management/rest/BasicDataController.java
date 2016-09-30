@@ -29,11 +29,13 @@ import com.wangf.sales.management.entity.HospitalLevel;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 import com.wangf.sales.management.rest.pojo.ProductPojo;
+import com.wangf.sales.management.rest.pojo.ProductPricePojo;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
 import com.wangf.sales.management.rest.pojo.UserPojo;
 import com.wangf.sales.management.service.AuthorityServcie;
 import com.wangf.sales.management.service.DepartmentService;
 import com.wangf.sales.management.service.HospitalService;
+import com.wangf.sales.management.service.ProductPriceService;
 import com.wangf.sales.management.service.ProductService;
 import com.wangf.sales.management.service.ProvinceService;
 import com.wangf.sales.management.service.UserService;
@@ -62,6 +64,8 @@ public class BasicDataController {
 
 	@Autowired
 	private AuthorityServcie authorityServcie;
+	@Autowired
+	private ProductPriceService priceService;
 
 	private Map<String, byte[]> excelFileCache = new HashMap<>();
 
@@ -187,4 +191,23 @@ public class BasicDataController {
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.flushBuffer();
 	}
+
+	@RequestMapping(path = "/listProductPricesByCurrentUser", method = RequestMethod.GET)
+	public Iterable<ProductPricePojo> listProductPricesByCurrentUser() {
+		Iterable<ProductPricePojo> pojos = priceService.listProductPricesByCurrentUser();
+		return pojos;
+	}
+
+	@RequestMapping(path = "/saveProductPrices", method = RequestMethod.POST)
+	public List<ProductPricePojo> saveProductPrices(@RequestBody List<ProductPricePojo> pojos) {
+		List<ProductPricePojo> saved = priceService.insertOrUpdate(pojos);
+		return saved;
+	}
+
+	@RequestMapping(path = "/deleteProductPrices", method = RequestMethod.POST)
+	public List<Long> deleteProductPrices(@RequestBody List<Long> ids) {
+		priceService.deleteByIds(ids);
+		return ids;
+	}
+
 }

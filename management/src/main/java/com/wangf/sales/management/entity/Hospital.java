@@ -41,6 +41,7 @@ public class Hospital {
 
 	@JsonIgnore
 	@OneToMany
+	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<ProductPrice> prices;
 
 	/**

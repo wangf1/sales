@@ -31,6 +31,10 @@ sap.ui.jsview("sales.main", (function() {
                     text: "{i18n>product}",
                     key: "product",
                     visible: "{permissionModel>/product/update}"
+                }), new sap.m.IconTabFilter(this.createId("tb_product_price"), {
+                    text: "{i18n>productPrice}",
+                    key: "productPrice",
+                    visible: "{permissionModel>/productPrice/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_user"), {
                     text: "{i18n>user}",
                     key: "user",

@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.google.common.base.MoreObjects;
@@ -18,15 +17,13 @@ public class ProductPrice {
 	private long id;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private Product product;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private Hospital hospital;
 
 	@Column
-	private int price;
+	private double price;
 
 	public long getId() {
 		return id;
@@ -52,11 +49,11 @@ public class ProductPrice {
 		this.hospital = hospital;
 	}
 
-	public int getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 

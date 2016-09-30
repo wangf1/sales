@@ -34,6 +34,7 @@ public class Product {
 
 	@JsonIgnore
 	@OneToMany
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private List<ProductPrice> prices;
 
 	public long getId() {

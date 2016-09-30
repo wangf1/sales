@@ -8,7 +8,8 @@
             "department": {"create":true,"delete":true,"read":true,"update":true},
             "departmentName": {"create":true,"delete":true,"read":true,"update":true},
             "product": {"create":true,"delete":true,"read":true,"update":true},
-            "user": {"create":true,"delete":true,"read":true,"update":true}
+            "user": {"create":true,"delete":true,"read":true,"update":true},
+            "productPrice": {"create":true,"delete":true,"read":true,"update":true}
         }
     },
     {
@@ -20,7 +21,8 @@
             "department": {"create":true,"delete":true,"read":true,"update":true},
             "departmentName": {"create":false,"delete":false,"read":true,"update":false},
             "product": {"create":false,"delete":false,"read":true,"update":false},
-            "user": {"create":false,"delete":false,"read":false,"update":true}
+            "user": {"create":false,"delete":false,"read":false,"update":true},
+            "productPrice": {"create":true,"delete":true,"read":true,"update":true}
         }
     }
 ]

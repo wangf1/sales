@@ -14,7 +14,7 @@ public class SecurityUtils {
 	public static final String ROLE_ADMIN = "Admin";
 	public static final String ROLE_USER = "User";
 
-	public static UserDetails getCurrentUserDetails() {
+	private static UserDetails getCurrentUserDetails() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		UserDetails principal = (UserDetails) securityContext.getAuthentication().getPrincipal();
 		return principal;
@@ -35,5 +35,10 @@ public class SecurityUtils {
 			roles.add(role);
 		}
 		return roles;
+	}
+
+	public static boolean isCurrentUserAdmin() {
+		boolean isAdmin = SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN);
+		return isAdmin;
 	}
 }

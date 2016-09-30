@@ -62,6 +62,7 @@ sap.ui.jsview("sales.basicData.User", (function() {
     function createTable(oController) {
         var tableCells = [];
         var tableColumns = [];
+        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
         oController.columnNames.forEach(function(columName) {
             tableColumns.push(new sap.m.Column({
                 width: "30%",
@@ -83,7 +84,7 @@ sap.ui.jsview("sales.basicData.User", (function() {
                 })
             }));
             var cellEnabled = true;
-            if (columName === "userName" || columName === "roles") {
+            if (columName === "userName" || columName === "roles" || columName === "manager") {
                 // Each sales person do not need see mamager and salesPerson columns
                 var cellEnabled = "{permissionModel>/user/create}";
             }
@@ -100,6 +101,24 @@ sap.ui.jsview("sales.basicData.User", (function() {
                         template: new sap.ui.core.Item({
                             key: "{}",
                             text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else if (columName === "manager" && isAdminRole) {
+                // only for Admin role, then the manager column is a select, for user role, the manager column only display manager userName
+                tableCells.push(new sap.m.Select({
+                    enabled: cellEnabled,
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/tableData",
+                        template: new sap.ui.core.Item({
+                            key: "{userName}",
+                            text: "{userName}"
                         }),
                         templateShareable: true
                     }

@@ -44,11 +44,7 @@ public class SalesRecordsController {
 
 	@RequestMapping(path = "/getSalesRecordsByCurrentUser", method = RequestMethod.GET)
 	public List<SalesRecordPojo> getSalesRecords() {
-		List<User> users = userRepository.findByUserName(SecurityUtils.getCurrentUserName());
-		if (users.isEmpty()) {
-			return null;
-		}
-		User currentUser = users.get(0);
+		User currentUser = userRepository.findByUserName(SecurityUtils.getCurrentUserName());
 		List<SalesRecord> records = currentUser.getSalesRecords();
 		List<SalesRecordPojo> result = new ArrayList<>();
 		for (SalesRecord record : records) {

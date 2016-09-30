@@ -19,6 +19,8 @@ public class UserPojo {
 
 	private String roles;
 
+	private String manager;
+
 	public String getPassword() {
 		return password;
 	}
@@ -75,6 +77,14 @@ public class UserPojo {
 		this.fullNameWithLoginName = fullNameWithLoginName;
 	}
 
+	public String getManager() {
+		return manager;
+	}
+
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
+
 	public static UserPojo from(User user) {
 		UserPojo pojo = new UserPojo();
 		pojo.setId(user.getUserName());
@@ -82,6 +92,10 @@ public class UserPojo {
 		pojo.setFirstName(user.getFirstName());
 		pojo.setLastName(user.getLastName());
 		pojo.setPassword(user.getPassword());
+		// If no manager, then assume him/her self is the manager
+		User manager = user.getManager();
+		String managerName = manager != null ? manager.getUserName() : user.getUserName();
+		pojo.setManager(managerName);
 		List<Authority> authorities = user.getAuthorities();
 		String roles = "";
 		if (authorities != null) {

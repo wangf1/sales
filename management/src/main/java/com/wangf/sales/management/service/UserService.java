@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -143,6 +144,13 @@ public class UserService {
 		toSave.setFirstName(pojo.getFirstName());
 		toSave.setLastName(pojo.getLastName());
 		toSave.setPassword(pojo.getPassword());
+		String managerName = pojo.getManager();
+		if (!StringUtils.equals(pojo.getUserName(), managerName)) {
+			User manager = userRepository.findByUserName(managerName);
+			toSave.setManager(manager);
+		} else {
+			toSave.setManager(null);
+		}
 		userRepository.save(toSave);
 		em.flush();
 		// em.detach(toSave);

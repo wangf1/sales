@@ -4,6 +4,8 @@ sap.ui.define([
 ], function(CRUDTableController, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox) {
     "use strict";
 
+    var oViewModel = CRUDTableController.prototype.oViewModel;
+
     function refreshAllRoles() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
@@ -12,7 +14,7 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            CRUDTableController.prototype.oViewModel.setProperty("/allRoles", result.data);
+            oViewModel.setProperty("/allRoles", result.data);
         });
     }
 
@@ -21,16 +23,29 @@ sap.ui.define([
         CRUDTableController.prototype.onRefresh.call(this);
     }
 
-    var oViewModel = CRUDTableController.prototype.oViewModel;
+    function onAdd() {
+        var newAdded = CRUDTableController.prototype.onAdd.call(this);
+        var users = oViewModel.getProperty("/tableData");
+        var manager;
+        for (var i = 0; i < users.length; i++) {
+            var user = users[i];
+            if (user.userName !== "") {
+                manager = user.userName;
+            }
+        }
+        newAdded["manager"] = manager;
+        return newAdded;
+    }
 
     var controller = CRUDTableController.extend("sales.basicData.User", {
         columnNames: [
-            "userName", "password", "firstName", "lastName", "roles"
+            "userName", "password", "firstName", "lastName", "roles", "manager"
         ],
         urlForListAll: "listAllUsers",
         urlForSaveAll: "saveUsers",
         urlForDeleteAll: "deleteUsers",
-        onRefresh: onRefresh
+        onRefresh: onRefresh,
+        onAdd: onAdd
     });
     return controller;
 });

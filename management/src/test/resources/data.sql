@@ -1,3 +1,4 @@
+delete from Product_Price
 delete from USER_HOSPITAL
 delete from sales_record
 delete from product_install_location
@@ -37,6 +38,8 @@ insert into Department(id, DEPARTMENT_NAME_ID, Hospital_id) values (3, 1, 2)
 insert into Company(id, name) values(1, 'Thermo')
 
 insert into Product(id, name, company_id) values(1, 'PCT-Q', 1)
+
+insert into Product_Price(id, product_id, hospital_id, price) values(1, 1, 1, 100)
 
 insert into Users(username, password, enabled, first_name, last_name) values('wangf', 'password', 1, 'Wang', 'Feng')
 insert into Users(username, password, enabled, first_name, last_name, MANAGER) values('Stella', 'password', 1, 'Ding', 'Stella', 'wangf')

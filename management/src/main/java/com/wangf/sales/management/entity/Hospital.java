@@ -39,6 +39,10 @@ public class Hospital {
 	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<Department> departments;
 
+	@JsonIgnore
+	@OneToMany
+	private List<ProductPrice> prices;
+
 	/**
 	 * Hospitals managed by who
 	 */
@@ -99,6 +103,14 @@ public class Hospital {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	public List<ProductPrice> getPrices() {
+		return prices;
+	}
+
+	public void setPrices(List<ProductPrice> prices) {
+		this.prices = prices;
 	}
 
 	@Override

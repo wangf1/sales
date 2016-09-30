@@ -32,6 +32,10 @@ public class Product {
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private List<ProductInstallLocation> installLocations;
 
+	@JsonIgnore
+	@OneToMany
+	private List<ProductPrice> prices;
+
 	public long getId() {
 		return id;
 	}
@@ -62,6 +66,14 @@ public class Product {
 
 	public void setInstallLocations(List<ProductInstallLocation> installLocations) {
 		this.installLocations = installLocations;
+	}
+
+	public List<ProductPrice> getPrices() {
+		return prices;
+	}
+
+	public void setPrices(List<ProductPrice> prices) {
+		this.prices = prices;
 	}
 
 	@Override

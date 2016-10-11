@@ -7,7 +7,7 @@ sap.ui.define([
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
     var columNames = [
-        "region", "province", "manager", "salesPerson", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment", "quantity", "date"
+        "region", "province", "manager", "salesPerson", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment", "quantity", "price", "date"
     ];
 
     var viewModelData = {

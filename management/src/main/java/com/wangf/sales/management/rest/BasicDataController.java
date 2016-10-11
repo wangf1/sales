@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
 import com.wangf.sales.management.auth.ResourcePermission;
 import com.wangf.sales.management.dao.CompanyRepository;
@@ -173,8 +174,8 @@ public class BasicDataController {
 	}
 
 	@RequestMapping(value = "/exportSalesRecords", method = RequestMethod.POST)
-	public String getFileDownloadUrl(SalesRecordSearchCriteria searchCriteria, HttpServletResponse response)
-			throws FileNotFoundException, IOException {
+	public String getFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
+			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = salesRecordsExcelExporter.export(searchCriteria);
 		String key = searchCriteria.toString();
 		String downloadUrl = "exportSalesRecords/" + key;
@@ -189,6 +190,7 @@ public class BasicDataController {
 		InputStream in = new ByteArrayInputStream(bytes);
 		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"SalesRecords.xlsx\"");
 		response.flushBuffer();
 	}
 

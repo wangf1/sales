@@ -1,9 +1,11 @@
 package com.wangf.sales.management.rest.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Transient;
 
+import com.wangf.sales.management.entity.ProductPrice;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 
@@ -19,6 +21,7 @@ public class SalesRecordPojo {
 	private String orderDepartment;
 	private int quantity;
 	private String hospitalLevel;
+	private double price;
 
 	@Transient
 	private boolean alreadyExisting;
@@ -129,6 +132,14 @@ public class SalesRecordPojo {
 		this.alreadyExisting = alreadyExisting;
 	}
 
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
 	@Override
 	public String toString() {
 		return "SalesRecordPojo [id=" + id + ", region=" + region + ", province=" + province + ", manager=" + manager
@@ -156,8 +167,23 @@ public class SalesRecordPojo {
 		pojo.setQuantity(record.getQuantity());
 		pojo.setDate(record.getDate());
 		pojo.setHospitalLevel(record.getInstallLocation().getDepartment().getHospital().getLevel().getName());
+		pojo.setPrice(getProductPrice(record));
 
 		return pojo;
+	}
+
+	private static double getProductPrice(SalesRecord record) {
+		List<ProductPrice> prices = record.getInstallLocation().getDepartment().getHospital().getPrices();
+		if (prices == null) {
+			return 0;
+		}
+		String productName = record.getInstallLocation().getProduct().getName();
+		for (ProductPrice price : prices) {
+			if (productName.equals(price.getProduct().getName())) {
+				return price.getPrice();
+			}
+		}
+		return 0;
 	}
 
 }

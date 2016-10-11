@@ -135,6 +135,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/salesRecords}.length>0 }",
+            visible: "{permissionModel>/user/delete}",
             press: function() {
                 oController.onExportSalesRecords();
             }
@@ -150,8 +151,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var tableCells = [];
         oController.columNames.forEach(function(name) {
             var columnVisible = true;
-            if (name === "manager" || name === "salesPerson") {
-                // Each sales person do not need see mamager and salesPerson columns
+            if (name === "manager" || name === "salesPerson" || name === "price") {
+                // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/user/delete}";
             }
             tableColumns.push(new sap.m.Column({

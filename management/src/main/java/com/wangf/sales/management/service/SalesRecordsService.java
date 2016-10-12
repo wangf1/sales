@@ -16,6 +16,8 @@ import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
+import com.wangf.sales.management.utils.DateUtils;
+import com.wangf.sales.management.utils.SecurityUtils;
 
 @Service
 @Transactional
@@ -75,8 +77,8 @@ public class SalesRecordsService {
 		 */
 		SalesRecord record = salesRecordRepository.findOne(pojo.getId());
 		if (record == null) {
-			record = salesRecordRepository.searchByLocationOrderDepartPersonMonth(installLocation.getId(),
-					orderDepartment.getId(), salesPerson.getUserName(), new Date());
+			record = salesRecordRepository.searchByLocationOrderDepartPersonInCurrentMonth(installLocation.getId(),
+					orderDepartment.getId(), salesPerson.getUserName());
 		}
 		boolean alreadyExisting = true;
 		if (record == null) {
@@ -120,5 +122,32 @@ public class SalesRecordsService {
 		for (Long id : salesRecordIds) {
 			salesRecordRepository.delete(id);
 		}
+	}
+
+	public void cloneLastMonthData() {
+		List<SalesRecord> salesRecordsOfLastMonth = getSalesRrecordOfLastMonthForCurrentUser();
+		for (SalesRecord record : salesRecordsOfLastMonth) {
+			SalesRecordPojo pojo = SalesRecordPojo.from(record);
+			// Set id = 0 in order to perform insert if not exist
+			pojo.setId(0);
+			insertOrUpdate(pojo);
+		}
+	}
+
+	private List<SalesRecord> getSalesRrecordOfLastMonthForCurrentUser() {
+		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
+		Date startAt = DateUtils.getFirstDayOfLastMonth();
+		criteria.setStartAt(startAt);
+		Date endAt = DateUtils.getFirstDayOfCurrentMonth();
+		criteria.setEndAt(endAt);
+		criteria.setIncludeEndAt(false);
+
+		String salesPersonName = SecurityUtils.getCurrentUserName();
+		List<String> salesPerson = new ArrayList<>();
+		salesPerson.add(salesPersonName);
+		criteria.setSalesPersonNames(salesPerson);
+
+		List<SalesRecord> salesRecordsOfLastMonth = salesRecordRepository.searchAgainstMultipleValues(criteria);
+		return salesRecordsOfLastMonth;
 	}
 }

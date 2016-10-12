@@ -406,12 +406,17 @@ sap.ui.define([
             iframe.setAttribute("style", "display: none");
             document.body.appendChild(iframe);
         });
-// $.post("exportSalesRecords", JSON.stringify(searchCriteria), function(retData) {
-// var iframe = document.createElement("iframe");
-// iframe.setAttribute("src", retData.data);
-// iframe.setAttribute("style", "display: none");
-// document.body.appendChild(iframe);
-// });
+    }
+
+    function cloneLastMonthData() {
+        var that = this;
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "cloneLastMonthSalesRecords",
+        });
+        promise.then(function(result) {
+            that.onAdvanceSearchSalesRecord();
+        });
     }
 
     var controller = Controller.extend("sales.records.ListInTable", {
@@ -426,7 +431,8 @@ sap.ui.define([
         onQuantityLiveChange: onQuantityLiveChange,
         onSaveAllSalesRecords: onSaveAllSalesRecords,
         sortTable: sortTable,
-        onExportSalesRecords: onExportSalesRecords
+        onExportSalesRecords: onExportSalesRecords,
+        cloneLastMonthData: cloneLastMonthData
     });
     return controller;
 });

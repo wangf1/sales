@@ -11,6 +11,8 @@ public class SalesRecordSearchCriteria {
 	private List<String> orderDepartNames;
 	private Date startAt;
 	private Date endAt;
+	private boolean includeStartAt = true;
+	private boolean includeEndAt = true;
 
 	public List<String> getProductNames() {
 		return productNames;
@@ -66,6 +68,22 @@ public class SalesRecordSearchCriteria {
 
 	public void setEndAt(Date endAt) {
 		this.endAt = endAt;
+	}
+
+	public boolean isIncludeStartAt() {
+		return includeStartAt;
+	}
+
+	public void setIncludeStartAt(boolean includeStartAt) {
+		this.includeStartAt = includeStartAt;
+	}
+
+	public boolean isIncludeEndAt() {
+		return includeEndAt;
+	}
+
+	public void setIncludeEndAt(boolean includeEndAt) {
+		this.includeEndAt = includeEndAt;
 	}
 
 	@Override

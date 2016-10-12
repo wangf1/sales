@@ -92,10 +92,12 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 			queryString = queryString + " and record.orderDepartment.name.name in :orderDeparts ";
 		}
 		if (criteria.getStartAt() != null) {
-			queryString = queryString + " and record.date >= :startAt ";
+			String compareOperater = criteria.isIncludeStartAt() ? ">=" : ">";
+			queryString = queryString + " and record.date " + compareOperater + " :startAt ";
 		}
 		if (criteria.getEndAt() != null) {
-			queryString = queryString + " and record.date <= :endAt ";
+			String compareOperater = criteria.isIncludeEndAt() ? "<=" : "<";
+			queryString = queryString + " and record.date " + compareOperater + " :endAt ";
 		}
 
 		TypedQuery<SalesRecord> query = em.createQuery(queryString, SalesRecord.class);
@@ -133,8 +135,8 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 	}
 
 	@Override
-	public SalesRecord searchByLocationOrderDepartPersonMonth(long locationId, long orderDepartId, String userName,
-			Date month) {
+	public SalesRecord searchByLocationOrderDepartPersonInCurrentMonth(long locationId, long orderDepartId,
+			String userName) {
 		Date startDate = DateUtils.getFirstDayOfCurrentMonth();
 		Date endDate = DateUtils.getFirstDayOfNextMonth();
 
@@ -142,7 +144,7 @@ public class SalesRecordRepositoryImpl implements SalesRecordCustomQuery {
 				+ " join record.orderDepartment orderDep " + " join record.salesPerson person "
 				+ " where location.id = :locationId " + " and orderDep.id = :orderDepartId "
 				+ " and record.salesPerson.userName = :userName "
-				+ " and record.date  BETWEEN :startDate AND :endDate ";
+				+ " and record.date  >= :startDate AND record.date < :endDate ";
 
 		TypedQuery<SalesRecord> query = em.createQuery(queryString, SalesRecord.class);
 		query.setParameter("locationId", locationId);

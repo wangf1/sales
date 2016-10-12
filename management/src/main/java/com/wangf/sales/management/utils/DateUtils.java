@@ -26,4 +26,12 @@ public class DateUtils {
 		Date result = firstDayOfNextMonth.getTime();
 		return result;
 	}
+
+	public static Date getFirstDayOfLastMonth() {
+		Calendar firstDayOfLastMonth = Calendar.getInstance();
+		firstDayOfLastMonth.add(Calendar.MONTH, -1);
+		setToFirstDayOfMonth(firstDayOfLastMonth);
+		Date result = firstDayOfLastMonth.getTime();
+		return result;
+	}
 }

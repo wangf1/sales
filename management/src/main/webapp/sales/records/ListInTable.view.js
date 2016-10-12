@@ -140,6 +140,14 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 oController.onExportSalesRecords();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            text: "{i18n>cloneLastMonthData}",
+            tooltip: "{i18n>cloneLastMonthData_tooltip}",
+            icon: "sap-icon://copy",
+            press: function() {
+                oController.cloneLastMonthData();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent

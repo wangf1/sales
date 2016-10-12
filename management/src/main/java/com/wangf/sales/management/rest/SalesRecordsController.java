@@ -2,7 +2,6 @@ package com.wangf.sales.management.rest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -83,21 +82,6 @@ public class SalesRecordsController {
 		return records;
 	}
 
-	@RequestMapping(path = "/test", method = RequestMethod.GET)
-	public SalesRecordSearchCriteria test() {
-
-		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
-		criteria.setProductNames(Arrays.asList(new String[] { "PCT-Q" }));
-		criteria.setSalesPersonNames(Arrays.asList(new String[] { "wangf" }));
-		criteria.setHospitalNames(Arrays.asList(new String[] { "长征", "长海" }));
-		criteria.setLocationDepartmentNames(Arrays.asList(new String[] { "ICU" }));
-		criteria.setOrderDepartNames(Arrays.asList(new String[] { "ICU" }));
-		criteria.setStartAt(new Date());
-		criteria.setEndAt(new Date());
-		criteria.setEndAt(new Date());
-		return criteria;
-	}
-
 	/**
 	 * POST http://localhost:8090/management/salesRecordsAdvanceSearch<br>
 	 * Content-Type = application/json<br>
@@ -174,4 +158,8 @@ public class SalesRecordsController {
 		return salesRecordIds;
 	}
 
+	@RequestMapping(path = "/cloneLastMonthSalesRecords", method = RequestMethod.POST)
+	public void cloneLastMonthSalesRecords() {
+		salesRecordsService.cloneLastMonthData();
+	}
 }

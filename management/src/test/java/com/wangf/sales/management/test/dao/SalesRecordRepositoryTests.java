@@ -121,8 +121,8 @@ public class SalesRecordRepositoryTests extends TestBase {
 
 	@Test
 	public void searchByLocationOrderDepartPersonMonth() throws Exception {
-		SalesRecord isNull = repository.searchByLocationOrderDepartPersonMonth(1, 1, "wangf1", new Date());
-		SalesRecord record = repository.searchByLocationOrderDepartPersonMonth(1, 1, "wangf", new Date());
+		SalesRecord isNull = repository.searchByLocationOrderDepartPersonInCurrentMonth(1, 1, "wangf1");
+		SalesRecord record = repository.searchByLocationOrderDepartPersonInCurrentMonth(1, 1, "wangf");
 		System.out.println(isNull);
 		System.out.println(record);
 	}

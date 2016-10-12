@@ -15,6 +15,5 @@ public interface SalesRecordCustomQuery {
 
 	EntityManager getEntityManager();
 
-	SalesRecord searchByLocationOrderDepartPersonMonth(long locationId, long orderDepartId, String userName,
-			Date month);
+	SalesRecord searchByLocationOrderDepartPersonInCurrentMonth(long locationId, long orderDepartId, String userName);
 }

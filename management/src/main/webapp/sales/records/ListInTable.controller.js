@@ -20,6 +20,8 @@ sap.ui.define([
         departments: [],
         products: [],
         startAt: DateTimeUtils.firstDayOfCurrentMonth(),
+        firstDayOfCurrentMonth: DateTimeUtils.firstDayOfCurrentMonth(),
+        isSelectedSalesRecordEditable: false,
         endAt: DateTimeUtils.today(),
         selectedRecords: [],
         inlineChangedRecords: []
@@ -318,6 +320,19 @@ sap.ui.define([
             selectedRecords.push(row.getObject());
         });
         viewModelData.selectedRecords = selectedRecords;
+
+        viewModelData.isSelectedSalesRecordEditable = true;
+        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
+        if (!isAdminRole) {
+            // Admin user can edit any record!
+            selectedRecords.forEach(function(record) {
+                var isInCurrentMonth = Date.parse(record.date) >= Date.parse(viewModelData.firstDayOfCurrentMonth);
+                if (!isInCurrentMonth) {
+                    viewModelData.isSelectedSalesRecordEditable = false;
+                }
+            });
+        }
+
         oViewModel.refresh();
     }
 

@@ -104,7 +104,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>edit}",
             icon: "sap-icon://edit",
-            enabled: "{= ${/selectedRecords}.length===1 }",
+            enabled: "{= ${/selectedRecords}.length===1 && ${/isSelectedSalesRecordEditable} }",
             customData: [
                 new sap.ui.core.CustomData({
                     key: "action",
@@ -118,7 +118,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
-            enabled: "{= ${/selectedRecords}.length>0 }",
+            enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedSalesRecordEditable} }",
             press: function() {
                 oController.onDeleteSalesRecord();
             }
@@ -186,6 +186,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             if (name === "quantity") {
                 tableCells.push(new sap.m.Input({
                     value: "{" + name + "}",
+                    // Admin user can edit any record!
+                    editable: "{= Date.parse(${date}) >= Date.parse(${/firstDayOfCurrentMonth}) || ${permissionModel>/user/delete} }",
                     liveChange: function(e) {
                         oController.onQuantityLiveChange(e);
                     }

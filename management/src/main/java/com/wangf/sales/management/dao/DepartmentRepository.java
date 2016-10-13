@@ -1,5 +1,8 @@
 package com.wangf.sales.management.dao;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,4 +18,11 @@ public interface DepartmentRepository extends PagingAndSortingRepository<Departm
 	@Query(query_findByDepartmentNameHospitalName)
 	Department findByDepartmentNameHospitalName(@Param("department") String departName,
 			@Param("hospital") String hospitalName);
+
+	String jpql_deleteByIds = "delete from Department d where d.id in :ids";
+
+	@Modifying
+	@Query(jpql_deleteByIds)
+	void deleteByIds(@Param("ids") List<Long> ids);
+
 }

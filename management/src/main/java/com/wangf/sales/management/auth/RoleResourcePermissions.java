@@ -17,7 +17,7 @@ public class RoleResourcePermissions {
 		}
 		Gson gson = new Gson();
 		Reader reader = new InputStreamReader(
-				RoleResourcePermissions.class.getResourceAsStream("role_resource_action.json"));
+				RoleResourcePermissions.class.getResourceAsStream("/role_resource_action.json"));
 		roleResourcePermissionMappings = gson.fromJson(reader, new TypeToken<List<RoleResourcePermissionMapping>>() {
 			private static final long serialVersionUID = 1L;
 		}.getType());

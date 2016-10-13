@@ -10,12 +10,20 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangf.sales.management.dao.DepartmentRepository;
 import com.wangf.sales.management.dao.HospitalRepository;
+import com.wangf.sales.management.dao.ProductInstallLocationRepository;
+import com.wangf.sales.management.dao.ProductPriceRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
+import com.wangf.sales.management.dao.SalesRecordRepository;
 import com.wangf.sales.management.dao.UserRepository;
+import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.HospitalLevel;
+import com.wangf.sales.management.entity.ProductInstallLocation;
+import com.wangf.sales.management.entity.ProductPrice;
 import com.wangf.sales.management.entity.Province;
+import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 
@@ -30,6 +38,18 @@ public class HospitalService {
 	private ProvinceRepository provinceRepository;
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private DepartmentRepository departmentRepository;
+
+	@Autowired
+	private ProductInstallLocationRepository installLocationRepository;
+
+	@Autowired
+	private SalesRecordRepository salesRecordRepository;
+
+	@Autowired
+	private ProductPriceRepository priceRepository;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -100,4 +120,47 @@ public class HospitalService {
 		}
 	}
 
+	public void deleteHospitalAndAllRelatedData(List<Long> hospitalIds) {
+		for (Long id : hospitalIds) {
+			deleteHospitalAndAllRelatedData(id);
+		}
+	}
+
+	private void deleteHospitalAndAllRelatedData(Long hospitalId) {
+		Hospital hospital = hospitalRepository.findOne(hospitalId);
+		List<Department> departments = hospital.getDepartments();
+		List<Long> depIds = new ArrayList<>();
+		if (departments != null) {
+			for (Department dep : departments) {
+				List<Long> locationIds = new ArrayList<>();
+				List<ProductInstallLocation> installLocations = dep.getInstallLocations();
+				for (ProductInstallLocation location : installLocations) {
+					List<SalesRecord> salesRecords = location.getSalesRecords();
+					List<Long> recordIds = new ArrayList<>();
+					for (SalesRecord record : salesRecords) {
+						recordIds.add(record.getId());
+					}
+					salesRecordRepository.deleteByIds(recordIds);
+					locationIds.add(location.getId());
+				}
+				installLocationRepository.deleteByIds(locationIds);
+				depIds.add(dep.getId());
+			}
+		}
+
+		List<ProductPrice> prices = hospital.getPrices();
+		if (prices != null) {
+			List<Long> priceIds = new ArrayList<>();
+
+			for (ProductPrice price : prices) {
+				priceIds.add(price.getId());
+			}
+			priceRepository.deleteByIds(priceIds);
+		}
+
+		departmentRepository.deleteByIds(depIds);
+		List<Long> ids = new ArrayList<>();
+		ids.add(hospitalId);
+		deleteByIds(ids);
+	}
 }

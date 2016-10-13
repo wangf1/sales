@@ -27,7 +27,7 @@ public class HospitalServiceTests extends TestBase {
 		System.out.println(hospital.getName());
 		List<Long> ids = new ArrayList<>();
 		ids.add(1L);
-		service.deleteByIds(ids);
+		service.deleteHospitalAndAllRelatedData(ids);
 		Hospital shouldNotexist = hospitalRepository.findOne(1L);
 		System.out.println(shouldNotexist);
 	}

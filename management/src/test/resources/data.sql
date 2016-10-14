@@ -12,6 +12,26 @@ delete from Company;
 delete from AUTHORITIES;
 delete from users;
 
+CREATE OR REPLACE VIEW sales_record_view
+    AS 
+select province.region, province.name as province, manager.username as manager, sr.sales_person, 
+	h.name as hospital, level.name as level, product.name as product, installDepartName.name as install_department,
+	orderDepartName.name as order_department, sr.quantity, price.price, sr.date
+from sales_record sr 
+inner join product_install_location location on sr.install_location_id=location.id 
+inner join department installDepart on location.department_id=installDepart.id 
+inner join department_name installDepartName on installDepart.department_name_id=installDepartName.id
+inner join hospital h on installDepart.hospital_id=h.id
+inner join hospital_level level on h.level_id=level.id
+inner join province on h.province_id=province.id
+inner join department orderDepart on sr.order_department_id=orderDepart.id 
+inner join department_name orderDepartName on orderDepart.department_name_id=orderDepartName.id
+inner join users salesPerson on sr.sales_person=salesPerson.username
+left join users manager on salesPerson.manager=manager.username
+inner join product on location.product_id=product.id
+left join product_price price on price.hospital_id=h.id and price.product_id=product.id;
+
+
 
 insert into Province (id, name, region) values (1, '上海', '华东');
 insert into Province (id, name, region) values (2, '浙江', '华东');

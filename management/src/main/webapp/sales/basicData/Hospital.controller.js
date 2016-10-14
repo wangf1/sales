@@ -21,8 +21,10 @@ sap.ui.define([
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
-        newAdded["province"] = oViewModel.getProperty("/filteredProvinces")[0].name;
+        newAdded["region"] = oViewModel.getProperty("/regions")[0];
+        newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
         newAdded["level"] = oViewModel.getProperty("/levels")[0].name;
+        oViewModel.refresh();
         return newAdded;
     }
 
@@ -59,7 +61,7 @@ sap.ui.define([
         promiseAfterSetTableModel.then(function() {
             var hospitals = oViewModel.getProperty("/tableData");
             hospitals.forEach(function(hospital) {
-                hospital["filteredProvinces"] = filterProvinceByRegion(hospital);
+                hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
             });
             // Must refresh model for each hospital, otherwise UI will not update
             oViewModel.refresh();
@@ -77,8 +79,7 @@ sap.ui.define([
         refreshAvailableLevels();
     }
 
-    function filterProvinceByRegion(hospital) {
-        var region = hospital.region;
+    function filterProvinceByRegion(region) {
         var filteredProvinces = [];
         oViewModel.getProperty("/allProvinces").forEach(function(province) {
             if (province.region === region) {
@@ -90,7 +91,7 @@ sap.ui.define([
 
     function onRegionChanged(e) {
         var hospital = e.getSource().getBindingContext().getObject()
-        hospital["filteredProvinces"] = filterProvinceByRegion(hospital);
+        hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 

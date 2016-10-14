@@ -77,7 +77,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
         toolbarContent.push(new sap.m.Title({
-            text: "{i18n>salesRecords}"
+            text: "{i18n>salesRecords}",
+            tooltip: "{i18n>salesRecords}"
         }));
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",

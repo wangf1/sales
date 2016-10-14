@@ -89,6 +89,14 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         }));
         toolbarContent.push(new sap.m.ToolbarSpacer());
         toolbarContent.push(new sap.m.Button({
+            text: "{i18n>refresh}",
+            icon: "sap-icon://refresh",
+            tooltip: "{i18n>refresh_sales_record_tooltip}",
+            press: function(e) {
+                oController.onAdvanceSearchSalesRecord();
+            }
+        }));
+        toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
             icon: "sap-icon://add",
             customData: [

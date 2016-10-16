@@ -1,8 +1,12 @@
 package com.wangf.sales.management.service;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -85,6 +89,14 @@ public class UserService {
 			HospitalPojo pojo = HospitalPojo.from(hospital);
 			pojos.add(pojo);
 		}
+
+		Comparator<HospitalPojo> compareByName = (HospitalPojo a, HospitalPojo b) -> {
+			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+			int result = chineseCollator.compare(a.getName(), b.getName());
+			return result;
+		};
+
+		Collections.sort(pojos, compareByName);
 		return pojos;
 	}
 

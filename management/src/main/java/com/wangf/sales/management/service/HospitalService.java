@@ -54,7 +54,7 @@ public class HospitalService {
 	@PersistenceContext
 	private EntityManager em;
 
-	public HospitalPojo insertOrUpdateForUser(HospitalPojo pojo, String currentUser) {
+	private HospitalPojo insertOrUpdateHospital(HospitalPojo pojo) {
 		/*
 		 * Firstly find by ID, if not exist, find by property. The purpose of
 		 * search two times is: 1). Search by ID to avoid treat update case as
@@ -75,10 +75,7 @@ public class HospitalService {
 		entity.setLevel(level);
 		Province province = provinceRepository.findByName(pojo.getProvince());
 		entity.setProvince(province);
-		User user = userRepository.findOne(currentUser);
-		if (!entity.getUsers().contains(user)) {
-			entity.getUsers().add(user);
-		}
+
 		hospitalRepository.save(entity);
 		// Must flush otherwise delete origionalLevel will fail
 		em.flush();
@@ -91,6 +88,26 @@ public class HospitalService {
 
 		HospitalPojo savedPojo = HospitalPojo.from(entity);
 		return savedPojo;
+	}
+
+	private void assignHospitalToUser(long hospitalId, String currentUser) {
+		// Not sure why for new created hospital entity, must remove it from
+		// entity manager and reload it into entity manager, then add user can
+		// persist into database, otherwise Hibernate will not execute "insert
+		// into user_hospital (hospital_id, username) values (?, ?)"
+		em.clear();
+		Hospital entity = hospitalRepository.findOne(hospitalId);
+		User user = userRepository.findOne(currentUser);
+		if (entity.getUsers().contains(user)) {
+			return;
+		}
+		entity.getUsers().add(user);
+		hospitalRepository.save(entity);
+	}
+
+	private void insertOrUpdateForUser(HospitalPojo pojo, String currentUser) {
+		HospitalPojo savedPojo = insertOrUpdateHospital(pojo);
+		assignHospitalToUser(savedPojo.getId(), currentUser);
 	}
 
 	public List<Long> insertOrUpdateForUser(List<HospitalPojo> pojos, String currentUser) {

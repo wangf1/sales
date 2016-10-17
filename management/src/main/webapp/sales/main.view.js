@@ -39,6 +39,10 @@ sap.ui.jsview("sales.main", (function() {
                     text: "{i18n>user}",
                     key: "user",
                     visible: "{permissionModel>/user/update}"
+                }), new sap.m.IconTabFilter(this.createId("tb_analysis"), {
+                    text: "{i18n>analysis}",
+                    key: "analysis",
+                    visible: "{permissionModel>/user/create}"
                 })
             ]
         });

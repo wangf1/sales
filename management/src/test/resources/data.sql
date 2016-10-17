@@ -14,8 +14,8 @@ delete from users;
 
 CREATE OR REPLACE VIEW sales_record_view
     AS 
-select province.region, province.name as province, manager.username as manager, sr.sales_person, 
-	h.name as hospital, level.name as level, product.name as product, installDepartName.name as install_department,
+select sr.id, province.region, province.name as province, manager.username as manager, sr.sales_person, 
+	h.name as hospital, level.name as hospital_level, product.name as product, installDepartName.name as install_department,
 	orderDepartName.name as order_department, sr.quantity, price.price, sr.date
 from sales_record sr 
 inner join product_install_location location on sr.install_location_id=location.id 

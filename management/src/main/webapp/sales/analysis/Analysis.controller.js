@@ -4,44 +4,13 @@ sap.ui.define([
 ], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils) {
     "use strict";
 
-    var viewModelData = {
-        currentUser: {}
-    };
-
-    var oViewModel = new JSONModel(viewModelData);
-
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
-    function getCurrentUserName() {
-        var promise = AjaxUtils.ajaxCallAsPromise({
-            method: "GET",
-            url: "getCurrentUser",
-        });
-        promise.then(function(result) {
-            viewModelData.currentUser = result.data;
-            oViewModel.refresh();
-        });
-    }
-
-    function getResourcePermissionForCurrentUser() {
-        var promise = AjaxUtils.ajaxCallAsPromise({
-            method: "GET",
-            url: "getResourcePermissionForCurrentUser",
-        });
-        promise.then(function(result) {
-            var permissionModel = new JSONModel(result.data);
-            sap.ui.getCore().setModel(permissionModel, "permissionModel");
-        });
-    }
-
     function init() {
-        getCurrentUserName();
-        getResourcePermissionForCurrentUser();
-        this.getView().setModel(oViewModel);
         // initial screen is the salesRecords page
         onTabSelect.bind(this, {
             getParameter: function(key) {
-                return "salesRecords";
+                return "newCustomer";
             }
         })();
     }
@@ -49,29 +18,11 @@ sap.ui.define([
     function createPageByTabKey(key, thisController) {
         var viewName;
         switch (key) {
-            case "salesRecords":
-                viewName = "sales.records.ListInTable"
+            case "newCustomer":
+                viewName = "sales.analysis.NewCustomer"
                 break;
-            case "province":
-                viewName = "sales.basicData.Province"
-                break;
-            case "hospital":
-                viewName = "sales.basicData.Hospital"
-                break;
-            case "department":
-                viewName = "sales.basicData.Department"
-                break;
-            case "product":
-                viewName = "sales.basicData.Product"
-                break;
-            case "user":
-                viewName = "sales.basicData.User"
-                break;
-            case "productPrice":
-                viewName = "sales.basicData.ProductPrice"
-                break;
-            case "analysis":
-                viewName = "sales.analysis.Analysis"
+            case "lostCustomer":
+                viewName = "sales.analysis.LostCustomer"
                 break;
             default:
                 break;
@@ -117,20 +68,9 @@ sap.ui.define([
         }
     }
 
-    function onLogout() {
-        var promise = AjaxUtils.ajaxCallAsPromise({
-            method: "POST",
-            url: "logout",
-        });
-        promise.then(function(result) {
-            window.location.href = "login";
-        });
-    }
-
-    var controller = Controller.extend("sales.main", {
+    var controller = Controller.extend("sales.analysis.Analysis", {
         onInit: init,
         onTabSelect: onTabSelect,
-        onLogout: onLogout
     });
     return controller;
 });

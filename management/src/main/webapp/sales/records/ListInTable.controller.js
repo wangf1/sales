@@ -353,7 +353,7 @@ sap.ui.define([
     function onQuantityLiveChange(e) {
         var record = e.getSource().getBindingContext().getObject();
         var quantity = e.getSource().getValue();
-        var quantityValid = ValidateUtils.validateIntegerGreaterThan0(quantity);
+        var quantityValid = ValidateUtils.validateIntegerGreaterOrEqualThan0(quantity);
         if (!quantityValid) {
             e.getSource().setValueState(sap.ui.core.ValueState.Error);
             e.getSource().setValueStateText(resBundle.getText("quantityRequired"));

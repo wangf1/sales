@@ -43,7 +43,7 @@ sap.ui.define([
             errorMessage = resBundle.getText("productRequired");
         }
         if (!errorMessage) {
-            var quantityValid = ValidateUtils.validateIntegerGreaterThan0(salesRecordData.quantity);
+            var quantityValid = ValidateUtils.validateIntegerGreaterOrEqualThan0(salesRecordData.quantity);
             if (!quantityValid) {
                 errorMessage = resBundle.getText("quantityRequired");
             }

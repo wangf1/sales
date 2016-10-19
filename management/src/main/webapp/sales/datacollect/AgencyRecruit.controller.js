@@ -6,8 +6,26 @@ sap.ui.define([
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
+    function initAccordingToViewUsage(thisController) {
+        var viewData = thisController.getView().getViewData();
+        if (viewData.usedForAgencyTraining) {
+            thisController.urlForListAll = "listAgencyTrainingsByCurrentUser";
+            thisController.urlForSaveAll = "saveAgencyTrainings";
+            thisController.urlForDeleteAll = "deleteAgencyTrainings";
+            thisController.urlForExport = "exportAgencyTrainings";
+
+        } else {
+            thisController.urlForListAll = "listAgencyRecruitsByCurrentUser";
+            thisController.urlForSaveAll = "saveAgencyRecruits";
+            thisController.urlForDeleteAll = "deleteAgencyRecruits";
+            thisController.urlForExport = "exportAgencyRecruits";
+        }
+    }
+
     function init() {
         CRUDTableController.prototype.onInit.call(this);
+
+        initAccordingToViewUsage(this);
 
         var startAt = DateTimeUtils.firstDayOfPreviousMonth();
         var endAt = DateTimeUtils.today();
@@ -40,7 +58,7 @@ sap.ui.define([
         var searchCriteria = buildSearchCriteria();
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: "listAgencyRecruitsByCurrentUser",
+            url: this.urlForListAll,
             data: JSON.stringify(searchCriteria),
             dataType: "json",
             contentType: "application/json"
@@ -163,6 +181,7 @@ sap.ui.define([
         var level = getLevelForAgency(agencyName);
         dataItem["level"] = level;
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
+        oViewModel.refresh();
     }
 
     function validateEachItemBeforeSave(object) {
@@ -187,7 +206,7 @@ sap.ui.define([
         var searchCriteria = buildSearchCriteria();
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
-            url: "exportAgencyRecruits",
+            url: this.urlForExport,
             data: JSON.stringify(searchCriteria),
             dataType: "text",
             contentType: "application/json"
@@ -205,8 +224,10 @@ sap.ui.define([
             "date", "region", "province", "salesPerson", "agency", "product", "level"
         ],
         onInit: init,
-        urlForSaveAll: "saveAgencyRecruits",
-        urlForDeleteAll: "deleteAgencyRecruits",
+        urlForListAll: "",
+        urlForSaveAll: "",
+        urlForDeleteAll: "",
+        urlForExport: "",
         onRefresh: onRefresh,
         onAdd: onAdd,
         setTableModel: setTableModel,

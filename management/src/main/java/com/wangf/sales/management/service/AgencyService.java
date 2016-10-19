@@ -11,15 +11,19 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.AgencyRecruitRepository;
 import com.wangf.sales.management.dao.AgencyRepository;
+import com.wangf.sales.management.dao.AgencyTrainingRepository;
 import com.wangf.sales.management.dao.ProductRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
 import com.wangf.sales.management.entity.Agency;
 import com.wangf.sales.management.entity.AgencyRecruit;
+import com.wangf.sales.management.entity.AgencyTraining;
 import com.wangf.sales.management.entity.Product;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
+import com.wangf.sales.management.rest.pojo.AgencyEventPojo;
 import com.wangf.sales.management.rest.pojo.AgencyPojo;
 import com.wangf.sales.management.rest.pojo.AgencyRecruitPojo;
+import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
 import com.wangf.sales.management.utils.SecurityUtils;
 
 @Service
@@ -36,6 +40,8 @@ public class AgencyService {
 	private ProductRepository productRepository;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AgencyTrainingRepository agencyTrainingRepository;
 
 	public List<AgencyRecruitPojo> listAgencyRecruitsByCurrentUser(Date startAt, Date endAt) {
 		List<AgencyRecruit> entities;
@@ -101,7 +107,7 @@ public class AgencyService {
 		return entity;
 	}
 
-	public AgencyRecruitPojo insertOrUpdateAgencyRecruit(AgencyRecruitPojo pojo) {
+	private AgencyRecruitPojo insertOrUpdateAgencyRecruit(AgencyRecruitPojo pojo) {
 		Agency agency = createAgencyIfNotExist(pojo);
 		AgencyRecruit entity = agencyRecruitRepository.findOne(pojo.getId());
 		if (entity == null) {
@@ -121,7 +127,7 @@ public class AgencyService {
 		return savedPojo;
 	}
 
-	private Agency createAgencyIfNotExist(AgencyRecruitPojo pojo) {
+	private Agency createAgencyIfNotExist(AgencyEventPojo pojo) {
 		AgencyPojo agencyPojo = new AgencyPojo();
 		agencyPojo.setLevel(pojo.getLevel());
 		agencyPojo.setName(pojo.getAgency());
@@ -142,6 +148,58 @@ public class AgencyService {
 	public List<Long> deleteAgencyRecruits(List<Long> ids) {
 		for (Long id : ids) {
 			agencyRecruitRepository.deleteById(id);
+		}
+		return ids;
+	}
+
+	public List<AgencyTrainingPojo> listAgencyTrainingsByCurrentUser(Date startAt, Date endAt) {
+		List<AgencyTraining> entities;
+		if (SecurityUtils.isCurrentUserAdmin()) {
+			entities = agencyTrainingRepository.findBetweenDate(startAt, endAt);
+		} else {
+			User currentUser = userService.getCurrentUser();
+			entities = agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, currentUser);
+		}
+		List<AgencyTrainingPojo> result = new ArrayList<>();
+		if (entities == null) {
+			return result;
+		}
+		for (AgencyTraining entity : entities) {
+			AgencyTrainingPojo pojo = AgencyTrainingPojo.from(entity);
+			result.add(pojo);
+		}
+		return result;
+	}
+
+	private AgencyTrainingPojo insertOrUpdateAgencyTraining(AgencyTrainingPojo pojo) {
+		Agency agency = createAgencyIfNotExist(pojo);
+		AgencyTraining entity = agencyTrainingRepository.findOne(pojo.getId());
+		if (entity == null) {
+			entity = new AgencyTraining();
+		}
+		entity.setAgency(agency);
+		Product product = productRepository.findByName(pojo.getProduct());
+		entity.setProduct(product);
+		User salesPerson = userService.getCurrentUser();
+		entity.setSalesPerson(salesPerson);
+
+		agencyTrainingRepository.save(entity);
+		AgencyTrainingPojo savedPojo = AgencyTrainingPojo.from(entity);
+		return savedPojo;
+	}
+
+	public List<AgencyTrainingPojo> insertOrUpdateAgencyTrainings(List<AgencyTrainingPojo> pojos) {
+		List<AgencyTrainingPojo> savedPojos = new ArrayList<>();
+		for (AgencyTrainingPojo pojo : pojos) {
+			AgencyTrainingPojo savedPojo = insertOrUpdateAgencyTraining(pojo);
+			savedPojos.add(savedPojo);
+		}
+		return pojos;
+	}
+
+	public List<Long> deleteAgencyTrainings(List<Long> ids) {
+		for (Long id : ids) {
+			agencyTrainingRepository.deleteById(id);
 		}
 		return ids;
 	}

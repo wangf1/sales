@@ -1,11 +1,11 @@
 package com.wangf.sales.management.rest.pojo;
 
-import com.wangf.sales.management.entity.AgencyRecruit;
+import com.wangf.sales.management.entity.AgencyTraining;
 
-public class AgencyRecruitPojo extends AgencyEventPojo {
+public class AgencyTrainingPojo extends AgencyEventPojo {
 
-	public static AgencyRecruitPojo from(AgencyRecruit entity) {
-		AgencyRecruitPojo pojo = new AgencyRecruitPojo();
+	public static AgencyTrainingPojo from(AgencyTraining entity) {
+		AgencyTrainingPojo pojo = new AgencyTrainingPojo();
 		pojo.setAgency(entity.getAgency().getName());
 		pojo.setDate(entity.getDate());
 		pojo.setId(entity.getId());
@@ -17,4 +17,5 @@ public class AgencyRecruitPojo extends AgencyEventPojo {
 
 		return pojo;
 	}
+
 }

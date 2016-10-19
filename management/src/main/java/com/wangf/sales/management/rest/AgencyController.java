@@ -24,6 +24,7 @@ import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dataexport.MiscDataExporter;
 import com.wangf.sales.management.rest.pojo.AgencyPojo;
 import com.wangf.sales.management.rest.pojo.AgencyRecruitPojo;
+import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
 import com.wangf.sales.management.service.AgencyService;
 import com.wangf.sales.management.service.UserService;
 
@@ -40,6 +41,7 @@ public class AgencyController {
 	private MiscDataExporter miscDataExporter;
 
 	private static Map<String, byte[]> AGENCY_RECRUITS_EXCEL_FILE_CACHE = new HashMap<>();
+	private static Map<String, byte[]> AGENCY_TRAININGS_EXCEL_FILE_CACHE = new HashMap<>();
 
 	@RequestMapping(path = "/listAgencyRecruitsByCurrentUser", method = RequestMethod.POST)
 	public List<AgencyRecruitPojo> listAgencyRecruitsByCurrentUser(@RequestBody SalesRecordSearchCriteria criteria) {
@@ -85,13 +87,53 @@ public class AgencyController {
 	}
 
 	@RequestMapping(value = "/exportAgencyRecruits/{url}", method = RequestMethod.GET)
-	public void getFile(@PathVariable("url") String url, HttpServletResponse response)
+	public void getAgencyRecruitsFile(@PathVariable("url") String url, HttpServletResponse response)
 			throws FileNotFoundException, IOException {
 		byte[] bytes = AGENCY_RECRUITS_EXCEL_FILE_CACHE.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
 		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AgencyRecruits.xlsx\"");
+		response.flushBuffer();
+	}
+
+	@RequestMapping(path = "/listAgencyTrainingsByCurrentUser", method = RequestMethod.POST)
+	public List<AgencyTrainingPojo> listAgencyTrainingsByCurrentUser(@RequestBody SalesRecordSearchCriteria criteria) {
+		List<AgencyTrainingPojo> pojos = agencyService.listAgencyTrainingsByCurrentUser(criteria.getStartAt(),
+				criteria.getEndAt());
+		return pojos;
+	}
+
+	@RequestMapping(path = "/saveAgencyTrainings", method = RequestMethod.POST)
+	public List<AgencyTrainingPojo> saveAgencyTrainings(@RequestBody List<AgencyTrainingPojo> pojos) {
+		List<AgencyTrainingPojo> savedPojos = agencyService.insertOrUpdateAgencyTrainings(pojos);
+		return savedPojos;
+	}
+
+	@RequestMapping(path = "/deleteAgencyTrainings", method = RequestMethod.POST)
+	public List<Long> deleteAgencyTrainings(@RequestBody List<Long> ids) {
+		List<Long> deletedPojos = agencyService.deleteAgencyTrainings(ids);
+		return deletedPojos;
+	}
+
+	@RequestMapping(value = "/exportAgencyTrainings", method = RequestMethod.POST)
+	public String getAgencyTrainingsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
+			HttpServletResponse response) throws FileNotFoundException, IOException {
+		byte[] bytes = miscDataExporter.exportAgencyTrainings(searchCriteria.getStartAt(), searchCriteria.getEndAt());
+		String key = searchCriteria.toString();
+		String downloadUrl = "exportAgencyTrainings/" + key;
+		AGENCY_TRAININGS_EXCEL_FILE_CACHE.put(key, bytes);
+		return downloadUrl;
+	}
+
+	@RequestMapping(value = "/exportAgencyTrainings/{url}", method = RequestMethod.GET)
+	public void getAgencyTrainingsFile(@PathVariable("url") String url, HttpServletResponse response)
+			throws FileNotFoundException, IOException {
+		byte[] bytes = AGENCY_TRAININGS_EXCEL_FILE_CACHE.remove(url);
+		InputStream in = new ByteArrayInputStream(bytes);
+		IOUtils.copy(in, response.getOutputStream());
+		response.setContentType(MediaType.OOXML_SHEET.toString());
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AgencyTrainings.xlsx\"");
 		response.flushBuffer();
 	}
 }

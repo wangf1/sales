@@ -14,10 +14,23 @@ sap.ui.define([
         })();
     }
 
+    function buildViewDataAccordingToTabKey(key) {
+        var viewData = {};
+        if (key === "agencyTraining") {
+            viewData = {
+                "usedForAgencyTraining": true,
+            };
+        }
+        return viewData;
+    }
+
     function createPageByTabKey(key, thisController) {
         var viewName;
         switch (key) {
             case "agencyRecruit":
+                viewName = "sales.datacollect.AgencyRecruit"
+                break;
+            case "agencyTraining":
                 viewName = "sales.datacollect.AgencyRecruit"
                 break;
             default:
@@ -26,6 +39,7 @@ sap.ui.define([
         var view = sap.ui.view({
             type: sap.ui.core.mvc.ViewType.JS,
             viewName: viewName,
+            viewData: buildViewDataAccordingToTabKey(key)
         });
         var page = new sap.m.Page(thisController.createId(key), {
             showHeader: false,

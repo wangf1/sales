@@ -15,10 +15,10 @@ sap.ui.jsview("sales.datacollect.DataCollect", (function() {
             items: [
                 new sap.m.IconTabFilter({
                     text: "{i18n>agency_recruit}",
-                    key: "newCustomer"
+                    key: "agencyRecruit"
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>agency_training}",
-                    key: "lostCustomer",
+                    key: "agencyTraining",
                     visible: "{permissionModel>/province/update}"
                 })
             ]

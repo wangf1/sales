@@ -174,7 +174,7 @@ public class BasicDataController {
 	}
 
 	@RequestMapping(value = "/exportSalesRecords", method = RequestMethod.POST)
-	public String getFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
+	public String getSalesRecordsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = salesRecordsExcelExporter.export(searchCriteria);
 		String key = searchCriteria.toString();

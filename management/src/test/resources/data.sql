@@ -1,3 +1,5 @@
+delete from Agency_Recruit;
+delete from Agency;
 delete from Product_Price;
 delete from USER_HOSPITAL;
 delete from sales_record;
@@ -81,3 +83,6 @@ insert into product_install_location(id, product_id, department_id) values(3, 1,
 insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(1, 1, 1, 'Stella', 100);
 insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(2, 1, 1, 'wangf', 200);
 insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(3, 2, 2, 'wangf', 300);
+
+insert into Agency(id, name, province_id, level) values (1, '经销商1', 1, '一级');
+insert into Agency_Recruit(id, agency_id, product_id, sales_person) values (1, 1, 1, 'wangf');

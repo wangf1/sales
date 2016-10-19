@@ -73,6 +73,9 @@ sap.ui.define([
             case "analysis":
                 viewName = "sales.analysis.Analysis"
                 break;
+            case "dataCollect":
+                viewName = "sales.datacollect.DataCollect"
+                break;
             default:
                 break;
         }

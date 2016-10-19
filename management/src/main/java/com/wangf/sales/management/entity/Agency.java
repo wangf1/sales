@@ -13,10 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.MoreObjects;
 
 @Entity
-public class Product {
+public class Agency {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -25,21 +24,14 @@ public class Product {
 	private String name;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-	private Company company;
+	private Province province;
+
+	@Column(nullable = false)
+	private String level;
 
 	@JsonIgnore
 	@OneToMany
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
-	private List<ProductInstallLocation> installLocations;
-
-	@JsonIgnore
-	@OneToMany
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
-	private List<ProductPrice> prices;
-
-	@JsonIgnore
-	@OneToMany
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	@JoinColumn(name = "AGENCY_ID", referencedColumnName = "ID")
 	private List<AgencyRecruit> agencyRecruit;
 
 	public long getId() {
@@ -58,28 +50,20 @@ public class Product {
 		this.name = name;
 	}
 
-	public Company getCompany() {
-		return company;
+	public Province getProvince() {
+		return province;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setProvince(Province province) {
+		this.province = province;
 	}
 
-	public List<ProductInstallLocation> getInstallLocations() {
-		return installLocations;
+	public String getLevel() {
+		return level;
 	}
 
-	public void setInstallLocations(List<ProductInstallLocation> installLocations) {
-		this.installLocations = installLocations;
-	}
-
-	public List<ProductPrice> getPrices() {
-		return prices;
-	}
-
-	public void setPrices(List<ProductPrice> prices) {
-		this.prices = prices;
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 	public List<AgencyRecruit> getAgencyRecruit() {
@@ -92,7 +76,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name).toString();
-		return string;
+		return "Agency [id=" + id + ", name=" + name + ", level=" + level + "]";
 	}
+
 }

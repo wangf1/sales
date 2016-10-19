@@ -34,11 +34,19 @@ sales.common.DateTimeUtils = (function() {
         return dateString;
     }
 
+    function nextDay(dateString) {
+        var date = new Date(dateString);
+        date.setDate(date.getDate() + 1);
+        var nextDay = yyyyMMdd(date);
+        return nextDay;
+    }
+
     var toExpose = {
         firstDayOfPreviousMonth: firstDayOfPreviousMonth,
         firstDayOfCurrentMonth: firstDayOfCurrentMonth,
         today: today,
-        yyyyMMdd: yyyyMMdd
+        yyyyMMdd: yyyyMMdd,
+        nextDay: nextDay
     };
     return toExpose;
 })();

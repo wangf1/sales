@@ -110,17 +110,23 @@ sap.ui.define([
         return true;
     }
 
+    function validateEachItemBeforeSave(object) {
+        var isValid = validateEachPropertyNotEmpty(object);
+        return isValid;
+    }
+
     function onSaveAll() {
+        var that = this;
         var allNeedSave = [];
         viewModelData.inlineChangedRecords.forEach(function(item) {
-            if (!validateEachPropertyNotEmpty(item)) {
+            if (!that.validateEachItemBeforeSave(item)) {
                 // do very basic validate
                 return;
             }
             allNeedSave.push(item);
         });
         viewModelData.newAddedRecords.forEach(function(item) {
-            if (!validateEachPropertyNotEmpty(item)) {
+            if (!that.validateEachItemBeforeSave(item)) {
                 // do very basic validate
                 return;
             }
@@ -189,8 +195,16 @@ sap.ui.define([
         });
     }
 
+    function clearSelectAndChangedData() {
+        viewModelData.selectedRecords = [];
+        viewModelData.inlineChangedRecords = [];
+        viewModelData.newAddedRecords = [];
+        oViewModel.refresh();
+    }
+
     function onRefresh() {
         this.setTableModel();
+        clearSelectAndChangedData();
         oViewModel.refresh();
     }
 
@@ -242,7 +256,9 @@ sap.ui.define([
         onTableSelectionChange: onTableSelectionChange,
         sortTable: sortTable,
         afterShow: afterShow,
-        setTableModel: setTableModel
+        setTableModel: setTableModel,
+        validateEachItemBeforeSave: validateEachItemBeforeSave,
+        clearSelectAndChangedData: clearSelectAndChangedData
     });
     return controller;
 });

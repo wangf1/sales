@@ -135,9 +135,7 @@ sap.ui.define([
         var orderDepartNames = ObjectUtils.getAllOwnPropertyAsArray(selectedOrderDepartments);
 
         // Increase the endAt by 1 day, in order to search the newest record of user choosen endAt date
-        var endAtDate = new Date(viewModelData.endAt);
-        endAtDate.setDate(endAtDate.getDate() + 1);
-        var endAt = DateTimeUtils.yyyyMMdd(endAtDate);
+        var endAt = DateTimeUtils.nextDay(viewModelData.endAt);
         /*
         searchCriteriaFormatExample:
         {

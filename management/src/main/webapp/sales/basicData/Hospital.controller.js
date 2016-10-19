@@ -23,6 +23,7 @@ sap.ui.define([
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
+        newAdded["province"] = newAdded["filteredProvinces"][0];
         newAdded["level"] = oViewModel.getProperty("/levels")[0].name;
         oViewModel.refresh();
         return newAdded;

@@ -171,7 +171,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             } else if (columName === "agency") {
                 tableCells.push(new sap.m.ComboBox({
                     change: function(e) {
-                        oController.onCellLiveChange(e);
+                        oController.onAgencyChanged(e);
                     },
                     value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",

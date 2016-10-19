@@ -50,10 +50,10 @@ sap.ui.define([
         });
         promiseAfterSetTableModel.then(function() {
             var tableData = oViewModel.getProperty("/tableData");
-            tableData.forEach(function(hospital) {
-                hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
+            tableData.forEach(function(dataItem) {
+                dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
             });
-            // Must refresh model for each hospital, otherwise UI will not update
+            // Must refresh model for each dataItem, otherwise UI will not update
             oViewModel.refresh();
         });
     }
@@ -139,8 +139,29 @@ sap.ui.define([
     }
 
     function onRegionChanged(e) {
-        var hospital = e.getSource().getBindingContext().getObject()
-        hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
+        var dataItem = e.getSource().getBindingContext().getObject()
+        dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
+        CRUDTableController.prototype.onCellLiveChange.call(this, e);
+    }
+
+    function getLevelForAgency(agencyName) {
+        var agencies = oViewModel.getProperty("/agencies");
+        var level;
+        for (var i = 0; i < agencies.length; i++) {
+            var agency = agencies[i];
+            if (agency.name === agencyName) {
+                level = agency.level;
+                break;
+            }
+        }
+        return level;
+    }
+
+    function onAgencyChanged(e) {
+        var dataItem = e.getSource().getBindingContext().getObject()
+        var agencyName = dataItem["agency"];
+        var level = getLevelForAgency(agencyName);
+        dataItem["level"] = level;
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
@@ -191,7 +212,8 @@ sap.ui.define([
         setTableModel: setTableModel,
         onRegionChanged: onRegionChanged,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
-        onExport: onExport
+        onExport: onExport,
+        onAgencyChanged: onAgencyChanged
     });
     return controller;
 });

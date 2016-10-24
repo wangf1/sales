@@ -73,16 +73,21 @@ public class UserService {
 	}
 
 	public List<HospitalPojo> listHospitalsForUser(String userName) {
-		List<Hospital> hospitals;
+		List<Hospital> hospitals = new ArrayList<>();
 		if (SecurityUtils.isCurrentUserAdmin()) {
 			Iterable<Hospital> all = hospitalRepository.findAll();
-			hospitals = new ArrayList<>();
 			for (Hospital hospital : all) {
 				hospitals.add(hospital);
 			}
 		} else {
-			User user = userRepository.findOne(userName);
-			hospitals = user.getHospitals();
+			User manager = userRepository.findOne(userName);
+			List<User> employees = manager.getEmployees();
+			for (User employee : employees) {
+				// If the user is a manager, also show hospitals belongs to his
+				// employees
+				hospitals.addAll(employee.getHospitals());
+			}
+			hospitals.addAll(manager.getHospitals());
 		}
 		List<HospitalPojo> pojos = new ArrayList<>();
 		for (Hospital hospital : hospitals) {

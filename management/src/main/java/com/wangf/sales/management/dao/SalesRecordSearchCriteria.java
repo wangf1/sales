@@ -1,5 +1,6 @@
 package com.wangf.sales.management.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class SalesRecordSearchCriteria {
 	}
 
 	public List<String> getSalesPersonNames() {
+		if (salesPersonNames == null) {
+			salesPersonNames = new ArrayList<>();
+		}
 		return salesPersonNames;
 	}
 

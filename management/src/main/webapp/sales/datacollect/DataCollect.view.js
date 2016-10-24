@@ -18,8 +18,7 @@ sap.ui.jsview("sales.datacollect.DataCollect", (function() {
                     key: "agencyRecruit"
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>agency_training}",
-                    key: "agencyTraining",
-                    visible: "{permissionModel>/province/update}"
+                    key: "agencyTraining"
                 })
             ]
         });

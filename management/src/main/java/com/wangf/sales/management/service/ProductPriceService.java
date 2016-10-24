@@ -42,17 +42,27 @@ public class ProductPriceService {
 				result.add(pojo);
 			}
 		} else {
-			User currentUser = userService.getCurrentUser();
-			List<Hospital> hospitals = currentUser.getHospitals();
-			for (Hospital hospital : hospitals) {
-				List<ProductPrice> prices = hospital.getPrices();
-				for (ProductPrice price : prices) {
-					ProductPricePojo pojo = ProductPricePojo.from(price);
-					result.add(pojo);
-				}
+			User manager = userService.getCurrentUser();
+			List<User> employees = manager.getEmployees();
+			for (User employee : employees) {
+				// If the user is a manager, also show prices belongs to his
+				// employees
+				getPricesByUser(result, employee);
 			}
+			getPricesByUser(result, manager);
 		}
 		return result;
+	}
+
+	private void getPricesByUser(List<ProductPricePojo> result, User currentUser) {
+		List<Hospital> hospitals = currentUser.getHospitals();
+		for (Hospital hospital : hospitals) {
+			List<ProductPrice> prices = hospital.getPrices();
+			for (ProductPrice price : prices) {
+				ProductPricePojo pojo = ProductPricePojo.from(price);
+				result.add(pojo);
+			}
+		}
 	}
 
 	public ProductPricePojo insertOrUpdate(ProductPricePojo pojo) {

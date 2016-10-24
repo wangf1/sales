@@ -38,6 +38,9 @@ public class RoleResourcePermissions {
 	}
 
 	private static ResourcePermission mergePermissions(List<ResourcePermission> availablePermissions) {
+		if (availablePermissions.size() == 1) {
+			return availablePermissions.get(0);
+		}
 		ResourcePermission result = new ResourcePermission();
 		for (ResourcePermission resourcePermission : availablePermissions) {
 			Permission permission = resourcePermission.getDepartment();
@@ -66,6 +69,10 @@ public class RoleResourcePermissions {
 
 			permission = resourcePermission.getUser();
 			merged = result.getUser();
+			mergePermission(permission, merged);
+
+			permission = resourcePermission.getShowSalesPersonForSalesRecord();
+			merged = result.getShowSalesPersonForSalesRecord();
 			mergePermission(permission, merged);
 		}
 		return result;

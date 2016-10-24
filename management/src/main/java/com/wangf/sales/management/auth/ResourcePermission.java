@@ -8,6 +8,7 @@ public class ResourcePermission {
 	private Permission departmentName = new Permission();
 	private Permission product = new Permission();
 	private Permission user = new Permission();
+	private Permission showSalesPersonForSalesRecord = new Permission();
 
 	public Permission getSalesRecord() {
 		return salesRecord;
@@ -63,6 +64,14 @@ public class ResourcePermission {
 
 	public void setUser(Permission user) {
 		this.user = user;
+	}
+
+	public Permission getShowSalesPersonForSalesRecord() {
+		return showSalesPersonForSalesRecord;
+	}
+
+	public void setShowSalesPersonForSalesRecord(Permission showSalesPersonForSalesRecord) {
+		this.showSalesPersonForSalesRecord = showSalesPersonForSalesRecord;
 	}
 
 }

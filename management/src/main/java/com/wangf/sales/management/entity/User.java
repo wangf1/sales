@@ -124,6 +124,9 @@ public class User {
 	}
 
 	public List<User> getEmployees() {
+		if (employees == null) {
+			employees = new ArrayList<>();
+		}
 		return employees;
 	}
 

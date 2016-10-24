@@ -68,7 +68,8 @@ insert into Users(username, password, enabled, first_name, last_name) values('wa
 insert into Users(username, password, enabled, first_name, last_name, MANAGER) values('Stella', 'password', 1, 'Ding', 'Stella', 'wangf');
 
 insert into AUTHORITIES(username, authority) values('wangf', 'Admin');
-insert into AUTHORITIES(username, authority) values('Stella', 'User');
+insert into AUTHORITIES(username, authority) values('Stella', 'Manager');
+insert into AUTHORITIES(username, authority) values('User1', 'User');
 
 insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1);
 insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 2);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.SalesRecordRepository;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
+import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.entity.SalesRecord;
@@ -31,6 +32,8 @@ public class SalesRecordsService {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserRepository userRepository;
 
 	public List<SalesRecordPojo> searchAgainstSingleValues(String productName, String salesPersonName,
 			String hospitalName, String locationDepartmentName, String orderDepartName, Date startFrom) {
@@ -54,6 +57,16 @@ public class SalesRecordsService {
 	}
 
 	public List<SalesRecordPojo> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
+		List<String> allEmployees = new ArrayList<>();
+		for (String managerName : criteria.getSalesPersonNames()) {
+			// If the user is a manager, also get all records of his employees
+			User manager = userRepository.findOne(managerName);
+			List<User> employees = manager.getEmployees();
+			for (User employee : employees) {
+				allEmployees.add(employee.getUserName());
+			}
+		}
+		criteria.getSalesPersonNames().addAll(allEmployees);
 		List<SalesRecord> records = salesRecordRepository.searchAgainstMultipleValues(criteria);
 		List<SalesRecordPojo> result = new ArrayList<>();
 		for (SalesRecord record : records) {
@@ -87,7 +100,12 @@ public class SalesRecordsService {
 		}
 		record.setInstallLocation(installLocation);
 		record.setOrderDepartment(orderDepartment);
-		record.setSalesPerson(salesPerson);
+		if (!alreadyExisting) {
+			// For existing sales record, do not change the sales person, since
+			// manager or admin may modify sales record for a user, should not
+			// change the sales person of a sales record
+			record.setSalesPerson(salesPerson);
+		}
 		record.setQuantity(pojo.getQuantity());
 		if (alreadyExisting) {
 			// salesRecordRepository.save(record) method cannot update, possibly

@@ -168,9 +168,12 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var tableCells = [];
         oController.columNames.forEach(function(name) {
             var columnVisible = true;
-            if (name === "manager" || name === "salesPerson" || name === "price") {
+            if (name === "manager" || name === "price") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/user/delete}";
+            }
+            if (name === "salesPerson") {
+                columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
             tableColumns.push(new sap.m.Column({
                 width: "30%",

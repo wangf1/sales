@@ -48,8 +48,15 @@ public class AgencyService {
 		if (SecurityUtils.isCurrentUserAdmin()) {
 			entities = agencyRecruitRepository.findBetweenDate(startAt, endAt);
 		} else {
-			User currentUser = userService.getCurrentUser();
-			entities = agencyRecruitRepository.findByUserAndBetweenDate(startAt, endAt, currentUser);
+			entities = new ArrayList<>();
+			User manager = userService.getCurrentUser();
+			List<User> employees = manager.getEmployees();
+			for (User employee : employees) {
+				// If the user is a manager, also show data belongs to his
+				// employees
+				entities.addAll(agencyRecruitRepository.findByUserAndBetweenDate(startAt, endAt, employee));
+			}
+			entities.addAll(agencyRecruitRepository.findByUserAndBetweenDate(startAt, endAt, manager));
 		}
 		List<AgencyRecruitPojo> result = new ArrayList<>();
 		if (entities == null) {
@@ -113,14 +120,20 @@ public class AgencyService {
 		if (entity == null) {
 			entity = agencyRecruitRepository.findByAgencyNameAndProductName(pojo.getAgency(), pojo.getProduct());
 		}
+		boolean isInsert = false;
 		if (entity == null) {
 			entity = new AgencyRecruit();
+			isInsert = true;
 		}
 		entity.setAgency(agency);
 		Product product = productRepository.findByName(pojo.getProduct());
 		entity.setProduct(product);
-		User salesPerson = userService.getCurrentUser();
-		entity.setSalesPerson(salesPerson);
+		if (isInsert) {
+			// Only set salesPerson for new created entity, since manager or
+			// admin may update the entity, should not change the entity's owner
+			User salesPerson = userService.getCurrentUser();
+			entity.setSalesPerson(salesPerson);
+		}
 
 		agencyRecruitRepository.save(entity);
 		AgencyRecruitPojo savedPojo = AgencyRecruitPojo.from(entity);
@@ -157,8 +170,15 @@ public class AgencyService {
 		if (SecurityUtils.isCurrentUserAdmin()) {
 			entities = agencyTrainingRepository.findBetweenDate(startAt, endAt);
 		} else {
-			User currentUser = userService.getCurrentUser();
-			entities = agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, currentUser);
+			entities = new ArrayList<>();
+			User manager = userService.getCurrentUser();
+			List<User> employees = manager.getEmployees();
+			for (User employee : employees) {
+				// If the user is a manager, also show data belongs to his
+				// employees
+				entities.addAll(agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, employee));
+			}
+			entities.addAll(agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, manager));
 		}
 		List<AgencyTrainingPojo> result = new ArrayList<>();
 		if (entities == null) {
@@ -174,14 +194,20 @@ public class AgencyService {
 	private AgencyTrainingPojo insertOrUpdateAgencyTraining(AgencyTrainingPojo pojo) {
 		Agency agency = createAgencyIfNotExist(pojo);
 		AgencyTraining entity = agencyTrainingRepository.findOne(pojo.getId());
+		boolean isInsert = false;
 		if (entity == null) {
 			entity = new AgencyTraining();
+			isInsert = true;
 		}
 		entity.setAgency(agency);
 		Product product = productRepository.findByName(pojo.getProduct());
 		entity.setProduct(product);
-		User salesPerson = userService.getCurrentUser();
-		entity.setSalesPerson(salesPerson);
+		if (isInsert) {
+			// Only set salesPerson for new created entity, since manager or
+			// admin may update the entity, should not change the entity's owner
+			User salesPerson = userService.getCurrentUser();
+			entity.setSalesPerson(salesPerson);
+		}
 
 		agencyTrainingRepository.save(entity);
 		AgencyTrainingPojo savedPojo = AgencyTrainingPojo.from(entity);

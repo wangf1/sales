@@ -94,7 +94,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             var columnVisible = true;
             if (columName === "salesPerson") {
                 // Each sales person do not need see above columns
-                columnVisible = "{permissionModel>/user/delete}";
+                columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
             tableColumns.push(new sap.m.Column({
                 width: "30%",

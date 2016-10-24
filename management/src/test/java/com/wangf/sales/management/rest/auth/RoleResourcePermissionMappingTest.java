@@ -19,6 +19,7 @@ public class RoleResourcePermissionMappingTest {
 		List<String> roles = new ArrayList<>();
 		roles.add("Admin");
 		roles.add("User");
+		roles.add("Manager");
 		ResourcePermission permission = RoleResourcePermissions.getResourcePermissionForRoles(roles);
 		Assert.assertTrue(permission.getUser().isCreate());
 		System.out.println(permission);

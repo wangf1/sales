@@ -41,7 +41,28 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            oViewModel.setProperty("/levels", result.data);
+            var levels = result.data;
+            var fixedLevels = [
+                {
+                    name: "三级"
+                }, {
+                    name: "二级"
+                }, {
+                    name: "其他"
+                }
+            ];
+            fixedLevels.forEach(function(level) {
+                var alreadyContains = false;
+                for (var i = 0; i < levels.length; i++) {
+                    if (levels[i].name === level.name) {
+                        alreadyContains = true;
+                    }
+                }
+                if (!alreadyContains) {
+                    levels.push(level);
+                }
+            });
+            oViewModel.setProperty("/levels", levels);
         });
     }
 

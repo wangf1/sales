@@ -129,7 +129,16 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            oViewModel.setProperty("/agencyLevels", result.data);
+            var levels = result.data;
+            var fixedLevels = [
+                "一级", "二级", "其他"
+            ];
+            fixedLevels.forEach(function(level) {
+                if (levels.indexOf(level) < 0) {
+                    levels.push(level);
+                }
+            });
+            oViewModel.setProperty("/agencyLevels", levels);
         });
     }
 

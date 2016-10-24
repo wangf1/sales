@@ -80,7 +80,7 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
                 })
             }));
             if (columName === "level") {
-                tableCells.push(new sap.m.ComboBox({
+                tableCells.push(new sap.m.Select({
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },

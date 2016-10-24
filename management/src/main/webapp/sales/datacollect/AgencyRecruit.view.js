@@ -185,7 +185,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                     }
                 }));
             } else if (columName === "level") {
-                tableCells.push(new sap.m.ComboBox({
+                tableCells.push(new sap.m.Select({
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },

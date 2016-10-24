@@ -69,7 +69,7 @@ sap.ui.define([
     function refreshAvailableRegions() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getRegionsByCurrentUser",
+            url: "getAllRegions",
             dataType: "json",
             contentType: "application/json"
         });

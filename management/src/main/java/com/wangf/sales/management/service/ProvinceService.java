@@ -2,6 +2,7 @@ package com.wangf.sales.management.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -67,6 +68,11 @@ public class ProvinceService {
 			// allowed.
 			provinceRepository.delete(id);
 		}
+	}
+
+	public Set<String> listAllRegions() {
+		Set<String> resions = provinceRepository.getAllRegions();
+		return resions;
 	}
 
 }

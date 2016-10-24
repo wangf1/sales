@@ -102,7 +102,7 @@ sap.ui.define([
     function refreshAvailableRegions() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getRegionsByCurrentUser",
+            url: "getAllRegions",
             dataType: "json",
             contentType: "application/json"
         });
@@ -161,6 +161,7 @@ sap.ui.define([
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
         newAdded["province"] = newAdded["filteredProvinces"][0];
+        newAdded["level"] = oViewModel.getProperty("/agencyLevels")[0];
         oViewModel.refresh();
         return newAdded;
     }
@@ -188,7 +189,9 @@ sap.ui.define([
         var dataItem = e.getSource().getBindingContext().getObject()
         var agencyName = dataItem["agency"];
         var level = getLevelForAgency(agencyName);
-        dataItem["level"] = level;
+        if (level) {
+            dataItem["level"] = level;
+        }
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
         oViewModel.refresh();
     }

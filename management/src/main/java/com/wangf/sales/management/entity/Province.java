@@ -29,6 +29,11 @@ public class Province {
 	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
 	private List<Hospital> hospitals;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
+	private List<Bid> bids;
+
 	public long getId() {
 		return id;
 	}
@@ -59,6 +64,14 @@ public class Province {
 
 	public void setHospitals(List<Hospital> hospitals) {
 		this.hospitals = hospitals;
+	}
+
+	public List<Bid> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Bid> bids) {
+		this.bids = bids;
 	}
 
 	@Override

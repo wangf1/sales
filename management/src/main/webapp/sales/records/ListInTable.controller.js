@@ -113,9 +113,6 @@ sap.ui.define([
         } else {
             var fs = [];
             columNames.forEach(function(column) {
-                if (column === "quantity" || column === "date") {
-                    return;
-                }
                 fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
             });
             var filters = new sap.ui.model.Filter(fs, false);

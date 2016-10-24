@@ -1,3 +1,4 @@
+delete from bid;
 delete from Agency_Recruit;
 delete from Agency;
 delete from Product_Price;
@@ -66,6 +67,7 @@ insert into Product_Price(id, product_id, hospital_id, price) values(1, 1, 1, 10
 
 insert into Users(username, password, enabled, first_name, last_name) values('wangf', 'password', 1, 'Wang', 'Feng');
 insert into Users(username, password, enabled, first_name, last_name, MANAGER) values('Stella', 'password', 1, 'Ding', 'Stella', 'wangf');
+insert into Users(username, password, enabled, first_name, last_name, MANAGER) values('User1', 'password', 1, 'User', '1', 'Stella');
 
 insert into AUTHORITIES(username, authority) values('wangf', 'Admin');
 insert into AUTHORITIES(username, authority) values('Stella', 'Manager');
@@ -89,3 +91,5 @@ insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PER
 
 insert into Agency(id, name, province_id, level) values (1, '经销商1', 1, '一级');
 insert into Agency_Recruit(id, agency_id, product_id, sales_person) values (1, 1, 1, 'wangf');
+
+insert into bid(id, province_id, sales_person, description,  product_id, price) values (1, 1, 'wangf', '上海市标', 1, 10.25)

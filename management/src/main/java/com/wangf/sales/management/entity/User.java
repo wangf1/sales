@@ -75,6 +75,11 @@ public class User {
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
 	private List<AgencyRecruit> agencyRecruit;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
+	private List<Bid> bids;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -170,6 +175,14 @@ public class User {
 
 	public void setAgencyRecruit(List<AgencyRecruit> agencyRecruit) {
 		this.agencyRecruit = agencyRecruit;
+	}
+
+	public List<Bid> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Bid> bids) {
+		this.bids = bids;
 	}
 
 	@Override

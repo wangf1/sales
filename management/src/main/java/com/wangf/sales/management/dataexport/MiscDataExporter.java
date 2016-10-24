@@ -13,12 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.rest.pojo.AgencyRecruitPojo;
 import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
+import com.wangf.sales.management.rest.pojo.BidPojo;
 import com.wangf.sales.management.service.AgencyService;
+import com.wangf.sales.management.service.BidService;
 
 @Service
 public class MiscDataExporter {
 	@Autowired
 	private AgencyService agencyService;
+
+	@Autowired
+	private BidService bidService;
 
 	public byte[] exportAgencyRecruit(Date startAt, Date endAt) throws IOException {
 		List<AgencyRecruitPojo> data = agencyService.listAgencyRecruitsByCurrentUser(startAt, endAt);
@@ -36,6 +41,19 @@ public class MiscDataExporter {
 	public byte[] exportAgencyTrainings(Date startAt, Date endAt) throws IOException {
 		List<AgencyTrainingPojo> data = agencyService.listAgencyTrainingsByCurrentUser(startAt, endAt);
 		try (InputStream template = getClass().getResourceAsStream("/Agency_Recruits_template.xlsx")) {
+			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+				Context context = new Context();
+				context.putVar("data", data);
+				JxlsHelper.getInstance().processTemplate(template, out, context);
+				byte[] result = out.toByteArray();
+				return result;
+			}
+		}
+	}
+
+	public byte[] exportBids(Date startAt, Date endAt) throws IOException {
+		List<BidPojo> data = bidService.getBidsByCurrentUser(startAt, endAt);
+		try (InputStream template = getClass().getResourceAsStream("/Bids_template.xlsx")) {
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 				Context context = new Context();
 				context.putVar("data", data);

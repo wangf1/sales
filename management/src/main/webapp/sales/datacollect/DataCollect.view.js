@@ -19,6 +19,9 @@ sap.ui.jsview("sales.datacollect.DataCollect", (function() {
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>agency_training}",
                     key: "agencyTraining"
+                }), new sap.m.IconTabFilter({
+                    text: "{i18n>bids_label}",
+                    key: "bids"
                 })
             ]
         });

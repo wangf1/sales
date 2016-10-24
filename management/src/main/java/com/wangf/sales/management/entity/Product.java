@@ -42,6 +42,11 @@ public class Product {
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private List<AgencyRecruit> agencyRecruit;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	private List<Bid> bids;
+
 	public long getId() {
 		return id;
 	}
@@ -88,6 +93,14 @@ public class Product {
 
 	public void setAgencyRecruit(List<AgencyRecruit> agencyRecruit) {
 		this.agencyRecruit = agencyRecruit;
+	}
+
+	public List<Bid> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Bid> bids) {
+		this.bids = bids;
 	}
 
 	@Override

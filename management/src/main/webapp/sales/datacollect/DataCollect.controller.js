@@ -33,6 +33,9 @@ sap.ui.define([
             case "agencyTraining":
                 viewName = "sales.datacollect.AgencyRecruit"
                 break;
+            case "bids":
+                viewName = "sales.datacollect.Bids"
+                break;
             default:
                 break;
         }

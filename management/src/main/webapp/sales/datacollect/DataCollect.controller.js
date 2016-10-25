@@ -36,6 +36,9 @@ sap.ui.define([
             case "bids":
                 viewName = "sales.datacollect.Bids"
                 break;
+            case "speakers":
+                viewName = "sales.datacollect.Speakers"
+                break;
             default:
                 break;
         }

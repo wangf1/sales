@@ -22,6 +22,9 @@ sap.ui.jsview("sales.datacollect.DataCollect", (function() {
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>bids_label}",
                     key: "bids"
+                }), new sap.m.IconTabFilter({
+                    text: "{i18n>speakers_label}",
+                    key: "speakers"
                 })
             ]
         });

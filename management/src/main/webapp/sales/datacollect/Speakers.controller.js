@@ -51,6 +51,7 @@ sap.ui.define([
             var tableData = oViewModel.getProperty("/tableData");
             tableData.forEach(function(dataItem) {
                 dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
+                dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
             });
             // Must refresh model for each dataItem, otherwise UI will not update
             oViewModel.refresh();
@@ -91,16 +92,52 @@ sap.ui.define([
             oViewModel.setProperty("/regions", result.data);
         });
     }
+    function refreshHospitals() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getHospitalsByCurrentUser",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        var promiseAfterGetAllHospitals = promise.then(function(result) {
+            oViewModel.setProperty("/allHospitals", result.data);
+        });
+        return promiseAfterGetAllHospitals;
+    }
+    function refreshSpeakerTypes() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getSpeakerTypes",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            var types = result.data;
+            var fixedTypes = [
+                "临床", "检验"
+            ];
+            fixedTypes.forEach(function(type) {
+                if (types.indexOf(type) < 0) {
+                    types.push(type);
+                }
+            });
+            oViewModel.setProperty("/speakerTypes", types);
+        });
+    }
 
     function onRefresh() {
         var that = this;
         CRUDTableController.prototype.clearSelectAndChangedData.call(this);
-        var promiseAfterGetAllProvinces = refreshProvinces();
-        promiseAfterGetAllProvinces.then(function() {
-            that.setTableModel();
+        var promiseAfterGetAllHospitals = refreshHospitals();
+        promiseAfterGetAllHospitals.then(function() {
+            var promiseAfterGetAllProvinces = refreshProvinces();
+            promiseAfterGetAllProvinces.then(function() {
+                that.setTableModel();
+            });
         });
         refreshAvailableRegions();
         refreshProducts();
+        refreshSpeakerTypes();
     }
 
     function onAdd() {
@@ -109,6 +146,13 @@ sap.ui.define([
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
         newAdded["province"] = newAdded["filteredProvinces"][0];
+        newAdded["filteredHospitals"] = filterHospitalByProvince(newAdded.province);
+        if (newAdded["filteredHospitals"][0]) {
+            newAdded["hospital"] = newAdded["filteredHospitals"][0].name;
+        } else {
+            newAdded["hospital"] = undefined;
+        }
+        newAdded["type"] = oViewModel.getProperty("/speakerTypes")[0];
         oViewModel.refresh();
         return newAdded;
     }
@@ -116,6 +160,23 @@ sap.ui.define([
     function onRegionChanged(e) {
         var dataItem = e.getSource().getBindingContext().getObject()
         dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
+        if (dataItem["filteredProvinces"][0]) {
+            dataItem["province"] = dataItem["filteredProvinces"][0].name;
+        } else {
+            dataItem["province"] = undefined;
+        }
+        onProvinceChanged(e);
+        CRUDTableController.prototype.onCellLiveChange.call(this, e);
+    }
+
+    function onProvinceChanged(e) {
+        var dataItem = e.getSource().getBindingContext().getObject()
+        dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
+        if (dataItem["filteredHospitals"][0]) {
+            dataItem["hospital"] = dataItem["filteredHospitals"][0].name;
+        } else {
+            dataItem["hospital"] = undefined;
+        }
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
@@ -154,21 +215,32 @@ sap.ui.define([
         });
     }
 
-    var controller = CRUDTableController.extend("sales.datacollect.Bids", {
+    function filterHospitalByProvince(province) {
+        var filteredHospitals = [];
+        oViewModel.getProperty("/allHospitals").forEach(function(hospital) {
+            if (hospital.province === province) {
+                filteredHospitals.push(hospital);
+            }
+        });
+        return filteredHospitals;
+    }
+
+    var controller = CRUDTableController.extend("sales.datacollect.Speakers", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "description", "product", "price"
+            "date", "region", "province", "salesPerson", "hospital", "type", "speakerName"
         ],
         onInit: init,
-        urlForListAll: "getBidsByCurrentUser",
-        urlForSaveAll: "saveBids",
-        urlForDeleteAll: "deleteBids",
-        urlForExport: "exportBids",
+        urlForListAll: "getSpeakersByCurrentUser",
+        urlForSaveAll: "saveSpeakers",
+        urlForDeleteAll: "deleteSpeakers",
+        urlForExport: "exportSpeakers",
         onRefresh: onRefresh,
         onAdd: onAdd,
         setTableModel: setTableModel,
         onRegionChanged: onRegionChanged,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
+        onProvinceChanged: onProvinceChanged
     });
     return controller;
 });

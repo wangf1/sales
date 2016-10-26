@@ -103,7 +103,39 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
                     value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/allHospitalsBelongToCurrentUser",
+                        path: "filteredHospitals",
+                        template: new sap.ui.core.Item({
+                            key: "{name}",
+                            text: "{name}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else if (columName === "region") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onRegionChanged(e);
+                    },
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/regions",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else if (columName === "province") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onProvinceChanged(e);
+                    },
+                    value: "{" + columName + "}",
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "filteredProvinces",
                         template: new sap.ui.core.Item({
                             key: "{name}",
                             text: "{name}"

@@ -5,6 +5,8 @@ import com.wangf.sales.management.entity.ProductPrice;
 public class ProductPricePojo {
 	private long id;
 	private String product;
+	private String region;
+	private String province;
 	private String hospital;
 	private double price;
 
@@ -22,6 +24,22 @@ public class ProductPricePojo {
 
 	public void setProduct(String product) {
 		this.product = product;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
 	}
 
 	public String getHospital() {
@@ -52,6 +70,8 @@ public class ProductPricePojo {
 		pojo.setHospital(price.getHospital().getName());
 		pojo.setProduct(price.getProduct().getName());
 		pojo.setPrice(price.getPrice());
+		pojo.setRegion(price.getHospital().getProvince().getRegion());
+		pojo.setProvince(price.getHospital().getProvince().getName());
 		return pojo;
 	}
 

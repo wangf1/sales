@@ -41,7 +41,6 @@ import com.wangf.sales.management.service.ProductPriceService;
 import com.wangf.sales.management.service.ProductService;
 import com.wangf.sales.management.service.ProvinceService;
 import com.wangf.sales.management.service.UserService;
-import com.wangf.sales.management.utils.SecurityUtils;
 
 @RestController
 public class BasicDataController {
@@ -127,8 +126,7 @@ public class BasicDataController {
 
 	@RequestMapping(path = "/saveHospitals", method = RequestMethod.POST)
 	public List<Long> saveHospitals(@RequestBody List<HospitalPojo> pojos) {
-		String currentUser = SecurityUtils.getCurrentUserName();
-		List<Long> ids = hospitalService.insertOrUpdateForUser(pojos, currentUser);
+		List<Long> ids = hospitalService.insertOrUpdateHospitals(pojos);
 		return ids;
 	}
 
@@ -217,6 +215,12 @@ public class BasicDataController {
 	public Set<String> getRegionsByCurrentUser() {
 		Set<String> result = provinceServcie.listAllRegions();
 		return result;
+	}
+
+	@RequestMapping(path = "/deleteHospitals", method = RequestMethod.POST)
+	public List<Long> deleteHospitals(@RequestBody List<Long> ids) {
+		hospitalService.deleteByIds(ids);
+		return ids;
 	}
 
 }

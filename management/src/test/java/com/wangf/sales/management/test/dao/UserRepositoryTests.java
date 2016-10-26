@@ -24,7 +24,6 @@ public class UserRepositoryTests extends TestBase {
 		System.out.println(user.getManager());
 		System.out.println(user.getEmployees());
 		System.out.println(user.getAuthorities());
-		System.out.println(user.getHospitals());
 		System.out.println(user.getSalesRecords());
 	}
 

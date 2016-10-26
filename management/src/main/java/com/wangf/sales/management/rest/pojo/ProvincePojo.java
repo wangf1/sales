@@ -1,12 +1,17 @@
 package com.wangf.sales.management.rest.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.wangf.sales.management.entity.Province;
+import com.wangf.sales.management.entity.User;
 
 public class ProvincePojo {
 
 	private long id;
 	private String name;
 	private String region;
+	private List<String> salesPersons;
 
 	public long getId() {
 		return id;
@@ -30,6 +35,17 @@ public class ProvincePojo {
 
 	public void setRegion(String region) {
 		this.region = region;
+	}
+
+	public List<String> getSalesPersons() {
+		if (salesPersons == null) {
+			salesPersons = new ArrayList<>();
+		}
+		return salesPersons;
+	}
+
+	public void setSalesPersons(List<String> salesPersons) {
+		this.salesPersons = salesPersons;
 	}
 
 	@Override
@@ -76,6 +92,9 @@ public class ProvincePojo {
 		pojo.setId(province.getId());
 		pojo.setName(province.getName());
 		pojo.setRegion(province.getRegion());
+		for (User user : province.getUsers()) {
+			pojo.getSalesPersons().add(user.getUserName());
+		}
 		return pojo;
 	}
 

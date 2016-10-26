@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.ProvinceRepository;
+import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Province;
+import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
 
 @Service
@@ -18,6 +20,8 @@ import com.wangf.sales.management.rest.pojo.ProvincePojo;
 public class ProvinceService {
 	@Autowired
 	private ProvinceRepository provinceRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	public ProvincePojo insertOrUpdate(ProvincePojo pojo) {
 
@@ -35,6 +39,11 @@ public class ProvinceService {
 		}
 		province.setName(pojo.getName());
 		province.setRegion(pojo.getRegion());
+		province.getUsers().clear();
+		for (String userName : pojo.getSalesPersons()) {
+			User user = userRepository.findByUserName(userName);
+			province.getUsers().add(user);
+		}
 		provinceRepository.save(province);
 
 		ProvincePojo savedPojo = ProvincePojo.from(province);

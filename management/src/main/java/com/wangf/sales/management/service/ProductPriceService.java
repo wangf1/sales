@@ -14,6 +14,7 @@ import com.wangf.sales.management.dao.ProductRepository;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.Product;
 import com.wangf.sales.management.entity.ProductPrice;
+import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.ProductPricePojo;
 import com.wangf.sales.management.utils.SecurityUtils;
@@ -55,12 +56,15 @@ public class ProductPriceService {
 	}
 
 	private void getPricesByUser(List<ProductPricePojo> result, User currentUser) {
-		List<Hospital> hospitals = currentUser.getHospitals();
-		for (Hospital hospital : hospitals) {
-			List<ProductPrice> prices = hospital.getPrices();
-			for (ProductPrice price : prices) {
-				ProductPricePojo pojo = ProductPricePojo.from(price);
-				result.add(pojo);
+		List<Province> provinces = currentUser.getProvinces();
+		for (Province province : provinces) {
+			List<Hospital> hospitals = province.getHospitals();
+			for (Hospital hospital : hospitals) {
+				List<ProductPrice> prices = hospital.getPrices();
+				for (ProductPrice price : prices) {
+					ProductPricePojo pojo = ProductPricePojo.from(price);
+					result.add(pojo);
+				}
 			}
 		}
 	}

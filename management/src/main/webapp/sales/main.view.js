@@ -22,7 +22,8 @@ sap.ui.jsview("sales.main", (function() {
                     visible: "{permissionModel>/province/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_hospital"), {
                     text: "{i18n>hospital}",
-                    key: "hospital"
+                    key: "hospital",
+                    visible: "{permissionModel>/hospital/update}"
                 }), new sap.m.IconTabFilter(this.createId("tb_department"), {
                     text: "{i18n>department}",
                     key: "department",

@@ -40,18 +40,14 @@ public class UserService {
 	@Autowired
 	private AuthorityServcie authorityServcie;
 
-	@Autowired
-	private HospitalService hospitalService;
-
 	@PersistenceContext
 	private EntityManager em;
 
 	public Set<String> listRegionsForUser(String userName) {
 		User user = userRepository.findOne(userName);
-		List<Hospital> hospitals = user.getHospitals();
+		List<Province> provinces = user.getProvinces();
 		Set<String> regions = new HashSet<>();
-		for (Hospital hospital : hospitals) {
-			Province province = hospital.getProvince();
+		for (Province province : provinces) {
 			regions.add(province.getRegion());
 		}
 		return regions;
@@ -59,10 +55,9 @@ public class UserService {
 
 	public List<ProvincePojo> listProvincesForUser(String userName) {
 		User user = userRepository.findOne(userName);
-		List<Hospital> hospitals = user.getHospitals();
+		List<Province> provinces = user.getProvinces();
 		List<ProvincePojo> pojos = new ArrayList<>();
-		for (Hospital hospital : hospitals) {
-			Province province = hospital.getProvince();
+		for (Province province : provinces) {
 			ProvincePojo pojo = ProvincePojo.from(province);
 			if (pojos.contains(pojo)) {
 				continue;
@@ -82,12 +77,17 @@ public class UserService {
 		} else {
 			User manager = userRepository.findOne(userName);
 			List<User> employees = manager.getEmployees();
-			for (User employee : employees) {
+			List<User> allUsersNeedList = new ArrayList<>();
+			allUsersNeedList.add(manager);
+			allUsersNeedList.addAll(employees);
+			for (User user : allUsersNeedList) {
 				// If the user is a manager, also show hospitals belongs to his
 				// employees
-				hospitals.addAll(employee.getHospitals());
+				List<Province> provinces = user.getProvinces();
+				for (Province province : provinces) {
+					hospitals.addAll(province.getHospitals());
+				}
 			}
-			hospitals.addAll(manager.getHospitals());
 		}
 		List<HospitalPojo> pojos = new ArrayList<>();
 		for (Hospital hospital : hospitals) {
@@ -109,25 +109,6 @@ public class UserService {
 		String currentUserName = SecurityUtils.getCurrentUserName();
 		User currentUser = userRepository.findOne(currentUserName);
 		return currentUser;
-	}
-
-	/**
-	 * Only delete the relationship.
-	 * 
-	 * @param ids
-	 */
-	public void deleteUserHospitalRelationship(List<Long> hostpitalIds) {
-		if (SecurityUtils.isCurrentUserAdmin()) {
-			// For Admin, really delete the hospitals
-			hospitalService.deleteByIds(hostpitalIds);
-		} else {
-			for (Long id : hostpitalIds) {
-				Hospital hospital = hospitalRepository.findOne(id);
-				User user = getCurrentUser();
-				user.getHospitals().remove(hospital);
-				userRepository.save(user);
-			}
-		}
 	}
 
 	/**

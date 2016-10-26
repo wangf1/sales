@@ -1,6 +1,8 @@
 sap.ui.jsview("sales.basicData.Province", (function() {
     "use strict";
 
+    jQuery.sap.require("sales.common.StringArrayAsCommaStringType");
+
     var getControllerName = function() {
         return "sales.basicData.Province";
     };
@@ -56,6 +58,32 @@ sap.ui.jsview("sales.basicData.Province", (function() {
         return toolBar;
     };
 
+    function createSalesPersonsCell(oController, columName) {
+        var hBox = new sap.m.HBox();
+
+        var input = new sap.m.Input({
+            value: {
+                path: columName,
+                type: new sales.common.StringArrayAsCommaStringType()
+            },
+            enabled: false,
+            change: function(e) {
+                oController.onCellLiveChange(e);
+            }
+        });
+        hBox.addItem(input);
+
+        var button = new sap.m.Button({
+            icon: "sap-icon://edit",
+            press: function(e) {
+                oController.onEditSalesPersons(e);
+            }
+        });
+        hBox.addItem(button);
+
+        return hBox;
+    }
+
     function createTable(oController) {
         var tableCells = [];
         var tableColumns = [];
@@ -95,6 +123,9 @@ sap.ui.jsview("sales.basicData.Province", (function() {
                         templateShareable: true
                     }
                 }));
+            } else if (columName === "salesPersons") {
+                var hBox = createSalesPersonsCell(oController, columName);
+                tableCells.push(hBox);
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",

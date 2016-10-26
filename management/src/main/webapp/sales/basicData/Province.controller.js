@@ -7,7 +7,7 @@ sap.ui.define([
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
     var columnNames = [
-        "name", "region"
+        "name", "region", "salesPersons"
     ];
 
     var viewModelData = {
@@ -19,6 +19,9 @@ sap.ui.define([
     };
 
     var oViewModel = new JSONModel(viewModelData);
+
+    var userSelectDialog;
+    var provinceToEditSalesPersons;
 
     function setProvincesModel(thisController) {
         // must clear table selection status
@@ -52,24 +55,28 @@ sap.ui.define([
         this.getView().setModel(oViewModel);
     }
 
-    function onCellLiveChange(e) {
-        var record = e.getSource().getBindingContext().getObject();
-        if (record.id === undefined) {
-            // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
-            return;
-        }
+    function tableItemDataChanged(changedItem) {
         // Remove before add, to avoid duplicate add
-        ArrayUtils.removeFromById(viewModelData.inlineChangedRecords, record.id);
+        ArrayUtils.removeFromById(viewModelData.inlineChangedRecords, changedItem.id);
         /* The reason why create a new array rather than use existing array is if use existing array, the save button enable status binding "{=
          ${/inlineChangedRecords}.length>0 }" just not work.*/
         var allChangedRecords = [
-            record
+            changedItem
         ];
         viewModelData.inlineChangedRecords.forEach(function(item) {
             allChangedRecords.push(item)
         });
         viewModelData.inlineChangedRecords = allChangedRecords;
         oViewModel.refresh();
+    }
+
+    function onCellLiveChange(e) {
+        var record = e.getSource().getBindingContext().getObject();
+        if (record.id === undefined) {
+            // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
+            return;
+        }
+        tableItemDataChanged(record);
     }
 
     function onQuickFilter(e) {
@@ -221,6 +228,35 @@ sap.ui.define([
         ]);
     }
 
+    function onEditSalesPersonsDialogConfirm(oEvent) {
+        var selectedUsers = [];
+        var aContexts = oEvent.getParameter("selectedContexts");
+        aContexts.forEach(function(oContext) {
+            var user = oContext.getObject();
+            selectedUsers.push(user.userName);
+        });
+        provinceToEditSalesPersons.salesPersons = selectedUsers;
+        tableItemDataChanged(provinceToEditSalesPersons);
+    }
+
+    function onEditSalesPersons(e) {
+        provinceToEditSalesPersons = e.getSource().getBindingContext().getObject();
+        if (!userSelectDialog) {
+            userSelectDialog = sap.ui.view({
+                type: sap.ui.core.mvc.ViewType.JS,
+                viewName: "sales.basicData.UserSelect"
+            });
+            // Should attach confirm event listener ONLY one time
+            userSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+                onEditSalesPersonsDialogConfirm(selectConfirmEvent);
+            });
+        }
+        userSelectDialog.getController().initSelection(provinceToEditSalesPersons.salesPersons);
+        // Must call addDependent otherwise the dialog will cannot access the i18n model
+        this.getView().addDependent(userSelectDialog);
+        userSelectDialog.dialog.open();
+    }
+
     var controller = Controller.extend("sales.basicData.Province", {
         onInit: init,
         onCellLiveChange: onCellLiveChange,
@@ -231,7 +267,8 @@ sap.ui.define([
         onRefresh: onRefresh,
         onTableSelectionChange: onTableSelectionChange,
         columnNames: columnNames,
-        sortTable: sortTable
+        sortTable: sortTable,
+        onEditSalesPersons: onEditSalesPersons
     });
     return controller;
 });

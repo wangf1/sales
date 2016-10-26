@@ -1,6 +1,5 @@
 package com.wangf.sales.management.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,11 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
@@ -43,17 +39,6 @@ public class Hospital {
 	@OneToMany
 	@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID")
 	private List<ProductPrice> prices;
-
-	/**
-	 * Hospitals managed by who
-	 */
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
-			@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-					@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, uniqueConstraints = {
-							@UniqueConstraint(columnNames = { "USERNAME", "HOSPITAL_ID" }) })
-	private List<User> users;
 
 	public long getId() {
 		return id;
@@ -93,17 +78,6 @@ public class Hospital {
 
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
-	}
-
-	public List<User> getUsers() {
-		if (users == null) {
-			return new ArrayList<>();
-		}
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
 	}
 
 	public List<ProductPrice> getPrices() {

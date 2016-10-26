@@ -18,7 +18,7 @@
         "resourcePermission":{
             "salesRecord": {"create":true,"delete":true,"read":true,"update":true},
             "province": {"create":false,"delete":false,"read":true,"update":false},
-            "hospital": {"create":true,"delete":true,"read":true,"update":true},
+            "hospital": {"create":false,"delete":false,"read":false,"update":false},
             "department": {"create":true,"delete":true,"read":true,"update":true},
             "departmentName": {"create":false,"delete":false,"read":true,"update":false},
             "product": {"create":false,"delete":false,"read":true,"update":false},
@@ -31,7 +31,7 @@
         "resourcePermission":{
             "salesRecord": {"create":true,"delete":true,"read":true,"update":true},
             "province": {"create":false,"delete":false,"read":true,"update":false},
-            "hospital": {"create":true,"delete":true,"read":true,"update":true},
+            "hospital": {"create":false,"delete":false,"read":false,"update":false},
             "department": {"create":true,"delete":true,"read":true,"update":true},
             "departmentName": {"create":false,"delete":false,"read":true,"update":false},
             "product": {"create":false,"delete":false,"read":true,"update":false},

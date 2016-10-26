@@ -1,14 +1,19 @@
 package com.wangf.sales.management.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
@@ -33,6 +38,17 @@ public class Province {
 	@OneToMany
 	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
 	private List<Bid> bids;
+
+	/**
+	 * Which users response for this province.
+	 */
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "USER_PROVINCE", joinColumns = {
+			@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "USERNAME", "PROVINCE_ID" }) })
+	private List<User> users;
 
 	public long getId() {
 		return id;
@@ -59,6 +75,9 @@ public class Province {
 	}
 
 	public List<Hospital> getHospitals() {
+		if (hospitals == null) {
+			hospitals = new ArrayList<>();
+		}
 		return hospitals;
 	}
 
@@ -72,6 +91,17 @@ public class Province {
 
 	public void setBids(List<Bid> bids) {
 		this.bids = bids;
+	}
+
+	public List<User> getUsers() {
+		if (users == null) {
+			return new ArrayList<>();
+		}
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	@Override

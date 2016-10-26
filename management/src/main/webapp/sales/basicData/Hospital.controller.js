@@ -123,7 +123,7 @@ sap.ui.define([
         ],
         urlForListAll: "getHospitalsByCurrentUser",
         urlForSaveAll: "saveHospitals",
-        urlForDeleteAll: "deleteUserHospitalRelationship",
+        urlForDeleteAll: "deleteHospitals",
         onInit: init,
         onAdd: onAdd,
         onRefresh: onRefresh,

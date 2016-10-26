@@ -49,11 +49,11 @@ public class User {
 	 */
 	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "USER_HOSPITAL", joinColumns = {
+	@JoinTable(name = "USER_PROVINCE", joinColumns = {
 			@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME") }, inverseJoinColumns = {
-					@JoinColumn(name = "HOSPITAL_ID", referencedColumnName = "ID") }, uniqueConstraints = {
-							@UniqueConstraint(columnNames = { "USERNAME", "HOSPITAL_ID" }) })
-	private List<Hospital> hospitals;
+					@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "USERNAME", "PROVINCE_ID" }) })
+	private List<Province> provinces;
 
 	/**
 	 * authorities is required by spring security, see
@@ -150,15 +150,15 @@ public class User {
 		this.authorities = authorities;
 	}
 
-	public List<Hospital> getHospitals() {
-		if (hospitals == null) {
-			hospitals = new ArrayList<>();
+	public List<Province> getProvinces() {
+		if (provinces == null) {
+			provinces = new ArrayList<>();
 		}
-		return hospitals;
+		return provinces;
 	}
 
-	public void setHospitals(List<Hospital> hospitals) {
-		this.hospitals = hospitals;
+	public void setProvinces(List<Province> provinces) {
+		this.provinces = provinces;
 	}
 
 	public List<SalesRecord> getSalesRecords() {

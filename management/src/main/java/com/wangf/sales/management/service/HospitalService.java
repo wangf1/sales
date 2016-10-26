@@ -16,7 +16,6 @@ import com.wangf.sales.management.dao.ProductInstallLocationRepository;
 import com.wangf.sales.management.dao.ProductPriceRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
 import com.wangf.sales.management.dao.SalesRecordRepository;
-import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.HospitalLevel;
@@ -24,7 +23,6 @@ import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.entity.ProductPrice;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.SalesRecord;
-import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.HospitalPojo;
 
 @Service
@@ -36,8 +34,6 @@ public class HospitalService {
 	private HospitalLevelService hospitalLevelService;
 	@Autowired
 	private ProvinceRepository provinceRepository;
-	@Autowired
-	private UserRepository userRepository;
 
 	@Autowired
 	private DepartmentRepository departmentRepository;
@@ -90,29 +86,9 @@ public class HospitalService {
 		return savedPojo;
 	}
 
-	private void assignHospitalToUser(long hospitalId, String currentUser) {
-		// Not sure why for new created hospital entity, must remove it from
-		// entity manager and reload it into entity manager, then add user can
-		// persist into database, otherwise Hibernate will not execute "insert
-		// into user_hospital (hospital_id, username) values (?, ?)"
-		em.clear();
-		Hospital entity = hospitalRepository.findOne(hospitalId);
-		User user = userRepository.findOne(currentUser);
-		if (entity.getUsers().contains(user)) {
-			return;
-		}
-		entity.getUsers().add(user);
-		hospitalRepository.save(entity);
-	}
-
-	private void insertOrUpdateForUser(HospitalPojo pojo, String currentUser) {
-		HospitalPojo savedPojo = insertOrUpdateHospital(pojo);
-		assignHospitalToUser(savedPojo.getId(), currentUser);
-	}
-
-	public List<Long> insertOrUpdateForUser(List<HospitalPojo> pojos, String currentUser) {
+	public List<Long> insertOrUpdateHospitals(List<HospitalPojo> pojos) {
 		for (HospitalPojo pojo : pojos) {
-			insertOrUpdateForUser(pojo, currentUser);
+			insertOrUpdateHospital(pojo);
 		}
 		List<Long> allIds = new ArrayList<>();
 		for (HospitalPojo pojo : pojos) {

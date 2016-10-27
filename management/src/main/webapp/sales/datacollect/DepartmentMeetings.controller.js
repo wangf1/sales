@@ -6,6 +6,14 @@ sap.ui.define([
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
+    var STATUS_PLAN = "预申请";
+    var STATUS_FINISH = "已完成";
+    var STATUS_ADDITONAL = "无预申请增补";
+    var firstDayOfCurrentMonth = Date.parse(DateTimeUtils.firstDayOfCurrentMonth());
+    var firstDayOfPreviousMonth = Date.parse(DateTimeUtils.firstDayOfPreviousMonth());
+    oViewModel.setProperty("/firstDayOfCurrentMonth", firstDayOfCurrentMonth);
+    oViewModel.setProperty("/firstDayOfPreviousMonth", firstDayOfPreviousMonth);
+
     function init() {
         CRUDTableController.prototype.onInit.call(this);
         var startAt = DateTimeUtils.firstDayOfPreviousMonth();
@@ -35,6 +43,50 @@ sap.ui.define([
         return searchCriteria;
     }
 
+    function cloneAndRemoveOneFromArray(array, element) {
+        var cloned = array.slice(0);
+        var index = array.indexOf(element);
+        if (index > -1) {
+            cloned.splice(index, 1);
+        }
+        return cloned;
+    }
+
+    function setAvailableStatusForMeeting(meeting) {
+        // 本月不能填“已完成”，
+        // 上月不能填“无预申请增补”，
+        // 上月是“无预申请增补”的不能变成别的
+        // 大上月及以前不能有任何修改
+        var allStatuses = oViewModel.getProperty("/statuses");
+        if (!meeting.date) {
+            // If date is undefined, it is new added, "finish" status should removed
+            var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
+            meeting["availableStatuses"] = cloned;
+        } else if (meeting.date) {
+            var meetingDate = Date.parse(meeting.date);
+            var isInCurrentMonth = meetingDate >= firstDayOfCurrentMonth;
+            var isInLastMonth = meetingDate < firstDayOfCurrentMonth && meetingDate >= firstDayOfPreviousMonth;
+            if (isInCurrentMonth) {
+                // 本月不能填“已完成”，
+                var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
+                meeting["availableStatuses"] = cloned;
+            } else if (isInLastMonth) {
+                // 上月不能填“无预申请增补”
+                var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_ADDITONAL);
+                meeting["availableStatuses"] = cloned;
+                if (meeting.status === STATUS_ADDITONAL) {
+                    // 上月是“无预申请增补”的不能变成别的
+                    meeting["availableStatuses"] = [
+                        STATUS_ADDITONAL
+                    ];
+                }
+            } else {
+                // 大上月及以前不能有任何修改, will disable the select on UI
+                meeting["availableStatuses"] = allStatuses;
+            }
+        }
+    }
+
     function setTableModel() {
         var searchCriteria = buildSearchCriteria();
         var promise = AjaxUtils.ajaxCallAsPromise({
@@ -52,6 +104,7 @@ sap.ui.define([
             tableData.forEach(function(dataItem) {
                 dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
                 dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
+                setAvailableStatusForMeeting(dataItem);
             });
             // Must refresh model for each dataItem, otherwise UI will not update
             oViewModel.refresh();
@@ -123,11 +176,10 @@ sap.ui.define([
             dataType: "json",
             contentType: "application/json"
         });
-        promise.then(function(result) {
+        var promiseAfterGetStatuses = promise.then(function(result) {
             var types = result.data;
-            // 本月不能填“已完成”，上月不能填“无预申请增补”，大上月及以前不能有任何修改
             var fixedTypes = [
-                "预申请", "已完成", "无预申请增补"
+                STATUS_PLAN, STATUS_FINISH, STATUS_ADDITONAL
             ];
             fixedTypes.forEach(function(type) {
                 if (types.indexOf(type) < 0) {
@@ -136,21 +188,22 @@ sap.ui.define([
             });
             oViewModel.setProperty("/statuses", types);
         });
+        return promiseAfterGetStatuses;
     }
 
     function onRefresh() {
         var that = this;
         CRUDTableController.prototype.clearSelectAndChangedData.call(this);
         var promiseAfterGetAllHospitals = refreshHospitals();
-        promiseAfterGetAllHospitals.then(function() {
-            var promiseAfterGetAllProvinces = refreshProvinces();
-            promiseAfterGetAllProvinces.then(function() {
-                that.setTableModel();
-            });
+        var promiseAfterGetAllProvinces = refreshProvinces();
+        var promiseAfterGetStatuses = refreshDepartmentMeetingStatuses();
+        Promise.all([
+            promiseAfterGetAllHospitals, promiseAfterGetAllProvinces, promiseAfterGetStatuses
+        ]).then(function() {
+            that.setTableModel();
         });
         refreshAvailableRegions();
         refreshProducts();
-        refreshDepartmentMeetingStatuses();
         refreshDepartmentNames();
     }
 
@@ -167,6 +220,10 @@ sap.ui.define([
             newAdded["hospital"] = undefined;
         }
         newAdded["department"] = oViewModel.getProperty("/departmentNames")[0];
+        setAvailableStatusForMeeting(newAdded);
+        newAdded["status"] = newAdded["availableStatuses"][0];
+        // Purpose of set a date is the cell enabled status depends on date
+        newAdded["date"] = DateTimeUtils.today();
         oViewModel.refresh();
         return newAdded;
     }
@@ -239,6 +296,25 @@ sap.ui.define([
         return filteredHospitals;
     }
 
+    function onTableSelectionChange() {
+        CRUDTableController.prototype.onTableSelectionChange.call(this);
+
+        // Only allow delete record of current month
+        var isSelectedSalesRecordEditable = true;
+        var selectedRecords = oViewModel.getProperty("/selectedRecords");
+        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
+        if (!isAdminRole) {
+            // Admin user can edit any record!
+            selectedRecords.forEach(function(record) {
+                var isInCurrentMonth = Date.parse(record.date) >= firstDayOfCurrentMonth;
+                if (!isInCurrentMonth) {
+                    isSelectedSalesRecordEditable = false;
+                }
+            });
+        }
+        oViewModel.setProperty("/isSelectedSalesRecordEditable", isSelectedSalesRecordEditable);
+    }
+
     var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
         columnNames: [
             "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "subject", "planCost", "status", "actualCost"
@@ -254,7 +330,8 @@ sap.ui.define([
         onRegionChanged: onRegionChanged,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
-        onProvinceChanged: onProvinceChanged
+        onProvinceChanged: onProvinceChanged,
+        onTableSelectionChange: onTableSelectionChange
     });
     return controller;
 });

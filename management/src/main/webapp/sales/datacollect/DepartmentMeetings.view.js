@@ -58,7 +58,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
-            enabled: "{= ${/selectedRecords}.length>0 }",
+            enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedSalesRecordEditable} }",
             press: function() {
                 oController.onDelete();
             }
@@ -96,6 +96,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
+            var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} }";
+            var enableIfInThisMonthOrLastMonth = "{= Date.parse(${date}) >= ${/firstDayOfPreviousMonth} }";
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
@@ -122,6 +124,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/allProducts",
@@ -142,6 +146,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onRegionChanged(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/regions",
@@ -158,6 +164,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onProvinceChanged(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "filteredProvinces",
@@ -174,6 +182,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "filteredHospitals",
@@ -190,6 +200,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onProvinceChanged(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/departmentNames",
@@ -206,9 +218,11 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonthOrLastMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/statuses",
+                        path: "availableStatuses",
                         template: new sap.ui.core.Item({
                             key: "{}",
                             text: "{}"
@@ -219,6 +233,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

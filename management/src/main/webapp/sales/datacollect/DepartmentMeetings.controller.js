@@ -9,9 +9,8 @@ sap.ui.define([
     var STATUS_PLAN = "预申请";
     var STATUS_FINISH = "已完成";
     var STATUS_ADDITONAL = "无预申请增补";
-    var firstDayOfCurrentMonth = Date.parse(DateTimeUtils.firstDayOfCurrentMonth());
+    var firstDayOfCurrentMonth = oViewModel.getProperty("/firstDayOfCurrentMonth");
     var firstDayOfPreviousMonth = Date.parse(DateTimeUtils.firstDayOfPreviousMonth());
-    oViewModel.setProperty("/firstDayOfCurrentMonth", firstDayOfCurrentMonth);
     oViewModel.setProperty("/firstDayOfPreviousMonth", firstDayOfPreviousMonth);
 
     function init() {
@@ -296,25 +295,6 @@ sap.ui.define([
         return filteredHospitals;
     }
 
-    function onTableSelectionChange() {
-        CRUDTableController.prototype.onTableSelectionChange.call(this);
-
-        // Only allow delete record of current month
-        var isSelectedSalesRecordEditable = true;
-        var selectedRecords = oViewModel.getProperty("/selectedRecords");
-        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
-        if (!isAdminRole) {
-            // Admin user can edit any record!
-            selectedRecords.forEach(function(record) {
-                var isInCurrentMonth = Date.parse(record.date) >= firstDayOfCurrentMonth;
-                if (!isInCurrentMonth) {
-                    isSelectedSalesRecordEditable = false;
-                }
-            });
-        }
-        oViewModel.setProperty("/isSelectedSalesRecordEditable", isSelectedSalesRecordEditable);
-    }
-
     var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
         columnNames: [
             "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "subject", "planCost", "status", "actualCost"
@@ -331,7 +311,6 @@ sap.ui.define([
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
         onProvinceChanged: onProvinceChanged,
-        onTableSelectionChange: onTableSelectionChange
     });
     return controller;
 });

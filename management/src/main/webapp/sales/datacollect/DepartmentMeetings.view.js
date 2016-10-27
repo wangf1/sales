@@ -58,7 +58,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
-            enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedSalesRecordEditable} }",
+            enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedRecordsEditable} }",
             press: function() {
                 oController.onDelete();
             }
@@ -96,8 +96,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
-            var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} }";
-            var enableIfInThisMonthOrLastMonth = "{= Date.parse(${date}) >= ${/firstDayOfPreviousMonth} }";
+            var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} || ${permissionModel>/user/delete} }";
+            var enableIfInThisMonthOrLastMonth = "{= Date.parse(${date}) >= ${/firstDayOfPreviousMonth} || ${permissionModel>/user/delete} }";
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,

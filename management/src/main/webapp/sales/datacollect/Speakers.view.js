@@ -58,7 +58,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
-            enabled: "{= ${/selectedRecords}.length>0 }",
+            enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedRecordsEditable} }",
             press: function() {
                 oController.onDelete();
             }
@@ -116,12 +116,14 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                     ]
                 })
             }));
+            var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} || ${permissionModel>/user/delete} }";
             if (columName === "product") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/allProducts",
@@ -142,6 +144,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                         oController.onRegionChanged(e);
                     },
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/regions",
@@ -158,6 +161,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                         oController.onProvinceChanged(e);
                     },
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "filteredProvinces",
@@ -174,6 +178,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "filteredHospitals",
@@ -190,6 +195,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                         oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/speakerTypes",
@@ -203,6 +209,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

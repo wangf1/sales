@@ -10,16 +10,13 @@ sap.ui.define([
         tableData: [],
         selectedRecords: [],
         inlineChangedRecords: [],
-        newAddedRecords: []
+        newAddedRecords: [],
+        firstDayOfCurrentMonth: Date.parse(DateTimeUtils.firstDayOfCurrentMonth())
     };
 
     var oViewModel = new JSONModel(viewModelData);
 
     function setTableModel() {
-        // must clear table selection status
-        var table = this.byId("theTable");
-        table.removeSelections();
-
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
             url: this.urlForListAll,
@@ -196,6 +193,10 @@ sap.ui.define([
     }
 
     function clearSelectAndChangedData() {
+        // must clear table selection status
+        var table = this.byId("theTable");
+        table.removeSelections();
+        // clear models
         viewModelData.selectedRecords = [];
         viewModelData.inlineChangedRecords = [];
         viewModelData.newAddedRecords = [];
@@ -208,6 +209,21 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
+    function isSelectedRecordsDeletable() {
+        // Only allow delete record of current month
+        viewModelData.isSelectedRecordsEditable = true;
+        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
+        if (!isAdminRole) {
+            // Admin user can edit any record!
+            viewModelData.selectedRecords.forEach(function(record) {
+                var isInCurrentMonth = Date.parse(record.date) >= viewModelData.firstDayOfCurrentMonth;
+                if (!isInCurrentMonth) {
+                    viewModelData.isSelectedRecordsEditable = false;
+                }
+            });
+        }
+    }
+
     function onTableSelectionChange() {
         var table = this.byId("theTable");
         var rows = table.getSelectedContexts();
@@ -216,6 +232,8 @@ sap.ui.define([
             selectedRecords.push(row.getObject());
         });
         viewModelData.selectedRecords = selectedRecords;
+
+        this.isSelectedRecordsDeletable();
         oViewModel.refresh();
     }
 
@@ -258,7 +276,8 @@ sap.ui.define([
         afterShow: afterShow,
         setTableModel: setTableModel,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
-        clearSelectAndChangedData: clearSelectAndChangedData
+        clearSelectAndChangedData: clearSelectAndChangedData,
+        isSelectedRecordsDeletable: isSelectedRecordsDeletable
     });
     return controller;
 });

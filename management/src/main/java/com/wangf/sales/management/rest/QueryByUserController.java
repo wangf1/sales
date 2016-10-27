@@ -1,7 +1,6 @@
 package com.wangf.sales.management.rest;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +30,8 @@ public class QueryByUserController {
 	}
 
 	@RequestMapping(path = "/getRegionsByCurrentUser", method = RequestMethod.GET)
-	public Set<String> getRegionsByCurrentUser() {
-		Set<String> result = userService.listRegionsForUser(SecurityUtils.getCurrentUserName());
+	public List<String> getRegionsByCurrentUser() {
+		List<String> result = userService.listRegionsForUser(SecurityUtils.getCurrentUserName());
 		return result;
 	}
 

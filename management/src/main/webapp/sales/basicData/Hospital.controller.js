@@ -9,7 +9,7 @@ sap.ui.define([
     function refreshAvailableProvinces() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProvinces",
+            url: "getProvincesByCurrentUser",
             dataType: "json",
             contentType: "application/json"
         });
@@ -69,7 +69,7 @@ sap.ui.define([
     function refreshAvailableRegions() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getAllRegions",
+            url: "getRegionsByCurrentUser",
             dataType: "json",
             contentType: "application/json"
         });

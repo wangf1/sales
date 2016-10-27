@@ -59,6 +59,34 @@ public class ProductPricePojo {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((hospital == null) ? 0 : hospital.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductPricePojo other = (ProductPricePojo) obj;
+		if (hospital == null) {
+			if (other.hospital != null)
+				return false;
+		} else if (!hospital.equals(other.hospital))
+			return false;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return "ProductPricePojo [id=" + id + ", product=" + product + ", hospital=" + hospital + ", price=" + price
 				+ "]";

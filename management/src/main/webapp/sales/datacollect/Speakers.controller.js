@@ -61,7 +61,7 @@ sap.ui.define([
     function refreshProvinces() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProvinces",
+            url: "getProvincesByCurrentUser",
             dataType: "json",
             contentType: "application/json"
         });
@@ -84,7 +84,7 @@ sap.ui.define([
     function refreshAvailableRegions() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getAllRegions",
+            url: "getRegionsByCurrentUser",
             dataType: "json",
             contentType: "application/json"
         });
@@ -145,7 +145,7 @@ sap.ui.define([
         newAdded["product"] = oViewModel.getProperty("/allProducts")[0].name;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
-        newAdded["province"] = newAdded["filteredProvinces"][0];
+        newAdded["province"] = newAdded["filteredProvinces"][0].name;
         newAdded["filteredHospitals"] = filterHospitalByProvince(newAdded.province);
         if (newAdded["filteredHospitals"][0]) {
             newAdded["hospital"] = newAdded["filteredHospitals"][0].name;

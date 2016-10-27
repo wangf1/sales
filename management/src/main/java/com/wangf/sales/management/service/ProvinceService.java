@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class ProvinceService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@PersistenceContext
+	private EntityManager em;
+
 	public ProvincePojo insertOrUpdate(ProvincePojo pojo) {
 
 		/*
@@ -39,14 +44,23 @@ public class ProvinceService {
 		}
 		province.setName(pojo.getName());
 		province.setRegion(pojo.getRegion());
-		province.getUsers().clear();
+		// For new created province, Must save and flush and CLEAR province
+		// before save the user-province
+		// relationship. Otherwise for new created province, the user-province
+		// relationship will not be saved, root cause unknown.
+		provinceRepository.save(province);
+		em.flush();
+		em.clear();
+
+		Province alreadySaved = provinceRepository.findOne(province.getId());
+		alreadySaved.getUsers().clear();
 		for (String userName : pojo.getSalesPersons()) {
 			User user = userRepository.findByUserName(userName);
-			province.getUsers().add(user);
+			alreadySaved.getUsers().add(user);
 		}
-		provinceRepository.save(province);
+		provinceRepository.save(alreadySaved);
 
-		ProvincePojo savedPojo = ProvincePojo.from(province);
+		ProvincePojo savedPojo = ProvincePojo.from(alreadySaved);
 		return savedPojo;
 	}
 

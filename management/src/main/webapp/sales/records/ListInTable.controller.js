@@ -91,12 +91,7 @@ sap.ui.define([
         // set i18n model
         i18nUtils.initAndGetResourceBundle();
         // populate view model date
-        this.onAdvanceSearchSalesRecord();
-        setRegionsModel();
-        setProvincesModel();
-        setHospitalsModel();
-        setDepartmentsModel();
-        setProductsModel();
+        this.onRefresh();
         // set model into view
         this.getView().setModel(oViewModel);
     };
@@ -163,8 +158,8 @@ sap.ui.define([
         return searchCriteria;
     }
 
-    function onAdvanceSearchSalesRecord() {
-        var searchCriteria = buildSearchCriteria(this);
+    function onAdvanceSearchSalesRecord(thicController) {
+        var searchCriteria = buildSearchCriteria(thicController);
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "salesRecordsAdvanceSearch",
@@ -175,6 +170,15 @@ sap.ui.define([
         promise.then(function(result) {
             oViewModel.setProperty("/salesRecords", result.data);
         });
+    }
+
+    function onRefresh() {
+        onAdvanceSearchSalesRecord(this);
+        setRegionsModel();
+        setProvincesModel();
+        setHospitalsModel();
+        setDepartmentsModel();
+        setProductsModel();
     }
 
     function removeSalesRecordFrom(salesRecords, savedRecordId) {
@@ -425,14 +429,14 @@ sap.ui.define([
             url: "cloneLastMonthSalesRecords",
         });
         promise.then(function(result) {
-            that.onAdvanceSearchSalesRecord();
+            that.onRefresh();
         });
     }
 
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
-        onAdvanceSearchSalesRecord: onAdvanceSearchSalesRecord,
+        onRefresh: onRefresh,
         columNames: columNames,
         onAddOrEditSalesRecord: onAddOrEditSalesRecord,
         onDeleteSalesRecord: onDeleteSalesRecord,

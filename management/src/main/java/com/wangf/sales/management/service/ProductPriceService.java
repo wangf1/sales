@@ -45,12 +45,14 @@ public class ProductPriceService {
 		} else {
 			User manager = userService.getCurrentUser();
 			List<User> employees = manager.getEmployees();
-			for (User employee : employees) {
+			List<User> allUserToList = new ArrayList<>();
+			allUserToList.add(manager);
+			allUserToList.addAll(employees);
+			for (User user : allUserToList) {
 				// If the user is a manager, also show prices belongs to his
 				// employees
-				getPricesByUser(result, employee);
+				getPricesByUser(result, user);
 			}
-			getPricesByUser(result, manager);
 		}
 		return result;
 	}
@@ -63,6 +65,9 @@ public class ProductPriceService {
 				List<ProductPrice> prices = hospital.getPrices();
 				for (ProductPrice price : prices) {
 					ProductPricePojo pojo = ProductPricePojo.from(price);
+					if (result.contains(pojo)) {
+						continue;
+					}
 					result.add(pojo);
 				}
 			}

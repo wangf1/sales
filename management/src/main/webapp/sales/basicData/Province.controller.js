@@ -30,7 +30,7 @@ sap.ui.define([
 
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProvinces",
+            url: "getProvincesByCurrentUser",
             dataType: "json",
             contentType: "application/json"
         });
@@ -56,6 +56,12 @@ sap.ui.define([
     }
 
     function tableItemDataChanged(changedItem) {
+        if (changedItem.id === undefined) {
+            // Must refresh model in order UI can view salesPersons change
+            oViewModel.refresh();
+            // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
+            return;
+        }
         // Remove before add, to avoid duplicate add
         ArrayUtils.removeFromById(viewModelData.inlineChangedRecords, changedItem.id);
         /* The reason why create a new array rather than use existing array is if use existing array, the save button enable status binding "{=
@@ -67,15 +73,12 @@ sap.ui.define([
             allChangedRecords.push(item)
         });
         viewModelData.inlineChangedRecords = allChangedRecords;
+        // Must refresh model in order change button enabled status
         oViewModel.refresh();
     }
 
     function onCellLiveChange(e) {
         var record = e.getSource().getBindingContext().getObject();
-        if (record.id === undefined) {
-            // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
-            return;
-        }
         tableItemDataChanged(record);
     }
 
@@ -199,8 +202,16 @@ sap.ui.define([
         });
     }
 
+    function clearSelectAndChangedData() {
+        viewModelData.selectedRecords = [];
+        viewModelData.inlineChangedRecords = [];
+        viewModelData.newAddedRecords = [];
+        oViewModel.refresh();
+    }
+
     function onRefresh() {
         setProvincesModel(this);
+        clearSelectAndChangedData
     }
 
     function onTableSelectionChange() {

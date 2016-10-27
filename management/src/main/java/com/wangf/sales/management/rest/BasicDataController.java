@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -104,12 +103,6 @@ public class BasicDataController {
 	public List<Long> deleteProducts(@RequestBody List<Long> ids) {
 		productService.deleteByIds(ids);
 		return ids;
-	}
-
-	@RequestMapping(path = "/listAllProvinces", method = RequestMethod.GET)
-	public List<ProvincePojo> listAllProvinces() {
-		List<ProvincePojo> provincePojos = provinceServcie.listAll();
-		return provincePojos;
 	}
 
 	@RequestMapping(path = "/saveProvinces", method = RequestMethod.POST)
@@ -209,12 +202,6 @@ public class BasicDataController {
 	public List<Long> deleteProductPrices(@RequestBody List<Long> ids) {
 		priceService.deleteByIds(ids);
 		return ids;
-	}
-
-	@RequestMapping(path = "/getAllRegions", method = RequestMethod.GET)
-	public Set<String> getRegionsByCurrentUser() {
-		Set<String> result = provinceServcie.listAllRegions();
-		return result;
 	}
 
 	@RequestMapping(path = "/deleteHospitals", method = RequestMethod.POST)

@@ -37,6 +37,11 @@ public class Department {
 	@JoinColumn(name = "ORDER_DEPARTMENT_ID", referencedColumnName = "ID")
 	private List<SalesRecord> salesRecords;
 
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
+	private List<DepartmentMeeting> departmentMeeting;
+
 	public long getId() {
 		return id;
 	}
@@ -75,6 +80,14 @@ public class Department {
 
 	public void setSalesRecords(List<SalesRecord> salesRecords) {
 		this.salesRecords = salesRecords;
+	}
+
+	public List<DepartmentMeeting> getDepartmentMeeting() {
+		return departmentMeeting;
+	}
+
+	public void setDepartmentMeeting(List<DepartmentMeeting> departmentMeeting) {
+		this.departmentMeeting = departmentMeeting;
 	}
 
 	@Override

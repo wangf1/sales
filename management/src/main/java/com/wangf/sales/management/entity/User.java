@@ -80,6 +80,11 @@ public class User {
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
 	private List<Bid> bids;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
+	private List<DepartmentMeeting> departmentMeetings;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -183,6 +188,14 @@ public class User {
 
 	public void setBids(List<Bid> bids) {
 		this.bids = bids;
+	}
+
+	public List<DepartmentMeeting> getDepartmentMeetings() {
+		return departmentMeetings;
+	}
+
+	public void setDepartmentMeetings(List<DepartmentMeeting> departmentMeetings) {
+		this.departmentMeetings = departmentMeetings;
 	}
 
 	@Override

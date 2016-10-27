@@ -39,31 +39,74 @@ public class UserService {
 	private HospitalRepository hospitalRepository;
 	@Autowired
 	private AuthorityServcie authorityServcie;
+	@Autowired
+	private ProvinceService provinceService;
 
 	@PersistenceContext
 	private EntityManager em;
 
-	public Set<String> listRegionsForUser(String userName) {
-		User user = userRepository.findOne(userName);
-		List<Province> provinces = user.getProvinces();
-		Set<String> regions = new HashSet<>();
-		for (Province province : provinces) {
-			regions.add(province.getRegion());
+	public List<String> listRegionsForUser(String userName) {
+		Set<String> regionsSet = new HashSet<>();
+		if (SecurityUtils.isCurrentUserAdmin()) {
+			Set<String> all = provinceService.listAllRegions();
+			regionsSet.addAll(all);
+		} else {
+			User manager = userRepository.findOne(userName);
+			List<User> employees = manager.getEmployees();
+			List<User> allUsersNeedList = new ArrayList<>();
+			allUsersNeedList.add(manager);
+			allUsersNeedList.addAll(employees);
+			for (User user : allUsersNeedList) {
+				// If the user is a manager, also show hospitals belongs to his
+				// employees
+				List<Province> provinces = user.getProvinces();
+				for (Province province : provinces) {
+					regionsSet.add(province.getRegion());
+				}
+			}
 		}
-		return regions;
+
+		List<String> sortedResult = new ArrayList<>();
+		sortedResult.addAll(regionsSet);
+		Comparator<String> compareByName = (String a, String b) -> {
+			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+			int result = chineseCollator.compare(a, b);
+			return result;
+		};
+		Collections.sort(sortedResult, compareByName);
+		return sortedResult;
 	}
 
 	public List<ProvincePojo> listProvincesForUser(String userName) {
-		User user = userRepository.findOne(userName);
-		List<Province> provinces = user.getProvinces();
 		List<ProvincePojo> pojos = new ArrayList<>();
-		for (Province province : provinces) {
-			ProvincePojo pojo = ProvincePojo.from(province);
-			if (pojos.contains(pojo)) {
-				continue;
+		if (SecurityUtils.isCurrentUserAdmin()) {
+			List<ProvincePojo> all = provinceService.listAll();
+			pojos.addAll(all);
+		} else {
+			User manager = userRepository.findOne(userName);
+			List<User> employees = manager.getEmployees();
+			List<User> allUsersNeedList = new ArrayList<>();
+			allUsersNeedList.add(manager);
+			allUsersNeedList.addAll(employees);
+			for (User user : allUsersNeedList) {
+				List<Province> provinces = user.getProvinces();
+				for (Province province : provinces) {
+					ProvincePojo pojo = ProvincePojo.from(province);
+					if (pojos.contains(pojo)) {
+						continue;
+					}
+					pojos.add(pojo);
+				}
 			}
-			pojos.add(pojo);
+			return pojos;
 		}
+
+		Comparator<ProvincePojo> compareByName = (ProvincePojo a, ProvincePojo b) -> {
+			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+			int result = chineseCollator.compare(a.getName(), b.getName());
+			return result;
+		};
+		Collections.sort(pojos, compareByName);
 		return pojos;
 	}
 
@@ -85,7 +128,13 @@ public class UserService {
 				// employees
 				List<Province> provinces = user.getProvinces();
 				for (Province province : provinces) {
-					hospitals.addAll(province.getHospitals());
+					List<Hospital> hospitalEntities = province.getHospitals();
+					for (Hospital hospital : hospitalEntities) {
+						if (hospitals.contains(hospital)) {
+							continue;
+						}
+						hospitals.add(hospital);
+					}
 				}
 			}
 		}
@@ -100,7 +149,6 @@ public class UserService {
 			int result = chineseCollator.compare(a.getName(), b.getName());
 			return result;
 		};
-
 		Collections.sort(pojos, compareByName);
 		return pojos;
 	}

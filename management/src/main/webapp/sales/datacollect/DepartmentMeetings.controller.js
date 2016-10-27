@@ -51,6 +51,7 @@ sap.ui.define([
             var tableData = oViewModel.getProperty("/tableData");
             tableData.forEach(function(dataItem) {
                 dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
+                dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
             });
             // Must refresh model for each dataItem, otherwise UI will not update
             oViewModel.refresh();
@@ -91,16 +92,66 @@ sap.ui.define([
             oViewModel.setProperty("/regions", result.data);
         });
     }
+    function refreshHospitals() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getHospitalsByCurrentUser",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        var promiseAfterGetAllHospitals = promise.then(function(result) {
+            oViewModel.setProperty("/allHospitals", result.data);
+        });
+        return promiseAfterGetAllHospitals;
+    }
+    function refreshDepartmentNames() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "listAllDepartments",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        var promiseAfterGetAllHospitals = promise.then(function(result) {
+            oViewModel.setProperty("/departmentNames", result.data);
+        });
+        return promiseAfterGetAllHospitals;
+    }
+    function refreshDepartmentMeetingStatuses() {
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "GET",
+            url: "getDepartmentMeetingStatuses",
+            dataType: "json",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            var types = result.data;
+            // 本月不能填“已完成”，上月不能填“无预申请增补”，大上月及以前不能有任何修改
+            var fixedTypes = [
+                "预申请", "已完成", "无预申请增补"
+            ];
+            fixedTypes.forEach(function(type) {
+                if (types.indexOf(type) < 0) {
+                    types.push(type);
+                }
+            });
+            oViewModel.setProperty("/statuses", types);
+        });
+    }
 
     function onRefresh() {
         var that = this;
         CRUDTableController.prototype.clearSelectAndChangedData.call(this);
-        var promiseAfterGetAllProvinces = refreshProvinces();
-        promiseAfterGetAllProvinces.then(function() {
-            that.setTableModel();
+        var promiseAfterGetAllHospitals = refreshHospitals();
+        promiseAfterGetAllHospitals.then(function() {
+            var promiseAfterGetAllProvinces = refreshProvinces();
+            promiseAfterGetAllProvinces.then(function() {
+                that.setTableModel();
+            });
         });
         refreshAvailableRegions();
         refreshProducts();
+        refreshDepartmentMeetingStatuses();
+        refreshDepartmentNames();
     }
 
     function onAdd() {
@@ -108,7 +159,14 @@ sap.ui.define([
         newAdded["product"] = oViewModel.getProperty("/allProducts")[0].name;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
-        newAdded["province"] = newAdded["filteredProvinces"][0];
+        newAdded["province"] = newAdded["filteredProvinces"][0].name;
+        newAdded["filteredHospitals"] = filterHospitalByProvince(newAdded.province);
+        if (newAdded["filteredHospitals"][0]) {
+            newAdded["hospital"] = newAdded["filteredHospitals"][0].name;
+        } else {
+            newAdded["hospital"] = undefined;
+        }
+        newAdded["department"] = oViewModel.getProperty("/departmentNames")[0];
         oViewModel.refresh();
         return newAdded;
     }
@@ -116,6 +174,23 @@ sap.ui.define([
     function onRegionChanged(e) {
         var dataItem = e.getSource().getBindingContext().getObject()
         dataItem["filteredProvinces"] = filterProvinceByRegion(dataItem.region);
+        if (dataItem["filteredProvinces"][0]) {
+            dataItem["province"] = dataItem["filteredProvinces"][0].name;
+        } else {
+            dataItem["province"] = undefined;
+        }
+        onProvinceChanged(e);
+        CRUDTableController.prototype.onCellLiveChange.call(this, e);
+    }
+
+    function onProvinceChanged(e) {
+        var dataItem = e.getSource().getBindingContext().getObject()
+        dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
+        if (dataItem["filteredHospitals"][0]) {
+            dataItem["hospital"] = dataItem["filteredHospitals"][0].name;
+        } else {
+            dataItem["hospital"] = undefined;
+        }
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
@@ -154,21 +229,32 @@ sap.ui.define([
         });
     }
 
-    var controller = CRUDTableController.extend("sales.datacollect.Bids", {
+    function filterHospitalByProvince(province) {
+        var filteredHospitals = [];
+        oViewModel.getProperty("/allHospitals").forEach(function(hospital) {
+            if (hospital.province === province) {
+                filteredHospitals.push(hospital);
+            }
+        });
+        return filteredHospitals;
+    }
+
+    var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "description", "product", "price"
+            "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "subject", "planCost", "status", "actualCost"
         ],
         onInit: init,
-        urlForListAll: "getBidsByCurrentUser",
-        urlForSaveAll: "saveBids",
-        urlForDeleteAll: "deleteBids",
-        urlForExport: "exportBids",
+        urlForListAll: "getDepartmentMeetingsByCurrentUser",
+        urlForSaveAll: "saveDepartmentMeetings",
+        urlForDeleteAll: "deleteDepartmentMeetings",
+        urlForExport: "exportDepartmentMeetings",
         onRefresh: onRefresh,
         onAdd: onAdd,
         setTableModel: setTableModel,
         onRegionChanged: onRegionChanged,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
+        onProvinceChanged: onProvinceChanged
     });
     return controller;
 });

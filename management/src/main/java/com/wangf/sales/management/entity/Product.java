@@ -47,6 +47,11 @@ public class Product {
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private List<Bid> bids;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	private List<DepartmentMeeting> departmentMeetings;
+
 	public long getId() {
 		return id;
 	}
@@ -101,6 +106,14 @@ public class Product {
 
 	public void setBids(List<Bid> bids) {
 		this.bids = bids;
+	}
+
+	public List<DepartmentMeeting> getDepartmentMeetings() {
+		return departmentMeetings;
+	}
+
+	public void setDepartmentMeetings(List<DepartmentMeeting> departmentMeetings) {
+		this.departmentMeetings = departmentMeetings;
 	}
 
 	@Override

@@ -21,7 +21,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             icon: "sap-icon://search",
             type: sap.m.ButtonType.Emphasized,
             press: function() {
-                oController.onAdvanceSearchSalesRecord();
+                oController.onRefresh();
             }
         }));
         toolBar.addContent(new sap.m.Button({
@@ -94,7 +94,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             icon: "sap-icon://refresh",
             tooltip: "{i18n>refresh_sales_record_tooltip}",
             press: function(e) {
-                oController.onAdvanceSearchSalesRecord();
+                oController.onRefresh();
             }
         }));
         toolbarContent.push(new sap.m.Button({

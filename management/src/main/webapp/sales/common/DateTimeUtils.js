@@ -15,9 +15,8 @@ sales.common.DateTimeUtils = (function() {
     }
 
     function yyyyMMdd(date) {
-        var isoString = date.toISOString();
-        var dateString = isoString.substr(0, 10);
-        return dateString;
+        var yyyy_MM_dd = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        return yyyy_MM_dd;
     }
 
     function firstDayOfCurrentMonth() {
@@ -29,8 +28,7 @@ sales.common.DateTimeUtils = (function() {
 
     function today() {
         var current = new Date();
-        var isoString = current.toISOString();
-        var dateString = isoString.substr(0, 10);
+        var dateString = yyyyMMdd(current);
         return dateString;
     }
 

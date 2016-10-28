@@ -39,7 +39,7 @@ sap.ui.jsview("sales.datacollect.DataCollect", (function() {
 
         var page = new sap.m.Page({
             showHeader: false,
-            enableScrolling: true,
+            enableScrolling: false,
             content: [
                 iconTabBar, pageContainer
             ]

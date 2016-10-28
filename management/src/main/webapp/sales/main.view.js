@@ -56,7 +56,7 @@ sap.ui.jsview("sales.main", (function() {
 
         var page = new sap.m.Page({
             showHeader: false,
-            enableScrolling: true,
+            enableScrolling: false,
             subHeader: new sap.m.Toolbar({
                 content: [
                     new sap.m.Text({

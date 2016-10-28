@@ -26,7 +26,6 @@ sap.ui.define([
 
     function createPageByTabKey(key, thisController) {
         var viewName;
-        var viewWidth = "auto";
         switch (key) {
             case "agencyRecruit":
                 viewName = "sales.datacollect.AgencyRecruit";
@@ -42,11 +41,9 @@ sap.ui.define([
                 break;
             case "departmentMeetings":
                 viewName = "sales.datacollect.DepartmentMeetings";
-                viewWidth = "1920px";
                 break;
             case "regionMeetings":
                 viewName = "sales.datacollect.RegionMeetings";
-                viewWidth = "1920px";
                 break;
             default:
                 break;
@@ -55,12 +52,10 @@ sap.ui.define([
             type: sap.ui.core.mvc.ViewType.JS,
             viewName: viewName,
             viewData: buildViewDataAccordingToTabKey(key),
-            width: viewWidth
         });
-        var page = new sap.m.ScrollContainer(thisController.createId(key), {
+        // Not sure why ScrollContainer cannot scroll , so roll back to use Page.
+        var page = new sap.m.Page(thisController.createId(key), {
             showHeader: false,
-            horizontal: true,
-            vertical: true,
             showNavButton: false,
             content: [
                 view
@@ -69,6 +64,9 @@ sap.ui.define([
                 new sap.ui.core.CustomData({
                     key: "tabKey",
                     value: key
+                }), new sap.ui.core.CustomData({
+                    key: "theView",
+                    value: view
                 })
             ]
         });
@@ -81,7 +79,7 @@ sap.ui.define([
         var selectedPage;
         var pages = container.getPages();
         pages.forEach(function(page) {
-            if (page.getCustomData()[0].getValue() === key) {
+            if (page.data("tabKey") === key) {
                 selectedPage = page;
             }
         })
@@ -90,8 +88,9 @@ sap.ui.define([
             container.addPage(selectedPage);
         }
         container.to(selectedPage);
-        if (selectedPage.getContent()[0].getController().afterShow) {
-            selectedPage.getContent()[0].getController().afterShow();
+        var theView = selectedPage.data("theView");
+        if (theView.getController().afterShow) {
+            theView.getController().afterShow();
         }
     }
 

@@ -138,6 +138,10 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "date" || columName === "salesPerson") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
+                    tooltip: {
+                        path: "",
+                        formatter: oController.buildReadableDetailMessage
+                    },
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
@@ -268,7 +272,10 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "planCost") {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
+                    tooltip: {
+                        path: "",
+                        formatter: oController.buildReadableDetailMessage
+                    },
                     enabled: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
@@ -277,7 +284,10 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
+                    tooltip: {
+                        path: "",
+                        formatter: oController.buildReadableDetailMessage
+                    },
                     enabled: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);

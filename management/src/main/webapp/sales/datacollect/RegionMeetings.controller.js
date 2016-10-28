@@ -260,6 +260,23 @@ sap.ui
                 });
             }
 
+            function buildReadableDetailMessage(dataItem) {
+                var readableMessage = "";
+                for ( var key in dataItem) {
+                    if (!dataItem.hasOwnProperty(key)) {
+                        continue;
+                    }
+                    var propertyReadableName = resBundle.getText(key);
+                    var propertyValue = dataItem[key];
+                    if (readableMessage === "") {
+                        readableMessage = propertyReadableName + "=" + propertyValue;
+                    } else {
+                        readableMessage = readableMessage + "\n" + propertyReadableName + "=" + propertyValue;
+                    }
+                }
+                return readableMessage;
+            }
+
             var controller =
                              CRUDTableController.extend("sales.datacollect.RegionMeetings", {
                                  columnNames: [
@@ -277,6 +294,7 @@ sap.ui
                                  onRegionChanged: onRegionChanged,
                                  validateEachItemBeforeSave: validateEachItemBeforeSave,
                                  onExport: onExport,
+                                 buildReadableDetailMessage: buildReadableDetailMessage
                              });
             return controller;
         });

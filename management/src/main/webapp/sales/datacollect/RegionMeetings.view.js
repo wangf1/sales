@@ -120,7 +120,8 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
             if (columName === "date" || columName === "salesPerson") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
-                }));
+                    tooltip: "{path: '',formatter: '.buildReadableDetailMessage'}"
+                }, oController));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
@@ -224,7 +225,10 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
+                    tooltip: {
+                        path: "",
+                        formatter: oController.buildReadableDetailMessage
+                    },
                     enabled: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);

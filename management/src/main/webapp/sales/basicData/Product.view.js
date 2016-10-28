@@ -84,7 +84,6 @@ sap.ui.jsview("sales.basicData.Product", (function() {
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
-                    value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/companies",

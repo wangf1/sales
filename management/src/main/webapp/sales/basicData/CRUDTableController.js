@@ -34,7 +34,22 @@ sap.ui.define([
         this.getView().setModel(oViewModel);
     }
 
+    function setValueToModelForComboBox(e) {
+        // Cannot bind combobox value property to model, since UI will have problem when input append string based on exiting selected item.
+        // So I have not two-way bind for combobox, so I should set explictly set the value to model.
+        var comboBox = e.getSource();
+        if (comboBox.getMetadata().getName() !== sap.m.ComboBox.getMetadata().getName()) {
+            // Only set value to model for combobox
+            return;
+        }
+        var record = comboBox.getBindingContext().getObject();
+        var propertyName = comboBox.getBindingPath("selectedKey");
+        record[propertyName] = comboBox.getValue();
+    }
+
     function onCellLiveChange(e) {
+        setValueToModelForComboBox(e);
+
         var record = e.getSource().getBindingContext().getObject();
         if (record.id === undefined) {
             // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
@@ -205,7 +220,7 @@ sap.ui.define([
 
     function onRefresh() {
         this.setTableModel();
-        clearSelectAndChangedData();
+        this.clearSelectAndChangedData();
         oViewModel.refresh();
     }
 

@@ -109,7 +109,6 @@ sap.ui.jsview("sales.basicData.Province", (function() {
             }));
             if (columName === "region") {
                 tableCells.push(new sap.m.ComboBox({
-                    value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     change: function(e) {
                         oController.onCellLiveChange(e);

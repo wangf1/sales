@@ -94,7 +94,6 @@ sap.ui.jsview("sales.basicData.User", (function() {
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
-                    value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "/allRoles",

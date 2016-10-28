@@ -188,13 +188,13 @@ sap.ui.define([
     }
 
     function onAgencyChanged(e) {
-        var dataItem = e.getSource().getBindingContext().getObject()
+        CRUDTableController.prototype.onCellLiveChange.call(this, e);
+        var dataItem = e.getSource().getBindingContext().getObject();
         var agencyName = dataItem["agency"];
         var level = getLevelForAgency(agencyName);
         if (level) {
             dataItem["level"] = level;
         }
-        CRUDTableController.prototype.onCellLiveChange.call(this, e);
         oViewModel.refresh();
     }
 

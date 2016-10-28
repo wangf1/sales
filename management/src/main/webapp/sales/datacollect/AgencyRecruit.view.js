@@ -177,7 +177,6 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                     change: function(e) {
                         oController.onAgencyChanged(e);
                     },
-                    value: "{" + columName + "}",
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {

@@ -108,6 +108,10 @@ sap.ui.define([
         } else {
             var fs = [];
             columnNames.forEach(function(column) {
+                if (column == "salesPersons") {
+                    // salesPersons is not string, cannot be search by "Contains" filter
+                    return;
+                }
                 fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
             });
             var filters = new sap.ui.model.Filter(fs, false);

@@ -26,24 +26,27 @@ sap.ui.define([
 
     function createPageByTabKey(key, thisController) {
         var viewName;
+        var viewWidth = "auto";
         switch (key) {
             case "agencyRecruit":
-                viewName = "sales.datacollect.AgencyRecruit"
+                viewName = "sales.datacollect.AgencyRecruit";
                 break;
             case "agencyTraining":
-                viewName = "sales.datacollect.AgencyRecruit"
+                viewName = "sales.datacollect.AgencyRecruit";
                 break;
             case "bids":
-                viewName = "sales.datacollect.Bids"
+                viewName = "sales.datacollect.Bids";
                 break;
             case "speakers":
-                viewName = "sales.datacollect.Speakers"
+                viewName = "sales.datacollect.Speakers";
                 break;
             case "departmentMeetings":
-                viewName = "sales.datacollect.DepartmentMeetings"
+                viewName = "sales.datacollect.DepartmentMeetings";
+                viewWidth = "1920px";
                 break;
             case "regionMeetings":
-                viewName = "sales.datacollect.RegionMeetings"
+                viewName = "sales.datacollect.RegionMeetings";
+                viewWidth = "1920px";
                 break;
             default:
                 break;
@@ -51,11 +54,13 @@ sap.ui.define([
         var view = sap.ui.view({
             type: sap.ui.core.mvc.ViewType.JS,
             viewName: viewName,
-            viewData: buildViewDataAccordingToTabKey(key)
+            viewData: buildViewDataAccordingToTabKey(key),
+            width: viewWidth
         });
-        var page = new sap.m.Page(thisController.createId(key), {
+        var page = new sap.m.ScrollContainer(thisController.createId(key), {
             showHeader: false,
-            enableScrolling: true,
+            horizontal: true,
+            vertical: true,
             showNavButton: false,
             content: [
                 view

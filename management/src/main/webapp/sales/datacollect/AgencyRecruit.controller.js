@@ -237,9 +237,7 @@ sap.ui.define([
     }
 
     var controller = CRUDTableController.extend("sales.datacollect.AgencyRecruit", {
-        columnNames: [
-            "date", "region", "province", "salesPerson", "agency", "product", "level"
-        ],
+        columnNames: [],
         onInit: init,
         urlForListAll: "",
         urlForSaveAll: "",

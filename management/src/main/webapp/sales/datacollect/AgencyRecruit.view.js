@@ -87,9 +87,22 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         return toolBar;
     };
 
+    function initColumnNamesAccordingToUsageType(thisController) {
+        var columns = [
+            "date", "region", "province", "salesPerson", "agency", "product"
+        ];
+        var viewData = thisController.getView().getViewData();
+        if (!viewData.usedForAgencyTraining) {
+            // Agency recruit should have level
+            columns.push("level");
+        }
+        thisController.columnNames = columns;
+    }
+
     function createTable(oController) {
         var tableCells = [];
         var tableColumns = [];
+        initColumnNamesAccordingToUsageType(oController);
         oController.columnNames.forEach(function(columName) {
             var columnVisible = true;
             if (columName === "salesPerson") {
@@ -173,7 +186,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                     }
                 }));
             } else if (columName === "agency") {
-                tableCells.push(new sap.m.ComboBox({
+                var controlSeetings = {
                     change: function(e) {
                         oController.onAgencyChanged(e);
                     },
@@ -187,7 +200,16 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                         }),
                         templateShareable: true
                     }
-                }));
+                };
+                var cellControl;
+                var viewData = oController.getView().getViewData();
+                if (viewData.usedForAgencyTraining) {
+                    cellControl = new sap.m.Select(controlSeetings);
+                } else {
+                    // Agency recruit can input new value
+                    cellControl = new sap.m.ComboBox(controlSeetings);
+                }
+                tableCells.push(cellControl);
             } else if (columName === "level") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {

@@ -133,22 +133,50 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
+    function validateEachPropertyNotEmpty(object) {
+        for ( var key in object) {
+            if (!object.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = object[key];
+            if (!value) {
+                return false;
+            }
+            if (value.trim) {
+                if (value.trim() === "") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function validateEachItemBeforeSave(object) {
+        var isValid = validateEachPropertyNotEmpty(object);
+        return isValid;
+    }
+
     function onSaveAll() {
         var allNeedSave = [];
-        viewModelData.inlineChangedRecords.forEach(function(item) {
-            if (item.name.trim() === "" || item.region.trim() === "") {
-                // do very basic validate
+        var i;
+        for (i = 0; i < viewModelData.inlineChangedRecords.length; i++) {
+            var item = viewModelData.inlineChangedRecords[i];
+            if (!validateEachItemBeforeSave(item)) {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);
-        });
-        viewModelData.newAddedRecords.forEach(function(item) {
-            if (item.name.trim() === "" || item.region.trim() === "") {
-                // do very basic validate
+        }
+        for (i = 0; i < viewModelData.newAddedRecords.length; i++) {
+            var item = viewModelData.newAddedRecords[i];
+            if (!validateEachItemBeforeSave(item)) {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);
-        });
+        }
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "saveProvinces",

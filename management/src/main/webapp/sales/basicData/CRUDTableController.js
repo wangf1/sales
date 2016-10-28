@@ -113,6 +113,9 @@ sap.ui.define([
                 continue;
             }
             var value = object[key];
+            if (!value) {
+                return false;
+            }
             if (value.trim) {
                 if (value.trim() === "") {
                     return false;
@@ -128,22 +131,26 @@ sap.ui.define([
     }
 
     function onSaveAll() {
-        var that = this;
         var allNeedSave = [];
-        viewModelData.inlineChangedRecords.forEach(function(item) {
-            if (!that.validateEachItemBeforeSave(item)) {
-                // do very basic validate
+        var i;
+        for (i = 0; i < viewModelData.inlineChangedRecords.length; i++) {
+            var item = viewModelData.inlineChangedRecords[i];
+            if (!this.validateEachItemBeforeSave(item)) {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);
-        });
-        viewModelData.newAddedRecords.forEach(function(item) {
-            if (!that.validateEachItemBeforeSave(item)) {
-                // do very basic validate
+        }
+        for (i = 0; i < viewModelData.newAddedRecords.length; i++) {
+            var item = viewModelData.newAddedRecords[i];
+            if (!this.validateEachItemBeforeSave(item)) {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);
-        });
+        }
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: this.urlForSaveAll,
@@ -154,8 +161,6 @@ sap.ui.define([
         var that = this;
         promise.then(function(result) {
             that.onRefresh();// Refresh all in order to have ID for new added record
-            viewModelData.inlineChangedRecords = [];
-            viewModelData.newAddedRecords = [];
             var message = resBundle.getText("save_success");
             UIUtils.showMessageToast(message);
         });

@@ -130,6 +130,9 @@ sap.ui.define([
                 continue;
             }
             var value = object[key];
+            if (!value) {
+                return false;
+            }
             if (value.trim) {
                 if (value.trim() === "") {
                     return false;

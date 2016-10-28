@@ -83,8 +83,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",
-            showSearchButton: false,
-            liveChange: function(e) {
+            search: function(e) {
                 oController.onFilterRecords(e);
             }
         }));

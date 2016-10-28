@@ -15,8 +15,7 @@ sap.ui.jsview("sales.basicData.Province", (function() {
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",
-            showSearchButton: false,
-            liveChange: function(e) {
+            search: function(e) {
                 oController.onQuickFilter(e);
             }
         }));

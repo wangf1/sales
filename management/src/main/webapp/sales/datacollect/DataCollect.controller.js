@@ -42,6 +42,9 @@ sap.ui.define([
             case "departmentMeetings":
                 viewName = "sales.datacollect.DepartmentMeetings"
                 break;
+            case "regionMeetings":
+                viewName = "sales.datacollect.RegionMeetings"
+                break;
             default:
                 break;
         }

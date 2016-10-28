@@ -50,6 +50,11 @@ public class Province {
 							@UniqueConstraint(columnNames = { "USERNAME", "PROVINCE_ID" }) })
 	private List<User> users;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
+	private List<RegionMeeting> regionMeetings;
+
 	public long getId() {
 		return id;
 	}
@@ -102,6 +107,14 @@ public class Province {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	public List<RegionMeeting> getRegionMeetings() {
+		return regionMeetings;
+	}
+
+	public void setRegionMeetings(List<RegionMeeting> regionMeetings) {
+		this.regionMeetings = regionMeetings;
 	}
 
 	@Override

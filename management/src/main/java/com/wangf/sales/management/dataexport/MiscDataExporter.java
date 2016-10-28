@@ -15,10 +15,12 @@ import com.wangf.sales.management.rest.pojo.AgencyRecruitPojo;
 import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
 import com.wangf.sales.management.rest.pojo.BidPojo;
 import com.wangf.sales.management.rest.pojo.DepartmentMeetingPojo;
+import com.wangf.sales.management.rest.pojo.RegionMeetingPojo;
 import com.wangf.sales.management.rest.pojo.SpeakerPojo;
 import com.wangf.sales.management.service.AgencyService;
 import com.wangf.sales.management.service.BidService;
 import com.wangf.sales.management.service.DepartmentMeetingService;
+import com.wangf.sales.management.service.RegionMeetingService;
 import com.wangf.sales.management.service.SpeakerService;
 
 @Service
@@ -34,6 +36,9 @@ public class MiscDataExporter {
 
 	@Autowired
 	private DepartmentMeetingService departmentMeetingService;
+
+	@Autowired
+	private RegionMeetingService regionMeetingService;
 
 	public byte[] exportAgencyRecruit(Date startAt, Date endAt) throws IOException {
 		List<AgencyRecruitPojo> data = agencyService.listAgencyRecruitsByCurrentUser(startAt, endAt);
@@ -90,6 +95,19 @@ public class MiscDataExporter {
 	public byte[] exportDepartmentMeetings(Date startAt, Date endAt) throws IOException {
 		List<DepartmentMeetingPojo> data = departmentMeetingService.getDepartmentMeetingsByCurrentUser(startAt, endAt);
 		try (InputStream template = getClass().getResourceAsStream("/DepartmentMeetings_template.xlsx")) {
+			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+				Context context = new Context();
+				context.putVar("data", data);
+				JxlsHelper.getInstance().processTemplate(template, out, context);
+				byte[] result = out.toByteArray();
+				return result;
+			}
+		}
+	}
+
+	public byte[] exportRegionMeetings(Date startAt, Date endAt) throws IOException {
+		List<RegionMeetingPojo> data = regionMeetingService.getRegionMeetingsByCurrentUser(startAt, endAt);
+		try (InputStream template = getClass().getResourceAsStream("/RegionMeetings_template.xlsx")) {
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 				Context context = new Context();
 				context.putVar("data", data);

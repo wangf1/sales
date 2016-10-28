@@ -85,6 +85,11 @@ public class User {
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
 	private List<DepartmentMeeting> departmentMeetings;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
+	private List<RegionMeeting> regionMeetings;
+
 	public String getUserName() {
 		return userName;
 	}

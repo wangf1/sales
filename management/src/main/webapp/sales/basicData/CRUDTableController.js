@@ -127,6 +127,10 @@ sap.ui.define([
 
     function validateEachItemBeforeSave(object) {
         var isValid = validateEachPropertyNotEmpty(object);
+        if (!isValid) {
+            var message = resBundle.getText("before_save_validate_fail");
+            UIUtils.showMessageToast(message + "\n\n\n" + JSON.stringify(object));
+        }
         return isValid;
     }
 
@@ -136,8 +140,6 @@ sap.ui.define([
         for (i = 0; i < viewModelData.inlineChangedRecords.length; i++) {
             var item = viewModelData.inlineChangedRecords[i];
             if (!this.validateEachItemBeforeSave(item)) {
-                var message = resBundle.getText("before_save_validate_fail");
-                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);
@@ -145,8 +147,6 @@ sap.ui.define([
         for (i = 0; i < viewModelData.newAddedRecords.length; i++) {
             var item = viewModelData.newAddedRecords[i];
             if (!this.validateEachItemBeforeSave(item)) {
-                var message = resBundle.getText("before_save_validate_fail");
-                UIUtils.showMessageToast(message);
                 return;
             }
             allNeedSave.push(item);

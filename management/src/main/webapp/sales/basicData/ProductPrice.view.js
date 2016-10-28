@@ -170,7 +170,8 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

@@ -152,7 +152,8 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

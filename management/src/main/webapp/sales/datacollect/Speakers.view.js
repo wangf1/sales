@@ -233,7 +233,8 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

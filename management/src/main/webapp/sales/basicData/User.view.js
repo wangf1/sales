@@ -151,7 +151,8 @@ sap.ui.jsview("sales.basicData.User", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

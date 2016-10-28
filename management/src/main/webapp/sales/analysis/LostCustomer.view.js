@@ -100,7 +100,9 @@ sap.ui.jsview("sales.analysis.LostCustomer", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+// table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

@@ -17,7 +17,8 @@
     sap.ui.getCore().attachInit(function() {
         var mainView = sap.ui.view("sales_home_view", {
             type: sap.ui.core.mvc.ViewType.JS,
-            viewName: "sales.main"
+            viewName: "sales.main",
+           // width: "1920px"
         });
         new sap.m.Shell({
             app: mainView,

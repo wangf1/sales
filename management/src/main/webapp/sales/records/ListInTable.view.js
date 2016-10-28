@@ -232,7 +232,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     };
     var createContent = function(oController) {

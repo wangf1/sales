@@ -313,7 +313,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             columns: tableColumns
 
         });
-        table.addStyleClass("sapUiResponsiveMargin");
+        table.addStyleClass("sapUiTinyMargin");
+        table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

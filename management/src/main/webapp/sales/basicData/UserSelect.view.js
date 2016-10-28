@@ -51,6 +51,8 @@ sap.ui.jsview("sales.basicData.UserSelect", (function() {
             rememberSelections: true
         });
         this.dialog = tableSelectDialog;
+        tableSelectDialog.addStyleClass("sapUiTinyMargin");
+        tableSelectDialog.addStyleClass("sapUiSizeCompact");
         return tableSelectDialog;
     };
 

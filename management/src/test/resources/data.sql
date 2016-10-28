@@ -2,7 +2,6 @@ delete from bid;
 delete from Agency_Recruit;
 delete from Agency;
 delete from Product_Price;
-delete from USER_HOSPITAL;
 delete from sales_record;
 delete from product_install_location;
 delete from Department;
@@ -72,14 +71,6 @@ insert into Users(username, password, enabled, first_name, last_name, MANAGER) v
 insert into AUTHORITIES(username, authority) values('wangf', 'Admin');
 insert into AUTHORITIES(username, authority) values('Stella', 'Manager');
 insert into AUTHORITIES(username, authority) values('User1', 'User');
-
-insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 1);
-insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 2);
-insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 3);
-insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 4);
-insert into USER_HOSPITAL(username, Hospital_id) values('wangf', 5);
-insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 1);
-insert into USER_HOSPITAL(username, Hospital_id) values('Stella', 6);
 
 insert into product_install_location(id, product_id, department_id) values(1, 1, 1);
 insert into product_install_location(id, product_id, department_id) values(2, 1, 2);

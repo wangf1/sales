@@ -230,6 +230,51 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         templateShareable: true
                     }
                 }));
+            } else if (columName === "purpose") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onProvinceChanged(e);
+                    },
+                    value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/department_meeting_purposes",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else if (columName === "subject") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onProvinceChanged(e);
+                    },
+                    value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/department_meeting_subjects",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
+            } else if (columName === "planCost") {
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: enableIfInThisMonth,
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",

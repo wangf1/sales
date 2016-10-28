@@ -5,10 +5,26 @@ sap.ui.define([
     "use strict";
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
+    var resBundle = i18nUtils.initAndGetResourceBundle();
 
-    var STATUS_PLAN = "预申请";
-    var STATUS_FINISH = "已完成";
-    var STATUS_ADDITONAL = "无预申请增补";
+    var STATUS_PLAN = resBundle.getText("department_meeting_STATUS_PLAN");
+    var STATUS_FINISH = resBundle.getText("department_meeting_STATUS_FINISH");
+    var STATUS_ADDITONAL = resBundle.getText("department_meeting_STATUS_ADDITONAL");
+
+    var department_meeting_purposes =
+                                      [
+                                          resBundle.getText("department_meeting_purpose_1"), resBundle.getText("department_meeting_purpose_2"),
+                                          resBundle.getText("department_meeting_purpose_3"), resBundle.getText("department_meeting_purpose_4"),
+                                          resBundle.getText("department_meeting_purpose_5"), resBundle.getText("department_meeting_purpose_6")
+                                      ];
+
+    var department_meeting_subjects =
+                                      [
+                                          resBundle.getText("department_meeting_subject_1"), resBundle.getText("department_meeting_subject_2"),
+                                          resBundle.getText("department_meeting_subject_3"), resBundle.getText("department_meeting_subject_4"),
+                                          resBundle.getText("department_meeting_subject_5")
+                                      ];
+
     var firstDayOfCurrentMonth = oViewModel.getProperty("/firstDayOfCurrentMonth");
     var firstDayOfPreviousMonth = Date.parse(DateTimeUtils.firstDayOfPreviousMonth());
     oViewModel.setProperty("/firstDayOfPreviousMonth", firstDayOfPreviousMonth);
@@ -19,6 +35,8 @@ sap.ui.define([
         var endAt = DateTimeUtils.today();
         oViewModel.setProperty("/startAt", startAt);
         oViewModel.setProperty("/endAt", endAt);
+        oViewModel.setProperty("/department_meeting_purposes", department_meeting_purposes);
+        oViewModel.setProperty("/department_meeting_subjects", department_meeting_subjects);
     }
 
     function filterProvinceByRegion(region) {
@@ -57,33 +75,36 @@ sap.ui.define([
         // 上月是“无预申请增补”的不能变成别的
         // 大上月及以前不能有任何修改
         var allStatuses = oViewModel.getProperty("/statuses");
-        if (!meeting.date) {
+        var isAdminRole = sap.ui.getCore().getModel("permissionModel").getProperty("/user/create");
+        var availableStatuses;
+        if (isAdminRole) {
+            availableStatuses = allStatuses;
+        } else if (!meeting.date) {
             // If date is undefined, it is new added, "finish" status should removed
-            var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
-            meeting["availableStatuses"] = cloned;
+            availableStatuses = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
         } else if (meeting.date) {
             var meetingDate = Date.parse(meeting.date);
             var isInCurrentMonth = meetingDate >= firstDayOfCurrentMonth;
             var isInLastMonth = meetingDate < firstDayOfCurrentMonth && meetingDate >= firstDayOfPreviousMonth;
             if (isInCurrentMonth) {
                 // 本月不能填“已完成”，
-                var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
-                meeting["availableStatuses"] = cloned;
+                availableStatuses = cloneAndRemoveOneFromArray(allStatuses, STATUS_FINISH);
             } else if (isInLastMonth) {
                 // 上月不能填“无预申请增补”
                 var cloned = cloneAndRemoveOneFromArray(allStatuses, STATUS_ADDITONAL);
-                meeting["availableStatuses"] = cloned;
+                availableStatuses = cloned;
                 if (meeting.status === STATUS_ADDITONAL) {
                     // 上月是“无预申请增补”的不能变成别的
-                    meeting["availableStatuses"] = [
+                    availableStatuses = [
                         STATUS_ADDITONAL
                     ];
                 }
             } else {
                 // 大上月及以前不能有任何修改, will disable the select on UI
-                meeting["availableStatuses"] = allStatuses;
+                availableStatuses = allStatuses;
             }
         }
+        meeting["availableStatuses"] = availableStatuses;
     }
 
     function setTableModel() {

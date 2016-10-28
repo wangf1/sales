@@ -58,7 +58,7 @@ public class DepartmentMeetingController {
 	}
 
 	@RequestMapping(value = "/exportDepartmentMeetings", method = RequestMethod.POST)
-	public String getAgencyTrainingsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
+	public String getFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportDepartmentMeetings(searchCriteria.getStartAt(),
 				searchCriteria.getEndAt());
@@ -69,14 +69,14 @@ public class DepartmentMeetingController {
 	}
 
 	@RequestMapping(value = "/exportDepartmentMeetings/{url}", method = RequestMethod.GET)
-	public void getAgencyTrainingsFile(@PathVariable("url") String url, HttpServletResponse response)
+	public void downloadFile(@PathVariable("url") String url, HttpServletResponse response)
 			throws FileNotFoundException, IOException {
 		byte[] bytes = DEPARTMENTMEETINGS_EXCEL_FILE_CACHE.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
-		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"DepartmentMeetings.xlsx\"");
-		response.flushBuffer();
+		IOUtils.copy(in, response.getOutputStream());
+		in.close();
 	}
 
 	@RequestMapping(value = "/getDepartmentMeetingStatuses", method = RequestMethod.GET)

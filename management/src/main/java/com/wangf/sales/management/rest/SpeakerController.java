@@ -70,9 +70,9 @@ public class SpeakerController {
 			throws FileNotFoundException, IOException {
 		byte[] bytes = SPEAKERS_EXCEL_FILE_CACHE.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
-		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Speakers.xlsx\"");
+		IOUtils.copy(in, response.getOutputStream());
 		response.flushBuffer();
 	}
 

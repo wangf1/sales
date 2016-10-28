@@ -180,9 +180,9 @@ public class BasicDataController {
 			throws FileNotFoundException, IOException {
 		byte[] bytes = excelFileCache.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
-		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"SalesRecords.xlsx\"");
+		IOUtils.copy(in, response.getOutputStream());
 		response.flushBuffer();
 	}
 

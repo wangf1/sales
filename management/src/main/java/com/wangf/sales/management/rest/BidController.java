@@ -69,9 +69,9 @@ public class BidController {
 			throws FileNotFoundException, IOException {
 		byte[] bytes = BIDS_EXCEL_FILE_CACHE.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
-		IOUtils.copy(in, response.getOutputStream());
 		response.setContentType(MediaType.OOXML_SHEET.toString());
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Bids.xlsx\"");
+		IOUtils.copy(in, response.getOutputStream());
 		response.flushBuffer();
 	}
 

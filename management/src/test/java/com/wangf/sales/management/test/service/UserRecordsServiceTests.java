@@ -1,7 +1,6 @@
 package com.wangf.sales.management.test.service;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -22,7 +21,7 @@ public class UserRecordsServiceTests extends TestBase {
 	@Test
 	public void listRegionsAndProvinces() throws Exception {
 		String salesPersonName = "wangf";
-		Set<String> regions = service.listRegionsForUser(salesPersonName);
+		List<String> regions = service.listRegionsForUser(salesPersonName);
 		System.out.println(regions);
 		List<ProvincePojo> provinces = service.listProvincesForUser(salesPersonName);
 		System.out.println(provinces);

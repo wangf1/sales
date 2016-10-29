@@ -142,6 +142,16 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
                         templateShareable: true
                     }
                 }));
+            } else if (columName === "price") {
+                tableCells.push(new sap.m.Input({
+                    value: {
+                        path: columName,
+                        type: new sap.ui.model.type.Float()
+                    },
+                    liveChange: function(e) {
+                        oController.onCellLiveChange(e);
+                    }
+                }).addStyleClass("input-in-table-cell"));
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",

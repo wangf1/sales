@@ -239,9 +239,11 @@ sap.ui.define([
         } else {
             newAdded["hospital"] = undefined;
         }
-        newAdded["department"] = oViewModel.getProperty("/departmentNames")[0];
+        newAdded["department"] = oViewModel.getProperty("/departmentNames")[0].name;
         setAvailableStatusForMeeting(newAdded);
         newAdded["status"] = newAdded["availableStatuses"][0];
+        newAdded["purpose"] = department_meeting_purposes[0];
+        newAdded["subject"] = department_meeting_subjects[0];
         // Purpose of set a date is the cell enabled status depends on date
         newAdded["date"] = DateTimeUtils.today();
         oViewModel.refresh();
@@ -271,12 +273,12 @@ sap.ui.define([
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
-    function validateEachItemBeforeSave(object) {
+    function validateRequiredFieldNotNull(object) {
         for ( var key in object) {
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPerson") {
+            if (key === "date" || key === "salesPerson" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell") {
                 continue;
             }
             var value = object[key];
@@ -290,6 +292,15 @@ sap.ui.define([
             }
         }
         return true;
+    }
+    function validateEachItemBeforeSave(object) {
+        var isValid = validateRequiredFieldNotNull(object);
+        if (!isValid) {
+            var message = resBundle.getText("before_save_validate_fail");
+            var detail = buildReadableDetailMessage(object);
+            UIUtils.showMessageToast(message + "\n\n\n" + detail);
+        }
+        return isValid;
     }
 
     function onExport() {
@@ -322,6 +333,9 @@ sap.ui.define([
     function buildReadableDetailMessage(dataItem) {
         var readableMessage = "";
         for ( var key in dataItem) {
+            if (key === "filteredProvinces" || key === "filteredHospitals" || key === "columnsNeedInOneCell" || key === "availableStatuses" || key === "subject") {
+                continue;
+            }
             if (!dataItem.hasOwnProperty(key)) {
                 continue;
             }
@@ -338,7 +352,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "subject", "planCost", "status", "actualCost"
+            "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell"
         ],
         onInit: init,
         urlForListAll: "getDepartmentMeetingsByCurrentUser",
@@ -352,7 +366,6 @@ sap.ui.define([
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
         onProvinceChanged: onProvinceChanged,
-        buildReadableDetailMessage: buildReadableDetailMessage
     });
     return controller;
 });

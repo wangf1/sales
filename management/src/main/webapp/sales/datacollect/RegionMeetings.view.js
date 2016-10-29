@@ -97,8 +97,14 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
             }
             var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} || ${permissionModel>/user/delete} }";
             var enableIfInThisMonthOrLastMonth = "{= Date.parse(${date}) >= ${/firstDayOfPreviousMonth} || ${permissionModel>/user/delete} }";
+            var width = "auto";
+            if (columName === "name") {
+                width = "10%"
+            } else if (columName == "allKindsOfInputs") {
+                width = "25%";
+            }
             tableColumns.push(new sap.m.Column({
-                width: "30%",
+                width: width,
                 hAlign: sap.ui.core.TextAlign.Center,
                 visible: columnVisible,
                 header: new sap.m.Button({
@@ -120,8 +126,8 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
             if (columName === "date" || columName === "salesPerson") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
-                    tooltip: "{path: '',formatter: '.buildReadableDetailMessage'}"
-                }, oController));
+                    tooltip: "{" + columName + "}"
+                }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
@@ -212,7 +218,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "name" || columName === "numberOfPeople") {
+            } else if (columName === "name") {
                 // Above columns can only edit in current month
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
@@ -222,13 +228,43 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                         oController.onCellLiveChange(e);
                     }
                 }).addStyleClass("input-in-table-cell"));
+            } else if (columName === "allKindsOfInputs") {
+                var vBox = new sap.m.VBox();
+                var inputColumNames = [
+                    "numberOfPeople", "satelliteMeetingCost", "exhibitionCost", "speakerCost", "otherCost", "otherTAndE"
+                ];
+                inputColumNames.forEach(function(inputColumn) {
+                    var hBox = new sap.m.HBox();
+                    hBox.addItem(new sap.m.Label({
+                        text: "{i18n>" + inputColumn + "}"
+                    }));
+                    var inputEnabled = enableIfInThisMonthOrLastMonth;
+                    var valueType = new sap.ui.model.type.Float();
+                    if (inputColumn === "numberOfPeople") {
+                        inputEnabled = enableIfInThisMonth;
+                        valueType = new sap.ui.model.type.Integer({
+                            groupingEnabled: true
+                        });
+                    }
+                    hBox.addItem(new sap.m.Input({
+                        value: {
+                            path: inputColumn,
+                            type: valueType
+                        },
+                        tooltip: "{" + inputColumn + "}",
+                        enabled: inputEnabled,
+                        textAlign: sap.ui.core.TextAlign.Right,
+                        liveChange: function(e) {
+                            oController.onCellLiveChange(e);
+                        }
+                    }).addStyleClass("input-in-table-cell"));
+                    vBox.addItem(hBox);
+                });
+                tableCells.push(vBox);
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    tooltip: {
-                        path: "",
-                        formatter: oController.buildReadableDetailMessage
-                    },
+                    tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
@@ -255,7 +291,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
 
         });
         table.addStyleClass("sapUiTinyMargin");
-        table.addStyleClass("sapUiSizeCompact");
+// table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

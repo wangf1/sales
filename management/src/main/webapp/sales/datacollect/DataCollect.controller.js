@@ -94,9 +94,20 @@ sap.ui.define([
         }
     }
 
+    function afterShow() {
+        // Handle the case of jump in DataCollect tab, the current selected tab should also be refresh
+        var container = this.byId("pageContainer");
+        var selectedPage = container.getCurrentPage();
+        var theView = selectedPage.data("theView");
+        if (theView.getController().afterShow) {
+            theView.getController().afterShow();
+        }
+    }
+
     var controller = Controller.extend("sales.datacollect.DataCollect", {
         onInit: init,
         onTabSelect: onTabSelect,
+        afterShow: afterShow
     });
     return controller;
 });

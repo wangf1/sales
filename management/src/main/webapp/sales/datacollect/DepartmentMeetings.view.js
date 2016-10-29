@@ -97,8 +97,14 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             }
             var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} || ${permissionModel>/user/delete} }";
             var enableIfInThisMonthOrLastMonth = "{= Date.parse(${date}) >= ${/firstDayOfPreviousMonth} || ${permissionModel>/user/delete} }";
+            var width = "auto";
+            if (columName === "hospital") {
+                width = "15%"
+            } else if (columName == "columnsNeedInOneCell") {
+                width = "15%";
+            }
             tableColumns.push(new sap.m.Column({
-                width: "30%",
+                width: width,
                 hAlign: sap.ui.core.TextAlign.Center,
                 visible: columnVisible,
                 header: new sap.m.Button({
@@ -138,10 +144,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "date" || columName === "salesPerson") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
-                    tooltip: {
-                        path: "",
-                        formatter: oController.buildReadableDetailMessage
-                    },
+                    tooltip: "{" + columName + "}"
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
@@ -200,7 +203,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "department") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
-                        oController.onProvinceChanged(e);
+                        oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
@@ -236,7 +239,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "purpose") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
-                        oController.onProvinceChanged(e);
+                        oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
@@ -254,7 +257,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             } else if (columName === "subject") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
-                        oController.onProvinceChanged(e);
+                        oController.onCellLiveChange(e);
                     },
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
@@ -269,25 +272,40 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "planCost") {
-                tableCells.push(new sap.m.Input({
-                    value: "{" + columName + "}",
-                    tooltip: {
-                        path: "",
-                        formatter: oController.buildReadableDetailMessage
-                    },
-                    enabled: enableIfInThisMonth,
-                    liveChange: function(e) {
-                        oController.onCellLiveChange(e);
+            } else if (columName === "columnsNeedInOneCell") {
+                var columnsInCell = [
+                    "planCost", "actualCost"
+                ];
+                var vBox = new sap.m.VBox();
+                columnsInCell.forEach(function(inputColumn) {
+                    var hBox = new sap.m.HBox();
+                    hBox.addItem(new sap.m.Label({
+                        text: "{i18n>" + inputColumn + "}"
+                    }));
+                    var inputEnabled = enableIfInThisMonthOrLastMonth;
+                    if (inputColumn === "planCost") {
+                        inputEnabled = enableIfInThisMonth;
                     }
-                }).addStyleClass("input-in-table-cell"));
+                    var valueControl = new sap.m.Input({
+                        value: {
+                            path: inputColumn,
+                            type: new sap.ui.model.type.Float()
+                        },
+                        tooltip: "{" + inputColumn + "}",
+                        enabled: inputEnabled,
+                        textAlign: sap.ui.core.TextAlign.Right,
+                        liveChange: function(e) {
+                            oController.onCellLiveChange(e);
+                        }
+                    }).addStyleClass("input-in-table-cell");
+                    hBox.addItem(valueControl);
+                    vBox.addItem(hBox);
+                });
+                tableCells.push(vBox);
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    tooltip: {
-                        path: "",
-                        formatter: oController.buildReadableDetailMessage
-                    },
+                    tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
@@ -314,7 +332,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
 
         });
         table.addStyleClass("sapUiTinyMargin");
-        table.addStyleClass("sapUiSizeCompact");
+// table.addStyleClass("sapUiSizeCompact");
         return table;
     }
 

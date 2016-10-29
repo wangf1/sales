@@ -219,7 +219,7 @@ sap.ui
                     if (!object.hasOwnProperty(key)) {
                         continue;
                     }
-                    if (key === "date" || key === "salesPerson" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE") {
+                    if (key === "date" || key === "salesPerson" || key === "allKindsOfInputs" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE") {
                         continue;
                     }
                     var value = object[key];
@@ -238,7 +238,8 @@ sap.ui
                 var isValid = validateRequiredFieldNotNull(object);
                 if (!isValid) {
                     var message = resBundle.getText("before_save_validate_region_meeting_fail");
-                    UIUtils.showMessageToast(message + "\n\n\n" + JSON.stringify(object));
+                    var detail = buildReadableDetailMessage(object);
+                    UIUtils.showMessageToast(message + "\n\n\n" + detail);
                 }
                 return isValid;
             }
@@ -263,6 +264,9 @@ sap.ui
             function buildReadableDetailMessage(dataItem) {
                 var readableMessage = "";
                 for ( var key in dataItem) {
+                    if (key === "availableStatuses") {
+                        continue;
+                    }
                     if (!dataItem.hasOwnProperty(key)) {
                         continue;
                     }
@@ -277,24 +281,21 @@ sap.ui
                 return readableMessage;
             }
 
-            var controller =
-                             CRUDTableController.extend("sales.datacollect.RegionMeetings", {
-                                 columnNames: [
-                                     "date", "name", "region", "province", "salesPerson", "type", "form", "numberOfPeople", "status", "satelliteMeetingCost", "exhibitionCost",
-                                     "speakerCost", "otherCost", "otherTAndE"
-                                 ],
-                                 onInit: init,
-                                 urlForListAll: "getRegionMeetingsByCurrentUser",
-                                 urlForSaveAll: "saveRegionMeetings",
-                                 urlForDeleteAll: "deleteRegionMeetings",
-                                 urlForExport: "exportRegionMeetings",
-                                 onRefresh: onRefresh,
-                                 onAdd: onAdd,
-                                 setTableModel: setTableModel,
-                                 onRegionChanged: onRegionChanged,
-                                 validateEachItemBeforeSave: validateEachItemBeforeSave,
-                                 onExport: onExport,
-                                 buildReadableDetailMessage: buildReadableDetailMessage
-                             });
+            var controller = CRUDTableController.extend("sales.datacollect.RegionMeetings", {
+                columnNames: [
+                    "date", "name", "region", "province", "salesPerson", "type", "form", "status", "allKindsOfInputs"
+                ],
+                onInit: init,
+                urlForListAll: "getRegionMeetingsByCurrentUser",
+                urlForSaveAll: "saveRegionMeetings",
+                urlForDeleteAll: "deleteRegionMeetings",
+                urlForExport: "exportRegionMeetings",
+                onRefresh: onRefresh,
+                onAdd: onAdd,
+                setTableModel: setTableModel,
+                onRegionChanged: onRegionChanged,
+                validateEachItemBeforeSave: validateEachItemBeforeSave,
+                onExport: onExport,
+            });
             return controller;
         });

@@ -234,12 +234,11 @@ sap.ui
                 }
                 return true;
             }
-            function validateEachItemBeforeSave(object) {
+            function validateBeforeSaveShowMessageToast(object) {
                 var isValid = validateRequiredFieldNotNull(object);
                 if (!isValid) {
                     var message = resBundle.getText("before_save_validate_region_meeting_fail");
-                    var detail = buildReadableDetailMessage(object);
-                    UIUtils.showMessageToast(message + "\n\n\n" + detail);
+                    UIUtils.showMessageToast(message);
                 }
                 return isValid;
             }
@@ -294,7 +293,7 @@ sap.ui
                 onAdd: onAdd,
                 setTableModel: setTableModel,
                 onRegionChanged: onRegionChanged,
-                validateEachItemBeforeSave: validateEachItemBeforeSave,
+                validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
                 onExport: onExport,
             });
             return controller;

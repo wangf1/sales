@@ -42,14 +42,12 @@ public class SpeakerService {
 			entities = speakerRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
-			User manager = userService.getCurrentUser();
-			List<User> employees = manager.getEmployees();
+			List<User> employees = userService.getAllEmployeesIncludeSelfForCurrentUser();
 			for (User employee : employees) {
 				// If the user is a manager, also show data belongs to his
 				// employees
 				entities.addAll(speakerRepository.findByUserAndBetweenDate(startAt, endAt, employee));
 			}
-			entities.addAll(speakerRepository.findByUserAndBetweenDate(startAt, endAt, manager));
 		}
 		List<SpeakerPojo> result = new ArrayList<>();
 		if (entities == null) {

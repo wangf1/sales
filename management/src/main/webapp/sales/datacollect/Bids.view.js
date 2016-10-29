@@ -167,7 +167,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName = "price") {
+            } else if (columName === "price") {
                 tableCells.push(new sap.m.Input({
                     value: {
                         path: columName,

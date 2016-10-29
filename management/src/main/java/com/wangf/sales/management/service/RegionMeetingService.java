@@ -34,11 +34,7 @@ public class RegionMeetingService {
 			entities = regionMeetingRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
-			User manager = userService.getCurrentUser();
-			List<User> employees = manager.getEmployees();
-			List<User> allUsersToSearch = new ArrayList<>();
-			allUsersToSearch.add(manager);
-			allUsersToSearch.addAll(employees);
+			List<User> allUsersToSearch = userService.getAllEmployeesIncludeSelfForCurrentUser();
 			for (User user : allUsersToSearch) {
 				// If the user is a manager, also show data belongs to his
 				// employees

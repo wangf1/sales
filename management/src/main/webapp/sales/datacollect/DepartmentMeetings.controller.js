@@ -295,11 +295,6 @@ sap.ui.define([
     }
     function validateEachItemBeforeSave(object) {
         var isValid = validateRequiredFieldNotNull(object);
-        if (!isValid) {
-            var message = resBundle.getText("before_save_validate_fail");
-            var detail = buildReadableDetailMessage(object);
-            UIUtils.showMessageToast(message + "\n\n\n" + detail);
-        }
         return isValid;
     }
 

@@ -127,9 +127,14 @@ sap.ui.define([
 
     function validateEachItemBeforeSave(object) {
         var isValid = validateEachPropertyNotEmpty(object);
+        return isValid;
+    }
+
+    function validateBeforeSaveShowMessageToast(object) {
+        var isValid = this.validateEachItemBeforeSave(object);
         if (!isValid) {
             var message = resBundle.getText("before_save_validate_fail");
-            UIUtils.showMessageToast(message + "\n\n\n" + JSON.stringify(object));
+            UIUtils.showMessageToast(message);
         }
         return isValid;
     }
@@ -139,14 +144,14 @@ sap.ui.define([
         var i;
         for (i = 0; i < viewModelData.inlineChangedRecords.length; i++) {
             var item = viewModelData.inlineChangedRecords[i];
-            if (!this.validateEachItemBeforeSave(item)) {
+            if (!this.validateBeforeSaveShowMessageToast(item)) {
                 return;
             }
             allNeedSave.push(item);
         }
         for (i = 0; i < viewModelData.newAddedRecords.length; i++) {
             var item = viewModelData.newAddedRecords[i];
-            if (!this.validateEachItemBeforeSave(item)) {
+            if (!this.validateBeforeSaveShowMessageToast(item)) {
                 return;
             }
             allNeedSave.push(item);
@@ -297,7 +302,8 @@ sap.ui.define([
         setTableModel: setTableModel,
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         clearSelectAndChangedData: clearSelectAndChangedData,
-        isSelectedRecordsDeletable: isSelectedRecordsDeletable
+        isSelectedRecordsDeletable: isSelectedRecordsDeletable,
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast
     });
     return controller;
 });

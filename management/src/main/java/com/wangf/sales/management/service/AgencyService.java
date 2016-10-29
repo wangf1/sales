@@ -49,14 +49,12 @@ public class AgencyService {
 			entities = agencyRecruitRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
-			User manager = userService.getCurrentUser();
-			List<User> employees = manager.getEmployees();
+			List<User> employees = userService.getAllEmployeesIncludeSelfForCurrentUser();
 			for (User employee : employees) {
 				// If the user is a manager, also show data belongs to his
 				// employees
 				entities.addAll(agencyRecruitRepository.findByUserAndBetweenDate(startAt, endAt, employee));
 			}
-			entities.addAll(agencyRecruitRepository.findByUserAndBetweenDate(startAt, endAt, manager));
 		}
 		List<AgencyRecruitPojo> result = new ArrayList<>();
 		if (entities == null) {
@@ -77,11 +75,13 @@ public class AgencyService {
 				entities.add(agency);
 			}
 		} else {
-			User currentUser = userService.getCurrentUser();
-			List<AgencyRecruit> recruits = currentUser.getAgencyRecruit();
-			for (AgencyRecruit recruit : recruits) {
-				Agency agency = recruit.getAgency();
-				entities.add(agency);
+			List<User> allUnderLineAndSelf = userService.getAllEmployeesIncludeSelfForCurrentUser();
+			for (User user : allUnderLineAndSelf) {
+				List<AgencyRecruit> recruits = user.getAgencyRecruit();
+				for (AgencyRecruit recruit : recruits) {
+					Agency agency = recruit.getAgency();
+					entities.add(agency);
+				}
 			}
 		}
 		List<AgencyPojo> result = new ArrayList<>();
@@ -171,14 +171,12 @@ public class AgencyService {
 			entities = agencyTrainingRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
-			User manager = userService.getCurrentUser();
-			List<User> employees = manager.getEmployees();
+			List<User> employees = userService.getAllEmployeesIncludeSelfForCurrentUser();
 			for (User employee : employees) {
 				// If the user is a manager, also show data belongs to his
 				// employees
 				entities.addAll(agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, employee));
 			}
-			entities.addAll(agencyTrainingRepository.findByUserAndBetweenDate(startAt, endAt, manager));
 		}
 		List<AgencyTrainingPojo> result = new ArrayList<>();
 		if (entities == null) {

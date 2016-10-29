@@ -52,10 +52,7 @@ public class UserService {
 			regionsSet.addAll(all);
 		} else {
 			User manager = userRepository.findOne(userName);
-			List<User> employees = manager.getEmployees();
-			List<User> allUsersNeedList = new ArrayList<>();
-			allUsersNeedList.add(manager);
-			allUsersNeedList.addAll(employees);
+			List<User> allUsersNeedList = getAllUnderlineEmployeesIncludeSelf(manager);
 			for (User user : allUsersNeedList) {
 				// If the user is a manager, also show hospitals belongs to his
 				// employees
@@ -84,10 +81,7 @@ public class UserService {
 			pojos.addAll(all);
 		} else {
 			User manager = userRepository.findOne(userName);
-			List<User> employees = manager.getEmployees();
-			List<User> allUsersNeedList = new ArrayList<>();
-			allUsersNeedList.add(manager);
-			allUsersNeedList.addAll(employees);
+			List<User> allUsersNeedList = getAllUnderlineEmployeesIncludeSelf(manager);
 			for (User user : allUsersNeedList) {
 				List<Province> provinces = user.getProvinces();
 				for (Province province : provinces) {
@@ -119,10 +113,7 @@ public class UserService {
 			}
 		} else {
 			User manager = userRepository.findOne(userName);
-			List<User> employees = manager.getEmployees();
-			List<User> allUsersNeedList = new ArrayList<>();
-			allUsersNeedList.add(manager);
-			allUsersNeedList.addAll(employees);
+			List<User> allUsersNeedList = getAllUnderlineEmployeesIncludeSelf(manager);
 			for (User user : allUsersNeedList) {
 				// If the user is a manager, also show hospitals belongs to his
 				// employees
@@ -253,6 +244,29 @@ public class UserService {
 		List<String> currentUserRoles = SecurityUtils.getCurrentUserRoles();
 		ResourcePermission permission = RoleResourcePermissions.getResourcePermissionForRoles(currentUserRoles);
 		return permission;
+	}
+
+	public List<User> getAllEmployeesIncludeSelfForCurrentUser() {
+		User currentUser = getCurrentUser();
+		List<User> allUnderLineAndSelf = getAllUnderlineEmployeesIncludeSelf(currentUser);
+		return allUnderLineAndSelf;
+	}
+
+	public List<User> getAllUnderlineEmployeesIncludeSelf(User manager) {
+		List<User> employees = getAllUnderlineEmployees(manager);
+		employees.add(0, manager);
+		return employees;
+	}
+
+	private List<User> getAllUnderlineEmployees(User manager) {
+		List<User> allUser = new ArrayList<>();
+		List<User> employees = manager.getEmployees();
+		for (User user : employees) {
+			allUser.add(user);
+			List<User> indirectEmployees = getAllUnderlineEmployees(user);
+			allUser.addAll(indirectEmployees);
+		}
+		return allUser;
 	}
 
 }

@@ -57,16 +57,16 @@ public class SalesRecordsService {
 	}
 
 	public List<SalesRecordPojo> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
-		List<String> allEmployees = new ArrayList<>();
+		List<String> allEmployeesIncludeSelf = new ArrayList<>();
 		for (String managerName : criteria.getSalesPersonNames()) {
 			// If the user is a manager, also get all records of his employees
 			User manager = userRepository.findOne(managerName);
-			List<User> employees = manager.getEmployees();
-			for (User employee : employees) {
-				allEmployees.add(employee.getUserName());
+			List<User> employeesIncludeSelf = userService.getAllUnderlineEmployeesIncludeSelf(manager);
+			for (User employee : employeesIncludeSelf) {
+				allEmployeesIncludeSelf.add(employee.getUserName());
 			}
 		}
-		criteria.getSalesPersonNames().addAll(allEmployees);
+		criteria.setSalesPersonNames(allEmployeesIncludeSelf);
 		List<SalesRecord> records = salesRecordRepository.searchAgainstMultipleValues(criteria);
 		List<SalesRecordPojo> result = new ArrayList<>();
 		for (SalesRecord record : records) {

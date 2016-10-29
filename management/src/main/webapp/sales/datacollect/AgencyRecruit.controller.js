@@ -162,6 +162,12 @@ sap.ui.define([
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
         newAdded["province"] = newAdded["filteredProvinces"][0];
         newAdded["level"] = oViewModel.getProperty("/agencyLevels")[0];
+        var viewData = this.getView().getViewData();
+        if (viewData.usedForAgencyTraining) {
+            if (oViewModel.getProperty("/agencies")[0]) {
+                newAdded["agency"] = oViewModel.getProperty("/agencies")[0].name;
+            }
+        }
         // Purpose of set a date is the cell enabled status depends on date
         newAdded["date"] = DateTimeUtils.today();
         oViewModel.refresh();

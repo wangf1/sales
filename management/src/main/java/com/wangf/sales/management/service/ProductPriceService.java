@@ -43,11 +43,7 @@ public class ProductPriceService {
 				result.add(pojo);
 			}
 		} else {
-			User manager = userService.getCurrentUser();
-			List<User> employees = manager.getEmployees();
-			List<User> allUserToList = new ArrayList<>();
-			allUserToList.add(manager);
-			allUserToList.addAll(employees);
+			List<User> allUserToList = userService.getAllEmployeesIncludeSelfForCurrentUser();
 			for (User user : allUserToList) {
 				// If the user is a manager, also show prices belongs to his
 				// employees

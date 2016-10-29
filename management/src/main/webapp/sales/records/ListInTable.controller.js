@@ -171,8 +171,18 @@ sap.ui.define([
             oViewModel.setProperty("/salesRecords", result.data);
         });
     }
+    function clearSelectAndChangedData(thisController) {
+        // must clear table selection status
+        var table = thisController.byId("recordsTable");
+        table.removeSelections();
+        // clear models
+        viewModelData.selectedRecords = [];
+        viewModelData.inlineChangedRecords = [];
+        oViewModel.refresh();
+    }
 
     function onRefresh() {
+        clearSelectAndChangedData(this);
         onAdvanceSearchSalesRecord(this);
         setRegionsModel();
         setProvincesModel();

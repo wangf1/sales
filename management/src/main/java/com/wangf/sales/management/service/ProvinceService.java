@@ -11,8 +11,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangf.sales.management.dao.AgencyRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
 import com.wangf.sales.management.dao.UserRepository;
+import com.wangf.sales.management.entity.Agency;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
@@ -24,6 +26,8 @@ public class ProvinceService {
 	private ProvinceRepository provinceRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private AgencyRepository agencyRepository;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -89,7 +93,16 @@ public class ProvinceService {
 		for (Long id : ids) {
 			// If there is hospitals belong to this province, delete will not be
 			// allowed.
-			provinceRepository.delete(id);
+			deleteAgencyOfThisProvince(id);
+			provinceRepository.deleteById(id);
+		}
+	}
+
+	private void deleteAgencyOfThisProvince(Long provinceID) {
+		Province province = provinceRepository.findOne(provinceID);
+		List<Agency> agencies = province.getAgencies();
+		for (Agency agency : agencies) {
+			agencyRepository.deleteById(agency.getId());
 		}
 	}
 

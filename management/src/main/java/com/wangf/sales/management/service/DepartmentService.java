@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import com.wangf.sales.management.dao.DepartmentNameRepository;
 import com.wangf.sales.management.dao.DepartmentRepository;
 import com.wangf.sales.management.dao.HospitalRepository;
+import com.wangf.sales.management.dao.ProductInstallLocationRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.DepartmentName;
 import com.wangf.sales.management.entity.Hospital;
+import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 
 @Service
@@ -27,6 +29,9 @@ public class DepartmentService {
 
 	@Autowired
 	private HospitalRepository hospitalRepository;
+
+	@Autowired
+	private ProductInstallLocationRepository locationRepository;
 
 	public List<DepartmentNamePojo> listAllDepartmentNames() {
 		Iterable<DepartmentName> departments = departmentNameRepository.findAll();
@@ -80,7 +85,41 @@ public class DepartmentService {
 		for (Long id : ids) {
 			// If there is departments use this department name, delete will not
 			// be allowed.
+			DepartmentName departmentName = departmentNameRepository.findOne(id);
+			deleteAllDepartmentOfName(departmentName);
 			departmentNameRepository.delete(id);
 		}
+	}
+
+	/**
+	 * Just try to delete all Department of a same name. But will throw
+	 * exception if other database record refer this department.
+	 * 
+	 * @param departmentName
+	 */
+	private void deleteAllDepartmentOfName(DepartmentName departmentName) {
+		List<Department> departments = departmentName.getDepartments();
+		List<Long> departIds = new ArrayList<>();
+		for (Department depart : departments) {
+			departIds.add(depart.getId());
+			tryDeleteInstallLocations(depart);
+		}
+		if (departIds.isEmpty()) {
+			return;
+		}
+		departmentRepository.deleteByIds(departIds);
+	}
+
+	private void tryDeleteInstallLocations(Department depart) {
+		List<ProductInstallLocation> installLocations = depart.getInstallLocations();
+		List<Long> locatoinIds = new ArrayList<>();
+		for (ProductInstallLocation location : installLocations) {
+			locatoinIds.add(location.getId());
+		}
+		if (locatoinIds.isEmpty()) {
+			// Empty list will cause SQL syntax error so must return
+			return;
+		}
+		locationRepository.deleteByIds(locatoinIds);
 	}
 }

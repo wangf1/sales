@@ -55,6 +55,11 @@ public class Province {
 	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
 	private List<RegionMeeting> regionMeetings;
 
+	@JsonIgnore
+	@OneToMany
+	@JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
+	private List<Agency> agencies;
+
 	public long getId() {
 		return id;
 	}
@@ -115,6 +120,14 @@ public class Province {
 
 	public void setRegionMeetings(List<RegionMeeting> regionMeetings) {
 		this.regionMeetings = regionMeetings;
+	}
+
+	public List<Agency> getAgencies() {
+		return agencies;
+	}
+
+	public void setAgencies(List<Agency> agencies) {
+		this.agencies = agencies;
 	}
 
 	@Override

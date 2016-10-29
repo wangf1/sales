@@ -1,5 +1,6 @@
 package com.wangf.sales.management.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -44,6 +45,9 @@ public class DepartmentName {
 	}
 
 	public List<Department> getDepartments() {
+		if (departments == null) {
+			departments = new ArrayList<>();
+		}
 		return departments;
 	}
 

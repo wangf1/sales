@@ -48,7 +48,7 @@ sap.ui.define([
                 }, {
                     name: "二级"
                 }, {
-                    name: "其他"
+                    name: "一级"
                 }
             ];
             fixedLevels.forEach(function(level) {

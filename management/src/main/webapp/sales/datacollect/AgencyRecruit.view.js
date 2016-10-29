@@ -7,10 +7,6 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
 
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
-        toolbarContent.push(new sap.m.Title({
-            text: "{i18n>agency_recruit}",
-            tooltip: "{i18n>agency_recruit}"
-        }));
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",

@@ -7,10 +7,6 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
 
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
-        toolbarContent.push(new sap.m.Title({
-            text: "{i18n>speakers_label}",
-            tooltip: "{i18n>speakers_label}"
-        }));
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",

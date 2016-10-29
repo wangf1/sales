@@ -7,9 +7,6 @@ sap.ui.jsview("sales.analysis.NewCustomer", (function() {
 
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
-        toolbarContent.push(new sap.m.Title({
-            text: "{i18n>new_customer}"
-        }));
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",

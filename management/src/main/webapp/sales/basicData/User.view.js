@@ -7,9 +7,6 @@ sap.ui.jsview("sales.basicData.User", (function() {
 
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
-        toolbarContent.push(new sap.m.Title({
-            text: "{i18n>hospital}"
-        }));
         toolbarContent.push(new sap.m.SearchField({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",

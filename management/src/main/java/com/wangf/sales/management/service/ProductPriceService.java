@@ -106,8 +106,6 @@ public class ProductPriceService {
 	}
 
 	public void deleteByIds(List<Long> ids) {
-		for (Long id : ids) {
-			priceRepository.delete(id);
-		}
+		priceRepository.deleteByIds(ids);
 	}
 }

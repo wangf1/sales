@@ -51,18 +51,18 @@ sap.ui.define([
                     name: "一级"
                 }
             ];
-            fixedLevels.forEach(function(level) {
+            levels.forEach(function(level) {
                 var alreadyContains = false;
-                for (var i = 0; i < levels.length; i++) {
-                    if (levels[i].name === level.name) {
+                for (var i = 0; i < fixedLevels.length; i++) {
+                    if (fixedLevels[i].name === level.name) {
                         alreadyContains = true;
                     }
                 }
                 if (!alreadyContains) {
-                    levels.push(level);
+                    fixedLevels.push(level);
                 }
             });
-            oViewModel.setProperty("/levels", levels);
+            oViewModel.setProperty("/levels", fixedLevels);
         });
     }
 

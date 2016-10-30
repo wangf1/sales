@@ -1,8 +1,12 @@
 package com.wangf.sales.management.service;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.transaction.Transactional;
 
@@ -89,6 +93,13 @@ public class AgencyService {
 			AgencyPojo pojo = AgencyPojo.from(entity);
 			result.add(pojo);
 		}
+
+		Comparator<AgencyPojo> compareByName = (AgencyPojo a, AgencyPojo b) -> {
+			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+			int compareResult = chineseCollator.compare(a.getName(), b.getName());
+			return compareResult;
+		};
+		Collections.sort(result, compareByName);
 		return result;
 	}
 

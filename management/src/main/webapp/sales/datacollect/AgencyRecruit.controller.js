@@ -133,12 +133,12 @@ sap.ui.define([
             var fixedLevels = [
                 "一级", "二级", "其他"
             ];
-            fixedLevels.forEach(function(level) {
-                if (levels.indexOf(level) < 0) {
-                    levels.push(level);
+            levels.forEach(function(level) {
+                if (fixedLevels.indexOf(level) < 0) {
+                    fixedLevels.push(level);
                 }
             });
-            oViewModel.setProperty("/agencyLevels", levels);
+            oViewModel.setProperty("/agencyLevels", fixedLevels);
         });
     }
 

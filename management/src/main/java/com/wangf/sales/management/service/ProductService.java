@@ -1,7 +1,11 @@
 package com.wangf.sales.management.service;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +37,13 @@ public class ProductService {
 			ProductPojo pojo = ProductPojo.from(prod);
 			pojos.add(pojo);
 		}
+
+		Comparator<ProductPojo> compareByName = (ProductPojo a, ProductPojo b) -> {
+			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
+			int compareResult = chineseCollator.compare(a.getName(), b.getName());
+			return compareResult;
+		};
+		Collections.sort(pojos, compareByName);
 		return pojos;
 	}
 

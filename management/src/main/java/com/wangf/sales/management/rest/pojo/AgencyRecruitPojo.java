@@ -14,6 +14,7 @@ public class AgencyRecruitPojo extends AgencyEventPojo {
 		pojo.setProvince(entity.getAgency().getProvince().getName());
 		pojo.setRegion(entity.getAgency().getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
+		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
 
 		return pojo;
 	}

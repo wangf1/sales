@@ -85,7 +85,7 @@ sap.ui.define([
         sortTable: sortTable,
         onQuickFilter: onQuickFilter,
         columnNames: [
-            "userName", "password", "firstName"
+            "fullNameWithLoginName"
         ],
         initSelection: initSelection
     });

@@ -84,7 +84,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
 
     function initColumnNamesAccordingToUsageType(thisController) {
         var columns = [
-            "date", "region", "province", "salesPerson", "agency", "product"
+            "date", "region", "province", "salesPersonFullName", "agency", "product"
         ];
         var viewData = thisController.getView().getViewData();
         if (!viewData.usedForAgencyTraining) {
@@ -100,7 +100,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         initColumnNamesAccordingToUsageType(oController);
         oController.columnNames.forEach(function(columName) {
             var columnVisible = true;
-            if (columName === "salesPerson") {
+            if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
@@ -142,7 +142,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "date" || columName === "salesPerson") {
+            } else if (columName === "date" || columName === "salesPersonFullName") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
                 }));

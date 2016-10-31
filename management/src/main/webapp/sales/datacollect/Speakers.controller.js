@@ -187,7 +187,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPerson") {
+            if (key === "date" || key === "salesPersonFullName") {
                 continue;
             }
             var value = object[key];
@@ -232,7 +232,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.Speakers", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "hospital", "type", "speakerName"
+            "date", "region", "province", "salesPersonFullName", "hospital", "type", "speakerName"
         ],
         onInit: init,
         urlForListAll: "getSpeakersByCurrentUser",

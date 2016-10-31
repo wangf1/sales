@@ -92,9 +92,8 @@ public class UserPojo {
 		pojo.setFirstName(user.getFirstName());
 		pojo.setLastName(user.getLastName());
 		pojo.setPassword(user.getPassword());
-		// If no manager, then assume him/her self is the manager
 		User manager = user.getManager();
-		String managerName = manager != null ? manager.getUserName() : user.getUserName();
+		String managerName = manager != null ? manager.getUserName() : "";
 		pojo.setManager(managerName);
 		List<Authority> authorities = user.getAuthorities();
 		String roles = "";

@@ -87,7 +87,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
         var tableColumns = [];
         oController.columnNames.forEach(function(columName) {
             var columnVisible = true;
-            if (columName === "salesPerson") {
+            if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
@@ -119,7 +119,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     ]
                 })
             }));
-            if (columName === "date" || columName === "salesPerson") {
+            if (columName === "date" || columName === "salesPersonFullName") {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",

@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.wangf.sales.management.entity.DepartmentMeeting;
 
-public class DepartmentMeetingPojo {
+public class DepartmentMeetingPojo extends PoJoBase {
 	private long id;
 
 	private Date date;
@@ -156,6 +156,7 @@ public class DepartmentMeetingPojo {
 		pojo.setPurpose(d.getPurpose());
 		pojo.setRegion(d.getDepartment().getHospital().getProvince().getRegion());
 		pojo.setSalesPerson(d.getSalesPerson().getUserName());
+		pojo.setSalesPersonFullName(PojoUtils.getFullName(d.getSalesPerson()));
 		pojo.setStatus(d.getStatus());
 		pojo.setSubject(d.getSubject());
 

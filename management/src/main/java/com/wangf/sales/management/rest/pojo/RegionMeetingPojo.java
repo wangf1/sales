@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.wangf.sales.management.entity.RegionMeeting;
 
-public class RegionMeetingPojo {
+public class RegionMeetingPojo extends PoJoBase {
 	private long id;
 
 	private Date date;
@@ -179,6 +179,7 @@ public class RegionMeetingPojo {
 		pojo.setProvince(r.getProvince().getName());
 		pojo.setRegion(r.getProvince().getRegion());
 		pojo.setSalesPerson(r.getSalesPerson().getUserName());
+		pojo.setSalesPersonFullName(PojoUtils.getFullName(r.getSalesPerson()));
 		pojo.setSatelliteMeetingCost(r.getSatelliteMeetingCost());
 		pojo.setSpeakerCost(r.getSpeakerCost());
 		pojo.setStatus(r.getStatus());

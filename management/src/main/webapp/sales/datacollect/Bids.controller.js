@@ -126,7 +126,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPerson") {
+            if (key === "date" || key === "salesPersonFullName") {
                 continue;
             }
             var value = object[key];
@@ -161,7 +161,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.Bids", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "description", "product", "price"
+            "date", "region", "province", "salesPersonFullName", "description", "product", "price"
         ],
         onInit: init,
         urlForListAll: "getBidsByCurrentUser",

@@ -246,6 +246,9 @@ sap.ui.define([
         newAdded["subject"] = department_meeting_subjects[0];
         // Purpose of set a date is the cell enabled status depends on date
         newAdded["date"] = DateTimeUtils.today();
+        // After move all input into one cell, the two-day binding cannot initialize the property, so must explicitly set numberOfPeople to
+        // undefined in order to do validate before save
+        newAdded["planCost"] = undefined;
         oViewModel.refresh();
         return newAdded;
     }
@@ -278,7 +281,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPerson" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell") {
+            if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell") {
                 continue;
             }
             var value = object[key];
@@ -293,8 +296,12 @@ sap.ui.define([
         }
         return true;
     }
-    function validateEachItemBeforeSave(object) {
+    function validateBeforeSaveShowMessageToast(object) {
         var isValid = validateRequiredFieldNotNull(object);
+        if (!isValid) {
+            var message = resBundle.getText("before_save_validate_department_meeting_fail");
+            UIUtils.showMessageToast(message);
+        }
         return isValid;
     }
 
@@ -347,7 +354,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
         columnNames: [
-            "date", "region", "province", "salesPerson", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell"
+            "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell"
         ],
         onInit: init,
         urlForListAll: "getDepartmentMeetingsByCurrentUser",
@@ -358,7 +365,7 @@ sap.ui.define([
         onAdd: onAdd,
         setTableModel: setTableModel,
         onRegionChanged: onRegionChanged,
-        validateEachItemBeforeSave: validateEachItemBeforeSave,
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
         onExport: onExport,
         onProvinceChanged: onProvinceChanged,
     });

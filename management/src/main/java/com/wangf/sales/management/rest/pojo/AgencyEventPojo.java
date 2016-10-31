@@ -2,7 +2,7 @@ package com.wangf.sales.management.rest.pojo;
 
 import java.util.Date;
 
-public class AgencyEventPojo {
+public class AgencyEventPojo extends PoJoBase {
 	private long id;
 
 	private Date date;

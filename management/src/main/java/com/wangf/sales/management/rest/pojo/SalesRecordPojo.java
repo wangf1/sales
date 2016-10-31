@@ -9,7 +9,7 @@ import com.wangf.sales.management.entity.ProductPrice;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 
-public class SalesRecordPojo {
+public class SalesRecordPojo extends PoJoBase {
 	private long id;
 	private String region;
 	private String province;
@@ -22,6 +22,7 @@ public class SalesRecordPojo {
 	private int quantity;
 	private String hospitalLevel;
 	private double price;
+	private String managerFullName;
 
 	@Transient
 	private boolean alreadyExisting;
@@ -158,8 +159,10 @@ public class SalesRecordPojo {
 		User manager = record.getSalesPerson().getManager();
 		String managerName = manager != null ? manager.getUserName() : record.getSalesPerson().getUserName();
 		pojo.setManager(managerName);
+		pojo.setManagerFullName(PojoUtils.getFullName(manager));
 
 		pojo.setSalesPerson(record.getSalesPerson().getUserName());
+		pojo.setSalesPersonFullName(PojoUtils.getFullName(record.getSalesPerson()));
 		pojo.setHospital(record.getInstallLocation().getDepartment().getHospital().getName());
 		pojo.setProduct(record.getInstallLocation().getProduct().getName());
 		pojo.setInstallDepartment(record.getInstallLocation().getDepartment().getName().getName());
@@ -184,6 +187,14 @@ public class SalesRecordPojo {
 			}
 		}
 		return 0;
+	}
+
+	public String getManagerFullName() {
+		return managerFullName;
+	}
+
+	public void setManagerFullName(String managerFullName) {
+		this.managerFullName = managerFullName;
 	}
 
 }

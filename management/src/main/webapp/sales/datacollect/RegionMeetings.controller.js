@@ -199,6 +199,9 @@ sap.ui
                 newAdded["date"] = DateTimeUtils.today();
                 newAdded["form"] = region_meeting_forms[0];
                 newAdded["type"] = region_meeting_types[0];
+                // After move all input into one cell, the two-day binding cannot initialize the property, so must explicitly set numberOfPeople to
+                // undefined in order to do validate before save
+                newAdded["numberOfPeople"] = undefined;
                 oViewModel.refresh();
                 return newAdded;
             }
@@ -219,7 +222,7 @@ sap.ui
                     if (!object.hasOwnProperty(key)) {
                         continue;
                     }
-                    if (key === "date" || key === "salesPerson" || key === "allKindsOfInputs" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE") {
+                    if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE") {
                         continue;
                     }
                     var value = object[key];
@@ -282,7 +285,7 @@ sap.ui
 
             var controller = CRUDTableController.extend("sales.datacollect.RegionMeetings", {
                 columnNames: [
-                    "date", "name", "region", "province", "salesPerson", "type", "form", "status", "allKindsOfInputs"
+                    "date", "name", "region", "province", "salesPersonFullName", "type", "form", "status", "allKindsOfInputs"
                 ],
                 onInit: init,
                 urlForListAll: "getRegionMeetingsByCurrentUser",

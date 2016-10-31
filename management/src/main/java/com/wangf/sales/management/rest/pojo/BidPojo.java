@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.wangf.sales.management.entity.Bid;
 
-public class BidPojo {
+public class BidPojo extends PoJoBase {
 	private long id;
 
 	private Date date;
@@ -102,6 +102,7 @@ public class BidPojo {
 		pojo.setProvince(entity.getProvince().getName());
 		pojo.setRegion(entity.getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
+		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
 		return pojo;
 	}
 

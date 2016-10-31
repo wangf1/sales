@@ -209,7 +209,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPerson") {
+            if (key === "date" || key === "salesPersonFullName") {
                 continue;
             }
             var value = object[key];

@@ -138,9 +138,10 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                     }
                 }));
             } else if (columName === "date" || columName === "salesPerson") {
-                tableCells.push(new sap.m.Text({
-                    text: "{" + columName + "}",
-                    tooltip: "{" + columName + "}"
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: false
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({

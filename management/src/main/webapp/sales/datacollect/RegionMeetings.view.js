@@ -120,9 +120,10 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                 })
             }));
             if (columName === "date" || columName === "salesPerson") {
-                tableCells.push(new sap.m.Text({
-                    text: "{" + columName + "}",
-                    tooltip: "{" + columName + "}"
+                tableCells.push(new sap.m.Input({
+                    value: "{" + columName + "}",
+                    tooltip: "{" + columName + "}",
+                    enabled: false
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
@@ -223,7 +224,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }
-                }).addStyleClass("input-in-table-cell"));
+                }));
             } else if (columName === "allKindsOfInputs") {
                 var vBox = new sap.m.VBox();
                 var inputColumNames = [

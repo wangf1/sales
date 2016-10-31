@@ -70,7 +70,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         form.addContent(facetFilter);
         form.addContent(new sap.m.Label());
         form.addContent(hBox);
-
+        form.addStyleClass("noPaddingAndMargin");
         return form;
     }
 

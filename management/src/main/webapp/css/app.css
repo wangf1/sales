@@ -1,3 +1,7 @@
+.noPaddingAndMargin div.sapUiFormResGrid>div{
+	padding: 0px !important;
+	margin: 0px !important;
+}
 
 .input-in-table-cell {
 	height: 1.5rem !important;
@@ -7,9 +11,34 @@
 	height: 1.5rem !important;
 }
 
-.icon-tab-bar {
+.navigater-container {
     width: 100% !important;
     margin: auto !important;
     height: 90% !important;
-    padding-top: 1.1rem !important;
 }
+
+.emptyIconTabFilter div.sapMITBContainerContent {
+    /* the icon bar content style */
+    height: 0px !important;
+    margin: 0px;
+}
+
+.emptyIconTabFilter div.sapMITBContainerContent div.sapMITBContent {
+    /* the icon bar content style */
+    background-color: transparent;
+}
+.emptyIconTabFilter div.sapMITBHead {
+    /* the icon tab style */
+    margin: 0px;
+}
+.emptyIconTabFilter div.sapMITBHead div.sapMITBText {
+    /* the icon tab style */
+    margin: 0px;
+}
+.emptyIconTabFilter div.sapMITBHead div.sapMITBFilterDefault {
+    /* the icon tab style */
+    height: 2rem;
+}
+
+
+ 

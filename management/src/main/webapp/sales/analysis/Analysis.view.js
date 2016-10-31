@@ -23,8 +23,9 @@ sap.ui.jsview("sales.analysis.Analysis", (function() {
                 })
             ]
         });
+        iconTabBar.addStyleClass("emptyIconTabFilter");
 
-        var pageContainer = new sap.m.NavContainer(this.createId("pageContainer")).addStyleClass("icon-tab-bar");
+        var pageContainer = new sap.m.NavContainer(this.createId("pageContainer")).addStyleClass("navigater-container");
 
         var page = new sap.m.Page({
             showHeader: false,

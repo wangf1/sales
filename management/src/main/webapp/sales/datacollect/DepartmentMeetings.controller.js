@@ -276,7 +276,22 @@ sap.ui.define([
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
+    function validateCost(object) {
+        var planCostValid = ValidateUtils.isGreaterOrEqualThan0(object.planCost);
+        var actualCostValid = ValidateUtils.isGreaterOrEqualThan0(object.actualCost);
+        if (!planCostValid || !actualCostValid) {
+            var message = resBundle.getText("cost_invalid");
+            UIUtils.showMessageToast(message);
+            return false;
+        }
+        return true;
+    }
+
     function validateRequiredFieldNotNull(object, thisController) {
+        var isCostValid = validateCost(object);
+        if (!isCostValid) {
+            return false;
+        }
         var isHospitalValid = thisController.validateHospital(object);
         if (!isHospitalValid) {
             return false;

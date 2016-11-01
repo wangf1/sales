@@ -217,7 +217,41 @@ sap.ui
                 CRUDTableController.prototype.onCellLiveChange.call(this, e);
             }
 
+            function hasNegativeCost(object) {
+                var haveNegativeNumber = false;
+                var costs = [
+                    "satelliteMeetingCost", "exhibitionCost", "speakerCost", "otherCost", "otherTAndE"
+                ];
+                costs.forEach(function(cost) {
+                    var value = object[cost];
+                    if (!ValidateUtils.isEmptyString(value) && ValidateUtils.isNegativeNumber(value)) {
+                        haveNegativeNumber = true;
+                    }
+                });
+                if (haveNegativeNumber) {
+                    var message = resBundle.getText("cost_invalid");
+                    UIUtils.showMessageToast(message);
+                }
+                return haveNegativeNumber;
+            }
+
+            function validatePeopleNumberAndCost(object) {
+                if (!ValidateUtils.validateIntegerGreaterThan0(object.numberOfPeople)) {
+                    var message = resBundle.getText("number_of_people_invalid");
+                    UIUtils.showMessageToast(message);
+                    return false;
+                }
+                if (hasNegativeCost(object)) {
+                    return false;
+                }
+                return true;
+            }
+
             function validateRequiredFieldNotNull(object) {
+                var isNumbersValid = validatePeopleNumberAndCost(object);
+                if (!isNumbersValid) {
+                    return false;
+                }
                 for ( var key in object) {
                     if (!object.hasOwnProperty(key)) {
                         continue;
@@ -227,10 +261,14 @@ sap.ui
                     }
                     var value = object[key];
                     if (!value) {
+                        var message = resBundle.getText("before_save_validate_region_meeting_fail");
+                        UIUtils.showMessageToast(message);
                         return false;
                     }
                     if (value.trim) {
                         if (value.trim() === "") {
+                            var message = resBundle.getText("before_save_validate_region_meeting_fail");
+                            UIUtils.showMessageToast(message);
                             return false;
                         }
                     }
@@ -239,10 +277,6 @@ sap.ui
             }
             function validateBeforeSaveShowMessageToast(object) {
                 var isValid = validateRequiredFieldNotNull(object);
-                if (!isValid) {
-                    var message = resBundle.getText("before_save_validate_region_meeting_fail");
-                    UIUtils.showMessageToast(message);
-                }
                 return isValid;
             }
 

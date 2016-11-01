@@ -1,3 +1,5 @@
+jQuery.sap.require("sales.common.FloatTypeOnlyFormatValue");
+
 sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
     "use strict";
 
@@ -288,7 +290,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                     var valueControl = new sap.m.Input({
                         value: {
                             path: inputColumn,
-                            type: new sap.ui.model.type.Float()
+                            type: new sales.common.FloatTypeOnlyFormatValue()
                         },
                         tooltip: "{" + inputColumn + "}",
                         enabled: inputEnabled,

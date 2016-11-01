@@ -1,3 +1,6 @@
+jQuery.sap.require("sales.common.IntTypeOnlyFormatValue");
+jQuery.sap.require("sales.common.FloatTypeOnlyFormatValue");
+
 sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
     "use strict";
 
@@ -236,10 +239,10 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                         text: "{i18n>" + inputColumn + "}"
                     }));
                     var inputEnabled = enableIfInThisMonthOrLastMonth;
-                    var valueType = new sap.ui.model.type.Float();
+                    var valueType = new sales.common.FloatTypeOnlyFormatValue()
                     if (inputColumn === "numberOfPeople") {
                         inputEnabled = enableIfInThisMonth;
-                        valueType = new sap.ui.model.type.Integer({
+                        valueType = new sales.common.IntTypeOnlyFormatValue({
                             groupingEnabled: true
                         });
                     }

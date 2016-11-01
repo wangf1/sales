@@ -1,3 +1,5 @@
+jQuery.sap.require("sales.common.FloatTypeOnlyFormatValue");
+
 sap.ui.jsview("sales.datacollect.Bids", (function() {
     "use strict";
 
@@ -171,7 +173,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                 tableCells.push(new sap.m.Input({
                     value: {
                         path: columName,
-                        type: new sap.ui.model.type.Float()
+                        type: new sales.common.FloatTypeOnlyFormatValue()
                     },
                     enabled: enableIfInThisMonth,
                     liveChange: function(e) {

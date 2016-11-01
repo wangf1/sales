@@ -1,3 +1,5 @@
+jQuery.sap.require("sales.common.FloatTypeOnlyFormatValue");
+
 sap.ui.jsview("sales.basicData.ProductPrice", (function() {
     "use strict";
 
@@ -145,7 +147,7 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
                 tableCells.push(new sap.m.Input({
                     value: {
                         path: columName,
-                        type: new sap.ui.model.type.Float()
+                        type: new sales.common.FloatTypeOnlyFormatValue()
                     },
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);

@@ -276,7 +276,11 @@ sap.ui.define([
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
-    function validateRequiredFieldNotNull(object) {
+    function validateRequiredFieldNotNull(object, thisController) {
+        var isHospitalValid = thisController.validateHospital(object);
+        if (!isHospitalValid) {
+            return false;
+        }
         for ( var key in object) {
             if (!object.hasOwnProperty(key)) {
                 continue;
@@ -286,10 +290,14 @@ sap.ui.define([
             }
             var value = object[key];
             if (!value) {
+                var message = resBundle.getText("before_save_validate_department_meeting_fail");
+                UIUtils.showMessageToast(message);
                 return false;
             }
             if (value.trim) {
                 if (value.trim() === "") {
+                    var message = resBundle.getText("before_save_validate_department_meeting_fail");
+                    UIUtils.showMessageToast(message);
                     return false;
                 }
             }
@@ -297,11 +305,7 @@ sap.ui.define([
         return true;
     }
     function validateBeforeSaveShowMessageToast(object) {
-        var isValid = validateRequiredFieldNotNull(object);
-        if (!isValid) {
-            var message = resBundle.getText("before_save_validate_department_meeting_fail");
-            UIUtils.showMessageToast(message);
-        }
+        var isValid = validateRequiredFieldNotNull(object, this);
         return isValid;
     }
 

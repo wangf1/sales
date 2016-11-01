@@ -92,10 +92,12 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
                     }
                 }));
             } else if (columName === "hospital") {
-                tableCells.push(new sap.m.Select({
+                tableCells.push(new sap.m.ComboBox({
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
+                    // Also bind value to model value, take advantage of the side effect that user cannot easily input value partly same as existing
+                    // choice value
                     value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {

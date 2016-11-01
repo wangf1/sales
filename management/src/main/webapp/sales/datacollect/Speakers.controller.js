@@ -6,6 +6,8 @@ sap.ui.define([
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
+    var resBundle = i18nUtils.initAndGetResourceBundle();
+
     function init() {
         CRUDTableController.prototype.onInit.call(this);
         var startAt = DateTimeUtils.firstDayOfPreviousMonth();
@@ -182,7 +184,11 @@ sap.ui.define([
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
-    function validateEachItemBeforeSave(object) {
+    function validateRequiredFieldNotNull(object, thisController) {
+        var isHospitalValid = thisController.validateHospital(object);
+        if (!isHospitalValid) {
+            return false;
+        }
         for ( var key in object) {
             if (!object.hasOwnProperty(key)) {
                 continue;
@@ -192,15 +198,24 @@ sap.ui.define([
             }
             var value = object[key];
             if (!value) {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
                 return false;
             }
             if (value.trim) {
                 if (value.trim() === "") {
+                    var message = resBundle.getText("before_save_validate_fail");
+                    UIUtils.showMessageToast(message);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    function validateBeforeSaveShowMessageToast(object) {
+        var isValid = validateRequiredFieldNotNull(object, this);
+        return isValid;
     }
 
     function onExport() {
@@ -243,9 +258,9 @@ sap.ui.define([
         onAdd: onAdd,
         setTableModel: setTableModel,
         onRegionChanged: onRegionChanged,
-        validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
-        onProvinceChanged: onProvinceChanged
+        onProvinceChanged: onProvinceChanged,
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast
     });
     return controller;
 });

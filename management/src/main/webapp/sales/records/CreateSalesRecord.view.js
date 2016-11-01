@@ -52,7 +52,7 @@ sap.ui.jsview("sales.records.CreateSalesRecord", (function() {
         form.addContent(new sap.m.Label({
             text: "{i18n>hospital}"
         }));
-        form.addContent(new sap.m.Select(oController.createId("selectHospital"), {
+        form.addContent(new sap.m.ComboBox(oController.createId("selectHospital"), {
             selectedKey: "{salesRecord>/hospital}",
             items: {
                 path: "/hospitals",

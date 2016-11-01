@@ -283,6 +283,22 @@ sap.ui.define([
         this.onRefresh();
     }
 
+    function validateHospital(object) {
+        var hospitalsOfProvince = object["filteredHospitals"];
+        var selectedHospital = object["hospital"];
+        var hospitalValid = false;
+        for (var i = 0; i < hospitalsOfProvince.length; i++) {
+            if (hospitalsOfProvince[i].name === selectedHospital) {
+                hospitalValid = true;
+            }
+        }
+        if (!hospitalValid) {
+            var message = resBundle.getText("before_save_hospital_invalid");
+            UIUtils.showMessageToast(message);
+        }
+        return hospitalValid;
+    }
+
     var controller = Controller.extend("sales.basicData.CRUDTableController", {
         urlForListAll: "",
         urlForSaveAll: "",
@@ -303,7 +319,8 @@ sap.ui.define([
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         clearSelectAndChangedData: clearSelectAndChangedData,
         isSelectedRecordsDeletable: isSelectedRecordsDeletable,
-        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
+        validateHospital: validateHospital
     });
     return controller;
 });

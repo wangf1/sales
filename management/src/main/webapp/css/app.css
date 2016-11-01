@@ -40,5 +40,48 @@
     height: 2rem;
 }
 
+/*
+.compactTableHeader th{
+	padding: 0px;
+	margin: 0px;
+	height: 2rem !important;
+}
+.compactTableHeader .sapMLIBSelectM div{
+	padding: 0px;
+	margin: 0px;
+	height: 1.5rem;
+}
+
+.compactTableHeader .sapMCb div{
+	padding: 0px !important;
+	margin: 0px !important;
+	height: 0.7rem !important;
+    width: 0.7rem !important;
+    top: 0.3rem !important;
+}
+
+.compactTableHeader button{
+	padding: 3px;
+	margin: 0px;
+	height: 1.5rem;
+}
+.compactTableHeader button div{
+	padding: 0px;
+	margin: 0px;
+	height: 1.5rem !important;	
+}
+.compactTableHeader span{
+	padding: 0px;
+	margin: 0px;
+	height: 1.5rem !important;
+	overflow: visible;
+	line-height: 1.375rem
+}
+*/
+
+.tinyTDPadding td{
+	padding-bottom: 0.2rem !important;
+	padding-top: 0.2rem !important;
+}
 
  

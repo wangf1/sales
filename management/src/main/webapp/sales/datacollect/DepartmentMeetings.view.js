@@ -333,7 +333,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
 
         });
         table.addStyleClass("sapUiTinyMargin");
-// table.addStyleClass("sapUiSizeCompact");
+        table.addStyleClass("sapUiSizeCompact");
+        table.addStyleClass("tinyTDPadding");
         return table;
     }
 

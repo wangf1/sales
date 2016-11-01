@@ -5,6 +5,7 @@ sap.ui.define([
     "use strict";
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
+    var resBundle = i18nUtils.initAndGetResourceBundle();
 
     function init() {
         CRUDTableController.prototype.onInit.call(this);

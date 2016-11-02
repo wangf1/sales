@@ -195,7 +195,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/speakerTypes",
+                        path: "/allTypes",
                         template: new sap.ui.core.Item({
                             key: "{}",
                             text: "{}"

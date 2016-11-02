@@ -192,7 +192,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/region_meeting_types",
+                        path: "/allTypes",
                         template: new sap.ui.core.Item({
                             key: "{}",
                             text: "{}"

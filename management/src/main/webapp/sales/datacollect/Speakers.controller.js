@@ -123,7 +123,7 @@ sap.ui.define([
                     types.push(type);
                 }
             });
-            oViewModel.setProperty("/speakerTypes", types);
+            oViewModel.setProperty("/allTypes", types);
         });
     }
 
@@ -154,7 +154,7 @@ sap.ui.define([
         } else {
             newAdded["hospital"] = undefined;
         }
-        newAdded["type"] = oViewModel.getProperty("/speakerTypes")[0];
+        newAdded["type"] = oViewModel.getProperty("/allTypes")[0];
         // Purpose of set a date is the cell enabled status depends on date
         newAdded["date"] = DateTimeUtils.today();
         oViewModel.refresh();

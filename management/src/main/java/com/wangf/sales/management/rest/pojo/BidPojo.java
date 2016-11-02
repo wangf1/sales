@@ -21,6 +21,13 @@ public class BidPojo extends PoJoBase {
 
 	private double price;
 
+	/**
+	 * The reason why names as bidStatus instead of status is to avoid UI
+	 * problem. See comments in RegionMeetings.controller.js#onRefresh() for
+	 * details.
+	 */
+	private String bidStatus;
+
 	public long getId() {
 		return id;
 	}
@@ -85,6 +92,14 @@ public class BidPojo extends PoJoBase {
 		this.price = price;
 	}
 
+	public String getBidStatus() {
+		return bidStatus;
+	}
+
+	public void setBidStatus(String bidSatus) {
+		this.bidStatus = bidSatus;
+	}
+
 	@Override
 	public String toString() {
 		return "BidPojo [id=" + id + ", date=" + date + ", province=" + province + ", region=" + region
@@ -103,6 +118,7 @@ public class BidPojo extends PoJoBase {
 		pojo.setRegion(entity.getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
+		pojo.setBidStatus(entity.getStatus());
 		return pojo;
 	}
 

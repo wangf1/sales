@@ -70,7 +70,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/tableData}.length>0 }",
-            visible: "{permissionModel>/user/delete}",
+// visible: "{permissionModel>/user/delete}",
             press: function() {
                 oController.onExport();
             }
@@ -90,6 +90,8 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         if (!viewData.usedForAgencyTraining) {
             // Agency recruit should have level
             columns.push("level");
+        } else {
+            columns.push("trainingContent");
         }
         thisController.columnNames = columns;
     }
@@ -104,8 +106,12 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
+            var width = "auto";
+            if (columName === "trainingContent") {
+                width = "25%";
+            }
             tableColumns.push(new sap.m.Column({
-                width: "30%",
+                width: width,
                 hAlign: sap.ui.core.TextAlign.Center,
                 visible: columnVisible,
                 header: new sap.m.Button({
@@ -221,6 +227,14 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                         }),
                         templateShareable: true
                     }
+                }));
+            } else if (columName === "trainingContent") {
+                tableCells.push(new sap.m.TextArea({
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    value: "{" + columName + "}",
+                    enabled: enableIfInThisMonth
                 }));
             } else {
                 tableCells.push(new sap.m.Input({

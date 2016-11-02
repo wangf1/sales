@@ -43,7 +43,7 @@ sap.ui.jsview("sales.main", (function() {
                 }), new sap.m.IconTabFilter(this.createId("tb_analysis"), {
                     text: "{i18n>analysis}",
                     key: "analysis",
-                    visible: "{permissionModel>/user/create}"
+// visible: "{permissionModel>/user/create}"
                 }), new sap.m.IconTabFilter(this.createId("tb_dataCollect"), {
                     text: "{i18n>data_collect_tab}",
                     key: "dataCollect",

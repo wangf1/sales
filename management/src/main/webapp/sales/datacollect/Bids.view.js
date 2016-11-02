@@ -72,7 +72,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/tableData}.length>0 }",
-            visible: "{permissionModel>/user/delete}",
+// visible: "{permissionModel>/user/delete}",
             press: function() {
                 oController.onExport();
             }
@@ -180,6 +180,21 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                         oController.onCellLiveChange(e);
                     }
                 }).addStyleClass("input-in-table-cell"));
+            } else if (columName === "bidStatus") {
+                tableCells.push(new sap.m.Select({
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/bidStatuses",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",

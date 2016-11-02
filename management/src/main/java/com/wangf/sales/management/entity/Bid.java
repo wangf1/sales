@@ -39,6 +39,8 @@ public class Bid {
 
 	private double price;
 
+	private String status;
+
 	public long getId() {
 		return id;
 	}
@@ -95,11 +97,19 @@ public class Bid {
 		this.price = price;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("description", description)
-				.add("province", province.getName()).add("product", product.getName()).add("price", price)
-				.add("salesPerson", salesPerson.getUserName()).toString();
+				.add("status", status).add("province", province.getName()).add("product", product.getName())
+				.add("price", price).add("salesPerson", salesPerson.getUserName()).toString();
 		return string;
 	}
 }

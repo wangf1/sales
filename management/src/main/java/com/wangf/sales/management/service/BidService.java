@@ -87,6 +87,7 @@ public class BidService {
 		}
 		Province province = provinceRepository.findByName(pojo.getProvince());
 		entity.setProvince(province);
+		entity.setStatus(pojo.getBidStatus());
 
 		bidRepository.save(entity);
 		BidPojo savedPojo = BidPojo.from(entity);

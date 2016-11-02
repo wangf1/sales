@@ -217,6 +217,7 @@ public class AgencyService {
 			User salesPerson = userService.getCurrentUser();
 			entity.setSalesPerson(salesPerson);
 		}
+		entity.setTrainingContent(pojo.getTrainingContent());
 
 		agencyTrainingRepository.save(entity);
 		AgencyTrainingPojo savedPojo = AgencyTrainingPojo.from(entity);

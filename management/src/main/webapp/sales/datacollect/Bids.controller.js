@@ -7,6 +7,10 @@ sap.ui.define([
     var oViewModel = CRUDTableController.prototype.oViewModel;
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
+    var bidStatuses = [
+        resBundle.getText("bids_satuse_before"), resBundle.getText("bids_satuse_middle"), resBundle.getText("bids_satuse_finish")
+    ];
+
     function init() {
         CRUDTableController.prototype.onInit.call(this);
         var startAt = DateTimeUtils.firstDayOfPreviousMonth();
@@ -92,6 +96,9 @@ sap.ui.define([
             oViewModel.setProperty("/regions", result.data);
         });
     }
+    function refreshbidStatuses() {
+        oViewModel.setProperty("/bidStatuses", bidStatuses);
+    }
 
     function onRefresh() {
         var that = this;
@@ -102,12 +109,14 @@ sap.ui.define([
         });
         refreshAvailableRegions();
         refreshProducts();
+        refreshbidStatuses();
     }
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["product"] = oViewModel.getProperty("/allProducts")[0].name;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
+        newAdded["bidStatus"] = oViewModel.getProperty("/bidStatuses")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
         newAdded["province"] = newAdded["filteredProvinces"][0];
         // Purpose of set a date is the cell enabled status depends on date
@@ -183,7 +192,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.Bids", {
         columnNames: [
-            "date", "region", "province", "salesPersonFullName", "description", "product", "price"
+            "date", "region", "province", "salesPersonFullName", "description", "product", "price", "bidStatus"
         ],
         onInit: init,
         urlForListAll: "getBidsByCurrentUser",

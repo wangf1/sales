@@ -112,13 +112,6 @@ public class SalesRecordsController {
 	 */
 	@RequestMapping(path = "/salesRecordsAdvanceSearch", method = RequestMethod.POST)
 	public List<SalesRecordPojo> advanceSearch(@RequestBody SalesRecordSearchCriteria criteria) {
-		if (!SecurityUtils.isCurrentUserAdmin()) {
-			// For non-admin user, only view sales records created by himself
-			String salesPersonName = SecurityUtils.getCurrentUserName();
-			List<String> salesPerson = new ArrayList<>();
-			salesPerson.add(salesPersonName);
-			criteria.setSalesPersonNames(salesPerson);
-		}
 		List<SalesRecordPojo> records = salesRecordsService.searchAgainstMultipleValues(criteria);
 		return records;
 	}

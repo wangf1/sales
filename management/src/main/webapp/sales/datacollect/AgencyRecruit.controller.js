@@ -131,7 +131,7 @@ sap.ui.define([
         promise.then(function(result) {
             var levels = result.data;
             var fixedLevels = [
-                "一级", "二级", "其他"
+                "省级代理", "分销商", "指定医院/区域授权"
             ];
             levels.forEach(function(level) {
                 if (fixedLevels.indexOf(level) < 0) {

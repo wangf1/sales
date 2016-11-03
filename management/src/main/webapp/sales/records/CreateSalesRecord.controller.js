@@ -15,15 +15,6 @@ sap.ui.define([
         quantity: 0,
     };
 
-    var selectedKeysBackup = {
-        region: {},
-        province: {},
-        hospital: {},
-        installDepartment: {},
-        orderDepartment: {},
-        product: {}
-    }
-
     var salesRecordModel = new JSONModel(salesRecordData);
 
     function init() {
@@ -83,7 +74,7 @@ sap.ui.define([
 
     function filterProvinceByRegion(thisController) {
         var viewModel = thisController.getView().getModel();
-        var region = thisController.byId("selectRegion").getSelectedKey();
+        var region = salesRecordData.region;
         if (region === "") {
             region = viewModel.getData().regions[0];
         }
@@ -95,13 +86,13 @@ sap.ui.define([
         });
         viewModel.getData().provinces = filteredProvinces;
         // Set the province to a new province in order to filterHospitalByProvince() function can works against new province
-        thisController.byId("selectProvince").setSelectedKey(filteredProvinces[0].name);
+        salesRecordData.province = filteredProvinces[0].name;
         viewModel.refresh();
     }
 
     function filterHospitalByProvince(thisController) {
         var viewModel = thisController.getView().getModel();
-        var province = thisController.byId("selectProvince").getSelectedKey();
+        var province = salesRecordData.province;
         if (province === "") {
             province = viewModel.getData().provinces[0].name;
         }
@@ -112,6 +103,9 @@ sap.ui.define([
             }
         });
         viewModel.getData().hospitals = filteredHospitals;
+        if (filteredHospitals[0]) {
+            salesRecordData.hospital = filteredHospitals[0].name;
+        }
         viewModel.refresh();
     }
 

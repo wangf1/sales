@@ -287,6 +287,64 @@ sap.ui.define([
         dlg.open();
     }
 
+    function doSaveMultipleSalesRecords(salesRecordsData, thisController) {
+        var records = [];
+        for (var i = 0; i < salesRecordsData.orderDepartments.length; i++) {
+            var orderDepartment = salesRecordsData.orderDepartments[i];
+            var salesRecord = {
+                hospital: salesRecordsData.hospital,
+                installDepartment: salesRecordsData.installDepartment,
+                product: salesRecordsData.product,
+                orderDepartment: orderDepartment.orderDepartment,
+                quantity: orderDepartment.quantity
+            };
+            records.push(salesRecord);
+        }
+        doSaveAllSalesRecords(records, thisController);
+    }
+
+    function onAddSalesRecords(e) {
+        var that = this;
+        var view = sap.ui.view({
+            type: sap.ui.core.mvc.ViewType.JS,
+            viewName: "sales.records.CreateMultipleSalesRecords"
+        });
+        var dlg = new sap.m.Dialog({
+            contentWidth: "60%",
+            contentHeight: "80%",
+            title: resBundle.getText("add"),
+            horizontalScrolling: false,
+            verticalScrolling: true,
+            content: [
+                view
+            ],
+            afterClose: function() {
+                dlg.destroy();
+            }
+        });
+        dlg.addButton(new sap.m.Button({
+            text: "{i18n>save}",
+            press: function() {
+                var salesRecordsData = view.getModel("salesRecordsData").getData();
+                var valid = view.getController().validateSalesRecords();
+                if (!valid) {
+                    return;
+                }
+                doSaveMultipleSalesRecords(salesRecordsData, that);
+                dlg.close();
+            }
+        }));
+        dlg.addButton(new sap.m.Button({
+            text: "{i18n>cancel}",
+            press: function() {
+                dlg.close();
+            }
+        }));
+        dlg.setModel(oViewModel);
+        view.getController().doInitialSelectFilter();
+        dlg.open();
+    }
+
     function doDeleteSalesRecords() {
         var recordIds = [];
         viewModelData.selectedRecords.forEach(function(record) {
@@ -385,11 +443,11 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
-    function onSaveAllSalesRecords() {
+    function doSaveAllSalesRecords(records, thisController) {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "saveSalesRecords",
-            data: JSON.stringify(viewModelData.inlineChangedRecords),
+            data: JSON.stringify(records),
             dataType: "json",
             contentType: "application/json"
         });
@@ -397,8 +455,11 @@ sap.ui.define([
             viewModelData.inlineChangedRecords = [];
             var message = resBundle.getText("salesOrderSaved");
             UIUtils.showMessageToast(message);
-            oViewModel.refresh();
+            thisController.onRefresh();
         });
+    }
+    function onSaveAllSalesRecords() {
+        doSaveAllSalesRecords(viewModelData.inlineChangedRecords, this);
     }
 
     function sortTable(e) {
@@ -456,7 +517,8 @@ sap.ui.define([
         onSaveAllSalesRecords: onSaveAllSalesRecords,
         sortTable: sortTable,
         onExportSalesRecords: onExportSalesRecords,
-        cloneLastMonthData: cloneLastMonthData
+        cloneLastMonthData: cloneLastMonthData,
+        onAddSalesRecords: onAddSalesRecords
     });
     return controller;
 });

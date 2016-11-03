@@ -102,7 +102,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 })
             ],
             press: function(e) {
-                oController.onAddOrEditSalesRecord(e);
+                oController.onAddSalesRecords(e);
             }
         }));
         toolbarContent.push(new sap.m.Button({

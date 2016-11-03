@@ -19,13 +19,15 @@ public interface SalesRecordViewRepository extends PagingAndSortingRepository<Sa
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
 			+ "	where date >= :previoudMonthFirstday and date < :dayAfterPrevioudMonthlastDay) as previoudMonth \n"
 			+ "on thisMonth.hospital=previoudMonth.hospital \n" + "	and thisMonth.product=previoudMonth.product \n"
-			+ "where previoudMonth.hospital is null\n" + "group by thisMonth.hospital, thisMonth.product";
+			+ "where previoudMonth.hospital is null\n" + "and thisMonth.province in :provinces\n"
+			+ "group by thisMonth.hospital, thisMonth.product";
 
 	@Query(value = jql_findNewCustomer, nativeQuery = true)
 	List<Object[]> findNewCustomer(@Param("thisMonthFirstDay") Date thisMonthFirstDay,
 			@Param("nextMonthFirstday") Date nextMonthFirstday,
 			@Param("previoudMonthFirstday") Date previoudMonthFirstday,
-			@Param("dayAfterPrevioudMonthlastDay") Date dayAfterPrevioudMonthlastDay);
+			@Param("dayAfterPrevioudMonthlastDay") Date dayAfterPrevioudMonthlastDay,
+			@Param("provinces") List<String> provinces);
 
 	static final String jql_findLostCustomer = "select distinct previoudMonth.hospital, previoudMonth.product from\n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
@@ -33,12 +35,13 @@ public interface SalesRecordViewRepository extends PagingAndSortingRepository<Sa
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
 			+ "	where date >= :previoudMonthFirstday and date < :dayAfterPrevioudMonthlastDay) as previoudMonth \n"
 			+ "on thisMonth.hospital=previoudMonth.hospital \n" + "	and thisMonth.product=previoudMonth.product \n"
-			+ "where thisMonth.hospital is null or thisMonth.quantity<=0\n"
-			+ "group by previoudMonth.hospital, previoudMonth.product";
+			+ "where (thisMonth.hospital is null or thisMonth.quantity<=0)\n"
+			+ "and previoudMonth.province in :provinces\n" + "group by previoudMonth.hospital, previoudMonth.product";
 
 	@Query(value = jql_findLostCustomer, nativeQuery = true)
 	List<Object[]> findLostCustomer(@Param("thisMonthFirstDay") Date thisMonthFirstDay,
 			@Param("nextMonthFirstday") Date nextMonthFirstday,
 			@Param("previoudMonthFirstday") Date previoudMonthFirstday,
-			@Param("dayAfterPrevioudMonthlastDay") Date dayAfterPrevioudMonthlastDay);
+			@Param("dayAfterPrevioudMonthlastDay") Date dayAfterPrevioudMonthlastDay,
+			@Param("provinces") List<String> provinces);
 }

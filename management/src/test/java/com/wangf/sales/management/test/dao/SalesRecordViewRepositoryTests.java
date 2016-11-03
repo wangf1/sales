@@ -1,6 +1,7 @@
 package com.wangf.sales.management.test.dao;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,8 +32,10 @@ public class SalesRecordViewRepositoryTests extends TestBase {
 		Date nextMonthFirstDay = formatter.parse("2016-11-01");
 		Date previousMonthFirstday = formatter.parse("2016-09-01");
 		Date dayAfterPreviousMonthLastday = formatter.parse("2016-10-01");
+		List<String> provinces = new ArrayList<>();
+		provinces.add("北京");
 		List<Object[]> newC = repository.findNewCustomer(thisMonthFirstDay, nextMonthFirstDay, previousMonthFirstday,
-				dayAfterPreviousMonthLastday);
+				dayAfterPreviousMonthLastday, provinces);
 		System.out.println(newC);
 	}
 
@@ -43,8 +46,10 @@ public class SalesRecordViewRepositoryTests extends TestBase {
 		Date nextMonthFirstDay = formatter.parse("2016-11-01");
 		Date previousMonthFirstday = formatter.parse("2016-09-01");
 		Date dayAfterPreviousMonthLastday = formatter.parse("2016-10-01");
+		List<String> provinces = new ArrayList<>();
+		provinces.add("北京");
 		List<Object[]> lost = repository.findLostCustomer(thisMonthFirstDay, nextMonthFirstDay, previousMonthFirstday,
-				dayAfterPreviousMonthLastday);
+				dayAfterPreviousMonthLastday, provinces);
 		System.out.println(lost);
 	}
 }

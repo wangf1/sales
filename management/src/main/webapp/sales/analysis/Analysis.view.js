@@ -19,7 +19,6 @@ sap.ui.jsview("sales.analysis.Analysis", (function() {
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>lost_customer}",
                     key: "lostCustomer",
-                    visible: "{permissionModel>/province/update}"
                 })
             ]
         });

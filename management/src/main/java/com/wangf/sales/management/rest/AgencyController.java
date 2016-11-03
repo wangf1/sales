@@ -80,7 +80,7 @@ public class AgencyController {
 	public String getAgencyRecruitsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportAgencyRecruit(searchCriteria.getStartAt(), searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportAgencyRecruits/" + key;
 		AGENCY_RECRUITS_EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;
@@ -120,7 +120,7 @@ public class AgencyController {
 	public String getAgencyTrainingsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportAgencyTrainings(searchCriteria.getStartAt(), searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportAgencyTrainings/" + key;
 		AGENCY_TRAININGS_EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;

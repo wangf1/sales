@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,7 @@ import com.wangf.sales.management.service.UserService;
 
 @RestController
 public class BasicDataController {
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private DepartmentService departmentService;
 	@Autowired
@@ -169,15 +172,17 @@ public class BasicDataController {
 	public String getSalesRecordsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = salesRecordsExcelExporter.export(searchCriteria);
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportSalesRecords/" + key;
 		excelFileCache.put(key, bytes);
+		logger.debug("Sales records export URL is: {}", downloadUrl);
 		return downloadUrl;
 	}
 
 	@RequestMapping(value = "/exportSalesRecords/{url}", method = RequestMethod.GET)
 	public void getFile(@PathVariable("url") String url, HttpServletResponse response)
 			throws FileNotFoundException, IOException {
+		logger.debug("Sales records export URL is: {}", url);
 		byte[] bytes = excelFileCache.remove(url);
 		InputStream in = new ByteArrayInputStream(bytes);
 		response.setContentType(MediaType.OOXML_SHEET.toString());

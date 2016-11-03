@@ -58,7 +58,7 @@ public class BidController {
 	public String getAgencyTrainingsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportBids(searchCriteria.getStartAt(), searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportBids/" + key;
 		BIDS_EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;

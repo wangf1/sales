@@ -170,9 +170,13 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             if (name === "salesPerson") {
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
+            var width = "auto";
+            if (name === "hospital") {
+                width = "20%";
+            }
             tableColumns.push(new sap.m.Column({
-                width: "30%",
-                hAlign: sap.ui.core.TextAlign.Center,
+                width: width,
+                hAlign: sap.ui.core.TextAlign.Left,
                 visible: columnVisible,
                 header: new sap.m.Button({
                     text: "{i18n>" + name + "}",

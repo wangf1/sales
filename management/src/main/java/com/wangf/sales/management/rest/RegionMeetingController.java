@@ -60,7 +60,7 @@ public class RegionMeetingController {
 	public String getFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportRegionMeetings(searchCriteria.getStartAt(), searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportRegionMeetings/" + key;
 		EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;

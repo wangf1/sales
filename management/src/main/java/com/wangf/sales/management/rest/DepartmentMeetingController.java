@@ -62,7 +62,7 @@ public class DepartmentMeetingController {
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportDepartmentMeetings(searchCriteria.getStartAt(),
 				searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportDepartmentMeetings/" + key;
 		DEPARTMENTMEETINGS_EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;

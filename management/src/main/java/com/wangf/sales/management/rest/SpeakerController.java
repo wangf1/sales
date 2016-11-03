@@ -59,7 +59,7 @@ public class SpeakerController {
 	public String getAgencyTrainingsFileDownloadUrl(@RequestBody SalesRecordSearchCriteria searchCriteria,
 			HttpServletResponse response) throws FileNotFoundException, IOException {
 		byte[] bytes = miscDataExporter.exportSpeakers(searchCriteria.getStartAt(), searchCriteria.getEndAt());
-		String key = searchCriteria.toString();
+		String key = searchCriteria.getMD5Base64String();
 		String downloadUrl = "exportSpeakers/" + key;
 		SPEAKERS_EXCEL_FILE_CACHE.put(key, bytes);
 		return downloadUrl;

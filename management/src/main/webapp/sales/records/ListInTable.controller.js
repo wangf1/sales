@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox", "sales/common/ObjectUtils", "sales/common/ValidateUtils"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox, ObjectUtils, ValidateUtils) {
+    "sales/common/DateTimeUtils", "sales/common/UIUtils", "sap/m/MessageBox", "sales/common/ObjectUtils", "sales/common/ValidateUtils", "sap/ui/model/type/Integer"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, UIUtils, MessageBox, ObjectUtils, ValidateUtils, Integer) {
     "use strict";
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -420,7 +420,15 @@ sap.ui.define([
     function onQuantityLiveChange(e) {
         var record = e.getSource().getBindingContext().getObject();
         var quantity = e.getSource().getValue();
-        var quantityValid = ValidateUtils.validateIntegerGreaterOrEqualThan0(quantity);
+        var integer = new Integer();
+        var intValue;
+        try {
+            intValue = integer.parseValue(quantity, "string");
+        } catch (e) {
+            // If parse fail, just keep original value, validate will fail, no worry.
+            intValue = quantity;
+        }
+        var quantityValid = ValidateUtils.validateIntegerGreaterOrEqualThan0(intValue);
         if (!quantityValid) {
             e.getSource().setValueState(sap.ui.core.ValueState.Error);
             e.getSource().setValueStateText(resBundle.getText("quantityRequired"));

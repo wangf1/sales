@@ -1,5 +1,6 @@
 jQuery.sap.require("sap.ui.layout.form.SimpleForm");
 jQuery.sap.require("sales.records.SalesRecordsUIHelper");
+jQuery.sap.require("sales.common.IntTypeOnlyFormatValue");
 
 sap.ui.jsview("sales.records.ListInTable", (function() {
     "use strict";
@@ -196,12 +197,18 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             }));
             if (name === "quantity") {
                 tableCells.push(new sap.m.Input({
-                    value: "{" + name + "}",
+                    value: {
+                        path: name,
+                        type: new sales.common.IntTypeOnlyFormatValue({
+                            groupingEnabled: true
+                        })
+                    },
                     // Admin user can edit any record!
                     editable: "{= Date.parse(${date}) >= Date.parse(${/firstDayOfCurrentMonth}) || ${permissionModel>/user/delete} }",
                     liveChange: function(e) {
                         oController.onQuantityLiveChange(e);
-                    }
+                    },
+                    textAlign: sap.ui.core.TextAlign.Right
                 }).addStyleClass("input-in-table-cell"));
             } else {
                 tableCells.push(new sap.m.Text({

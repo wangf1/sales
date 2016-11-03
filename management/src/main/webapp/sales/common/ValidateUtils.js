@@ -49,8 +49,10 @@ sales.common.ValidateUtils = (function() {
         if (string === undefined || string === null) {
             return true;
         }
-        if (string.trim === "") {
-            return true;
+        if (string.trim) {
+            if (string.trim() === "") {
+                return true;
+            }
         }
         return false;
     }

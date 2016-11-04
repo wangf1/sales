@@ -10,67 +10,78 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
     };
 
     function createSearchPanel(oController) {
-        var toolBar = new sap.m.Toolbar();
-        toolBar.addContent(new sap.m.Label({
+
+        var searchPanelLabel = new sap.m.Text({
+            textAlign: sap.ui.core.TextAlign.Center,
             text: "{i18n>searchPanelHeader}"
+        });
+        var searchPanelLabelHBox = new sap.m.HBox({
+            alignItems: sap.m.FlexAlignItems.Center,
+            items: [
+                searchPanelLabel
+            ]
+        });
+
+        var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
+
+        var hBoxStartAt = new sap.m.HBox();
+        hBoxStartAt.setAlignItems(sap.m.FlexAlignItems.Center);
+        hBoxStartAt.addItem(new sap.m.Label({
+            text: "{i18n>startAt}"
         }));
-        toolBar.addContent(new sap.m.ToolbarSpacer({
-            width: "10%"
+        hBoxStartAt.addItem(new sap.m.DatePicker({
+            value: "{/startAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
         }));
-        toolBar.addContent(new sap.m.Button({
+
+        var hBoxEndAt = new sap.m.HBox();
+        hBoxEndAt.setAlignItems(sap.m.FlexAlignItems.Center);
+        hBoxEndAt.addItem(new sap.m.Label({
+            text: "{i18n>endAt}"
+        }));
+        hBoxEndAt.addItem(new sap.m.DatePicker({
+            value: "{/endAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
+        }));
+        hBoxEndAt.addItem(new sap.m.ToolbarSpacer());
+
+        var searchButton = new sap.m.Button({
             text: "{i18n>search}",
             icon: "sap-icon://search",
             type: sap.m.ButtonType.Emphasized,
             press: function() {
                 oController.onRefresh();
             }
-        }));
-        toolBar.addContent(new sap.m.Button({
+        });
+        var resetButton = new sap.m.Button({
             text: "{i18n>resetSearchCondition}",
             icon: "sap-icon://reset",
             press: function() {
                 oController.onResetSearchCondition();
             }
-        }));
+        });
 
-        var hBox = new sap.m.HBox();
-        hBox.setAlignItems(sap.m.FlexAlignItems.Center);
-
-        var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
-        hBox.addItem(facetFilter);
-
-        hBox.addItem(new sap.m.Label({
-            text: "{i18n>startAt}"
-        }));
-        hBox.addItem(new sap.m.DatePicker({
-            value: "{/startAt}",
-            valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd"
-        }));
-        hBox.addItem(new sap.m.Label({
-            text: "{i18n>endAt}"
-        }));
-        hBox.addItem(new sap.m.DatePicker({
-            value: "{/endAt}",
-            valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd"
-        }));
+        var hBoxAll = new sap.m.HBox({
+            items: [
+                searchPanelLabelHBox, facetFilter, hBoxStartAt, hBoxEndAt, searchButton, resetButton
+            ]
+        });
 
         var form = new sap.ui.layout.form.SimpleForm({
             // Must explicitly set layout type, otherwise in non-debug mode in Chrome browser, the UI will no response. Should be a UI5 bug.
             layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
-            labelSpanL: 2,
-            labelSpanM: 2,
-            emptySpanL: 1,
-            emptySpanM: 1,
+            labelSpanL: 1,
+            labelSpanM: 1,
+            labelSpanS: 1,
+            emptySpanL: 0,
+            emptySpanM: 0,
             editable: true,
-            minWidth: 1024,
-            toolbar: toolBar
+            content: [
+                hBoxAll
+            ]
         });
-        form.addContent(new sap.m.Label());
-        form.addContent(facetFilter);
-        form.addContent(new sap.m.Label());
-        form.addContent(hBox);
         form.addStyleClass("noPaddingAndMargin");
         return form;
     }

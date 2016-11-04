@@ -1,7 +1,7 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sales/common/UIUtils", "sales/common/ArrayUtils", "sap/m/MessageBox"
-], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox) {
+    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sales/common/UIUtils", "sales/common/ArrayUtils", "sap/m/MessageBox", "sales/common/SortUtils"
+], function(Controller, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox, SortUtils) {
     "use strict";
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -273,16 +273,9 @@ sap.ui.define([
 
     function sortTable(e) {
         var table = this.byId("theTable");
-        var binding = table.getBinding("items");
         var columnName = e.getSource().getCustomData()[0].getValue();
         var customDataDescending = e.getSource().getCustomData()[1];
-        var oldDescendingValue = customDataDescending.getValue();
-        var newDescendingValue = !oldDescendingValue;
-        customDataDescending.setValue(newDescendingValue);
-        var nameSorter = new sap.ui.model.Sorter(columnName, newDescendingValue);
-        binding.sort([
-            nameSorter
-        ]);
+        SortUtils.sortTable(table, columnName, customDataDescending);
     }
 
     function onEditSalesPersonsDialogConfirm(oEvent) {

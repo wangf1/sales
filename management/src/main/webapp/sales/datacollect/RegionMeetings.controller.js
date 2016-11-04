@@ -232,7 +232,7 @@ sap.ui
                 ];
                 costs.forEach(function(cost) {
                     var value = object[cost];
-                    if (!ValidateUtils.isEmptyString(value) && ValidateUtils.isNegativeNumber(value)) {
+                    if (!ValidateUtils.isEmptyString(value) && !ValidateUtils.isGreaterOrEqualThan0(value)) {
                         haveNegativeNumber = true;
                     }
                 });

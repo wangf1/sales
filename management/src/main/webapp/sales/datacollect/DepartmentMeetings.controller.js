@@ -277,8 +277,9 @@ sap.ui.define([
     }
 
     function validateCost(object) {
-        var planCostValid = ValidateUtils.isGreaterOrEqualThan0(object.planCost);
-        var actualCostValid = ValidateUtils.isGreaterOrEqualThan0(object.actualCost);
+        // cost can be empty or 0, but cannot be negative or non-number value
+        var planCostValid = (ValidateUtils.isEmptyString(object.planCost) || ValidateUtils.isGreaterOrEqualThan0(object.planCost));
+        var actualCostValid = (ValidateUtils.isEmptyString(object.actualCost) || ValidateUtils.isGreaterOrEqualThan0(object.actualCost));
         if (!planCostValid || !actualCostValid) {
             var message = resBundle.getText("cost_invalid");
             UIUtils.showMessageToast(message);
@@ -300,11 +301,11 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell") {
+            if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell" || key === "planCost" || key === "actualCost") {
                 continue;
             }
             var value = object[key];
-            if (!value) {
+            if (value === undefined || value === null) {
                 var message = resBundle.getText("before_save_validate_department_meeting_fail");
                 UIUtils.showMessageToast(message);
                 return false;

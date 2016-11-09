@@ -39,6 +39,8 @@ insert into Province (id, name, region) values (1, '上海', '华东');
 insert into Province (id, name, region) values (2, '浙江', '华东');
 insert into Province (id, name, region) values (3, '北京', '华北');
 insert into Province (id, name, region) values (4, '河北', '华北');
+insert into Province (id, name, region) values (5, '安徽', '华东2区');
+insert into Province (id, name, region) values (6, '湖北', '华东2区');
 
 insert into Hospital_Level(id, name) values(1, '三级');
 insert into Hospital_Level(id, name) values(2, '二级');

@@ -11,14 +11,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
 
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
@@ -27,6 +32,7 @@ import com.wangf.sales.management.dao.CompanyRepository;
 import com.wangf.sales.management.dao.HospitalLevelRepository;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dataexport.SalesRecordsExcelExporter;
+import com.wangf.sales.management.dataimport.HospitalImporter;
 import com.wangf.sales.management.entity.Company;
 import com.wangf.sales.management.entity.HospitalLevel;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
@@ -69,6 +75,9 @@ public class BasicDataController {
 	private AuthorityServcie authorityServcie;
 	@Autowired
 	private ProductPriceService priceService;
+
+	@Autowired
+	private HospitalImporter hospitalImporter;
 
 	private Map<String, byte[]> excelFileCache = new HashMap<>();
 
@@ -213,6 +222,13 @@ public class BasicDataController {
 	public List<Long> deleteHospitals(@RequestBody List<Long> ids) {
 		hospitalService.deleteByIds(ids);
 		return ids;
+	}
+
+	@PostMapping("/importHospitals")
+	public void handleFileUpload(@RequestParam("file") MultipartFile file)
+			throws IOException, InvalidFormatException, SAXException {
+		InputStream inputXLS = file.getInputStream();
+		hospitalImporter.importHospital(inputXLS);
 	}
 
 }

@@ -149,6 +149,49 @@ public class SalesRecordPojo extends PoJoBase {
 				+ quantity + ", hospitalLevel=" + hospitalLevel + ", date=" + date + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((hospital == null) ? 0 : hospital.hashCode());
+		result = prime * result + ((installDepartment == null) ? 0 : installDepartment.hashCode());
+		result = prime * result + ((orderDepartment == null) ? 0 : orderDepartment.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SalesRecordPojo other = (SalesRecordPojo) obj;
+		if (hospital == null) {
+			if (other.hospital != null)
+				return false;
+		} else if (!hospital.equals(other.hospital))
+			return false;
+		if (installDepartment == null) {
+			if (other.installDepartment != null)
+				return false;
+		} else if (!installDepartment.equals(other.installDepartment))
+			return false;
+		if (orderDepartment == null) {
+			if (other.orderDepartment != null)
+				return false;
+		} else if (!orderDepartment.equals(other.orderDepartment))
+			return false;
+		if (product == null) {
+			if (other.product != null)
+				return false;
+		} else if (!product.equals(other.product))
+			return false;
+		return true;
+	}
+
 	public static SalesRecordPojo from(SalesRecord record) {
 		SalesRecordPojo pojo = new SalesRecordPojo();
 		pojo.setId(record.getId());

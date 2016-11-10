@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +89,12 @@ public class SalesRecordsService {
 				pojo.getProduct(), pojo.getInstallDepartment(), pojo.getHospital());
 		Department orderDepartment = departmentServcie
 				.findOrCreateByDepartNameAndHospitalName(pojo.getOrderDepartment(), pojo.getHospital());
-		User salesPerson = userService.getCurrentUser();
+		User salesPerson;
+		if (StringUtils.isNotBlank(pojo.getSalesPerson())) {
+			salesPerson = userRepository.findByUserName(pojo.getSalesPerson().trim());
+		} else {
+			salesPerson = userService.getCurrentUser();
+		}
 		/*
 		 * Firstly find by ID, if not exist, find by (installLocation,
 		 * orderDepartment, salesPerson, month). The purpose of search two times
@@ -132,7 +138,7 @@ public class SalesRecordsService {
 		return savedPojo;
 	}
 
-	public List<Long> insertOrUpdate(List<SalesRecordPojo> pojos) {
+	public List<Long> insertOrUpdate(Iterable<SalesRecordPojo> pojos) {
 		for (SalesRecordPojo pojo : pojos) {
 			insertOrUpdate(pojo);
 		}

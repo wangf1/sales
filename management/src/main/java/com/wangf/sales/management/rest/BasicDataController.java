@@ -33,6 +33,7 @@ import com.wangf.sales.management.dao.HospitalLevelRepository;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dataexport.SalesRecordsExcelExporter;
 import com.wangf.sales.management.dataimport.HospitalImporter;
+import com.wangf.sales.management.dataimport.SalesRecordsImporter;
 import com.wangf.sales.management.entity.Company;
 import com.wangf.sales.management.entity.HospitalLevel;
 import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
@@ -78,6 +79,8 @@ public class BasicDataController {
 
 	@Autowired
 	private HospitalImporter hospitalImporter;
+	@Autowired
+	private SalesRecordsImporter salesRecordsImporter;
 
 	private Map<String, byte[]> excelFileCache = new HashMap<>();
 
@@ -225,10 +228,17 @@ public class BasicDataController {
 	}
 
 	@PostMapping("/importHospitals")
-	public void handleFileUpload(@RequestParam("file") MultipartFile file)
+	public void importHospitals(@RequestParam("file") MultipartFile file)
 			throws IOException, InvalidFormatException, SAXException {
 		InputStream inputXLS = file.getInputStream();
 		hospitalImporter.importHospital(inputXLS);
+	}
+
+	@PostMapping("/importSalesRecordsAndHospitals")
+	public void importSalesRecordsAndHospitals(@RequestParam("file") MultipartFile file)
+			throws IOException, InvalidFormatException, SAXException {
+		InputStream inputXLS = file.getInputStream();
+		salesRecordsImporter.importHospitalsAndSalesRecords(inputXLS);
 	}
 
 }

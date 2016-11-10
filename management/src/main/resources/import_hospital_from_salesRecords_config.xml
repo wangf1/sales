@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workbook>
+	<worksheet name="Sheet1">
+		<loop startRow="1" endRow="1" items="hospitals" var="hospital"
+			varType="com.wangf.sales.management.rest.pojo.HospitalPojo">
+			<section startRow="1" endRow="1">
+				<mapping row="1" col="1">hospital.name</mapping>
+				<mapping row="1" col="5">hospital.level</mapping>
+				<mapping row="1" col="3">hospital.province</mapping>
+				<mapping row="1" col="4">hospital.region</mapping>
+			</section>
+			<loopbreakcondition>
+				<rowcheck offset="0">
+					<cellcheck offset="0">End</cellcheck>
+				</rowcheck>
+			</loopbreakcondition>
+		</loop>
+	</worksheet>
+</workbook>

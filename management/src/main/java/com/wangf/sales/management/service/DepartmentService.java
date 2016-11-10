@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import com.wangf.sales.management.rest.pojo.DepartmentNamePojo;
 @Service
 @Transactional
 public class DepartmentService {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private DepartmentNameRepository departmentNameRepository;
 
@@ -52,6 +56,11 @@ public class DepartmentService {
 		Hospital hospital = hospitalRepository.findByName(hospitalName);
 		department.setHospitals(hospital);
 		DepartmentName name = departmentNameRepository.findByName(departmentName);
+		if (name == null) {
+			logger.error(
+					"Department {} does not exist. Please change department name to existing one or create this department",
+					departmentName);
+		}
 		department.setName(name);
 		departmentRepository.save(department);
 		return department;

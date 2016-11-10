@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ import com.wangf.sales.management.rest.pojo.HospitalPojo;
 @Service
 @Transactional
 public class HospitalService {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private HospitalRepository hospitalRepository;
 	@Autowired
@@ -70,6 +75,11 @@ public class HospitalService {
 		HospitalLevel level = hospitalLevelService.findOrCreate(pojo.getLevel());
 		entity.setLevel(level);
 		Province province = provinceRepository.findByName(pojo.getProvince());
+		if (province == null) {
+			logger.error(
+					"Province {} does not exist. Please change province name to existing one or create this province",
+					pojo.getProvince());
+		}
 		entity.setProvince(province);
 
 		hospitalRepository.save(entity);
@@ -86,7 +96,7 @@ public class HospitalService {
 		return savedPojo;
 	}
 
-	public List<Long> insertOrUpdateHospitals(List<HospitalPojo> pojos) {
+	public List<Long> insertOrUpdateHospitals(Iterable<HospitalPojo> pojos) {
 		for (HospitalPojo pojo : pojos) {
 			insertOrUpdateHospital(pojo);
 		}

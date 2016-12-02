@@ -150,6 +150,12 @@ public class BasicDataController {
 		return companies;
 	}
 
+	@RequestMapping(path = "/listAllProductUsageTypes", method = RequestMethod.GET)
+	public List<String> listAllProductUsageTypes() {
+		List<String> usageTypes = productService.listAllProductUsageTypes();
+		return usageTypes;
+	}
+
 	@RequestMapping(path = "/listAllUsers", method = RequestMethod.GET)
 	public Iterable<UserPojo> listAllUsers() {
 		Iterable<UserPojo> users = userService.listAllUsersByCurrentUserRole();

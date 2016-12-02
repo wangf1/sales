@@ -6,6 +6,7 @@ public class ProductPojo {
 	private long id;
 	private String name;
 	private String company;
+	private String usageType;
 
 	public long getId() {
 		return id;
@@ -31,6 +32,14 @@ public class ProductPojo {
 		this.company = company;
 	}
 
+	public String getUsageType() {
+		return usageType;
+	}
+
+	public void setUsageType(String usageType) {
+		this.usageType = usageType;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductPojo [id=" + id + ", name=" + name + ", company=" + company + "]";
@@ -41,6 +50,7 @@ public class ProductPojo {
 		pojo.setId(prod.getId());
 		pojo.setName(prod.getName());
 		pojo.setCompany(prod.getCompany().getName());
+		pojo.setUsageType(prod.getUsageType());
 		return pojo;
 	}
 

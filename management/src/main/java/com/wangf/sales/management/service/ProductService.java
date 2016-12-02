@@ -47,6 +47,11 @@ public class ProductService {
 		return pojos;
 	}
 
+	public List<String> listAllProductUsageTypes() {
+		List<String> usageTypes = productRepository.listAllUsageTypes();
+		return usageTypes;
+	}
+
 	public ProductPojo insertOrUpdate(ProductPojo pojo) {
 
 		/*
@@ -67,6 +72,7 @@ public class ProductService {
 		product.setName(pojo.getName());
 		Company company = companyService.findOrCreateByName(pojo.getCompany());
 		product.setCompany(company);
+		product.setUsageType(pojo.getUsageType());
 		productRepository.save(product);
 		// Must flush otherwise delete origionalCompany will fail
 		em.flush();

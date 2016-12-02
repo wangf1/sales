@@ -90,6 +90,21 @@ sap.ui.jsview("sales.basicData.Product", (function() {
                         templateShareable: true
                     }
                 }));
+            } else if (columName === "usageType") {
+                tableCells.push(new sap.m.ComboBox({
+                    change: function(e) {
+                        oController.onCellLiveChange(e);
+                    },
+                    selectedKey: "{" + columName + "}",
+                    items: {
+                        path: "/usageTypes",
+                        template: new sap.ui.core.Item({
+                            key: "{}",
+                            text: "{}"
+                        }),
+                        templateShareable: true
+                    }
+                }));
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",

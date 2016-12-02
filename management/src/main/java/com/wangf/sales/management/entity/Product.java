@@ -61,6 +61,11 @@ public class Product {
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
 	private List<DepartmentMeeting> departmentMeetings;
 
+	/**
+	 * For internal use. Used for filter products by usage type.
+	 */
+	private String usageType;
+
 	public long getId() {
 		return id;
 	}
@@ -123,6 +128,14 @@ public class Product {
 
 	public void setDepartmentMeetings(List<DepartmentMeeting> departmentMeetings) {
 		this.departmentMeetings = departmentMeetings;
+	}
+
+	public String getUsageType() {
+		return usageType;
+	}
+
+	public void setUsageType(String usageType) {
+		this.usageType = usageType;
 	}
 
 	@Override

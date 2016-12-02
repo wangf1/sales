@@ -1,5 +1,7 @@
 package com.wangf.sales.management.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,4 +20,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 	@Modifying
 	@Query(jpql_deleteById)
 	void deleteById(@Param("id") Long id);
+
+	String query_listAllUsageTypes = "select distinct p.usageType from Product p";
+
+	@Query(query_listAllUsageTypes)
+	List<String> listAllUsageTypes();
 }

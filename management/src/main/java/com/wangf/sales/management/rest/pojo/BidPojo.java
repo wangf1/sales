@@ -1,6 +1,7 @@
 package com.wangf.sales.management.rest.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import com.wangf.sales.management.entity.Bid;
 
@@ -17,7 +18,7 @@ public class BidPojo extends PoJoBase {
 
 	private String description;
 
-	private String product;
+	private List<String> products;
 
 	private double price;
 
@@ -76,12 +77,12 @@ public class BidPojo extends PoJoBase {
 		this.description = description;
 	}
 
-	public String getProduct() {
-		return product;
+	public List<String> getProducts() {
+		return products;
 	}
 
-	public void setProduct(String product) {
-		this.product = product;
+	public void setProducts(List<String> products) {
+		this.products = products;
 	}
 
 	public double getPrice() {
@@ -103,7 +104,7 @@ public class BidPojo extends PoJoBase {
 	@Override
 	public String toString() {
 		return "BidPojo [id=" + id + ", date=" + date + ", province=" + province + ", region=" + region
-				+ ", salesPerson=" + salesPerson + ", description=" + description + ", product=" + product + ", price="
+				+ ", salesPerson=" + salesPerson + ", description=" + description + ", product=" + products + ", price="
 				+ price + "]";
 	}
 
@@ -113,7 +114,7 @@ public class BidPojo extends PoJoBase {
 		pojo.setDescription(entity.getDescription());
 		pojo.setId(entity.getId());
 		pojo.setPrice(entity.getPrice());
-		pojo.setProduct(entity.getProduct().getName());
+		pojo.setProducts(AgencyEventPojo.getProductNames(entity.getProducts()));
 		pojo.setProvince(entity.getProvince().getName());
 		pojo.setRegion(entity.getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());

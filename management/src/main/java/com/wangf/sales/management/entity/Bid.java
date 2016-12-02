@@ -1,6 +1,8 @@
 package com.wangf.sales.management.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,10 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 
 @Entity
@@ -34,8 +40,13 @@ public class Bid {
 
 	private String description;
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-	private Product product;
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "BID_PRODUCT", joinColumns = {
+			@JoinColumn(name = "BID_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "BID_ID", "PRODUCT_ID" }) })
+	private List<Product> products;
 
 	private double price;
 
@@ -81,12 +92,15 @@ public class Bid {
 		this.description = description;
 	}
 
-	public Product getProduct() {
-		return product;
+	public List<Product> getProducts() {
+		if (products == null) {
+			products = new ArrayList<>();
+		}
+		return products;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProduct(List<Product> products) {
+		this.products = products;
 	}
 
 	public double getPrice() {
@@ -108,8 +122,8 @@ public class Bid {
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("description", description)
-				.add("status", status).add("province", province.getName()).add("product", product.getName())
-				.add("price", price).add("salesPerson", salesPerson.getUserName()).toString();
+				.add("status", status).add("province", province.getName()).add("price", price)
+				.add("salesPerson", salesPerson.getUserName()).toString();
 		return string;
 	}
 }

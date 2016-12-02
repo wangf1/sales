@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class BidService {
 
 	@Autowired
 	private ProvinceRepository provinceRepository;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public List<BidPojo> getBidsByCurrentUser(Date startAt, Date endAt) {
 		List<Bid> entities;
@@ -77,8 +82,6 @@ public class BidService {
 		}
 		entity.setDescription(pojo.getDescription());
 		entity.setPrice(pojo.getPrice());
-		Product product = productRepository.findByName(pojo.getProduct());
-		entity.setProduct(product);
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
@@ -89,8 +92,23 @@ public class BidService {
 		entity.setProvince(province);
 		entity.setStatus(pojo.getBidStatus());
 
+		// For new created province, Must save and flush and CLEAR province
+		// before save the user-province
+		// relationship. Otherwise for new created province, the user-province
+		// relationship will not be saved, root cause unknown.
 		bidRepository.save(entity);
-		BidPojo savedPojo = BidPojo.from(entity);
+		em.flush();
+		em.clear();
+
+		Bid alreadySaved = bidRepository.findOne(entity.getId());
+		alreadySaved.getProducts().clear();
+		for (String prodName : pojo.getProducts()) {
+			Product product = productRepository.findByName(prodName);
+			alreadySaved.getProducts().add(product);
+		}
+		bidRepository.save(alreadySaved);
+
+		BidPojo savedPojo = BidPojo.from(alreadySaved);
 		return savedPojo;
 	}
 

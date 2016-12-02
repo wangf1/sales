@@ -74,17 +74,6 @@ sap.ui.define([
         });
         return promiseAfterGetAllProvinces;
     }
-    function refreshProducts() {
-        var promise = AjaxUtils.ajaxCallAsPromise({
-            method: "GET",
-            url: "listAllProducts",
-            dataType: "json",
-            contentType: "application/json"
-        });
-        promise.then(function(result) {
-            oViewModel.setProperty("/allProducts", result.data);
-        });
-    }
     function refreshAvailableRegions() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
@@ -108,7 +97,6 @@ sap.ui.define([
             that.setTableModel();
         });
         refreshAvailableRegions();
-        refreshProducts();
         refreshbidStatuses();
     }
 
@@ -190,9 +178,41 @@ sap.ui.define([
         });
     }
 
+    var productSelectDialog;
+    var agencyToEditProducts;
+
+    function onEditProducts(e) {
+        agencyToEditProducts = e.getSource().getBindingContext().getObject();
+        if (!productSelectDialog) {
+            productSelectDialog = sap.ui.view({
+                type: sap.ui.core.mvc.ViewType.JS,
+                viewName: "sales.datacollect.ProductSelect"
+            });
+            // Should attach confirm event listener ONLY one time
+            productSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+                onEditProductsDialogConfirm(selectConfirmEvent);
+            });
+        }
+        productSelectDialog.getController().initSelection(agencyToEditProducts.products);
+        // Must call addDependent otherwise the dialog will cannot access the i18n model
+        this.getView().addDependent(productSelectDialog);
+        productSelectDialog.dialog.open();
+    }
+
+    function onEditProductsDialogConfirm(oEvent) {
+        var selectedProducts = [];
+        var aContexts = oEvent.getParameter("selectedContexts");
+        aContexts.forEach(function(oContext) {
+            var product = oContext.getObject();
+            selectedProducts.push(product.name);
+        });
+        agencyToEditProducts.products = selectedProducts;
+        CRUDTableController.prototype.tableItemDataChanged(agencyToEditProducts);
+    }
+
     var controller = CRUDTableController.extend("sales.datacollect.Bids", {
         columnNames: [
-            "date", "region", "province", "salesPersonFullName", "description", "product", "price", "bidStatus"
+            "date", "region", "province", "salesPersonFullName", "description", "products", "price", "bidStatus"
         ],
         onInit: init,
         urlForListAll: "getBidsByCurrentUser",
@@ -205,6 +225,7 @@ sap.ui.define([
         onRegionChanged: onRegionChanged,
         validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
         onExport: onExport,
+        onEditProducts: onEditProducts
     });
     return controller;
 });

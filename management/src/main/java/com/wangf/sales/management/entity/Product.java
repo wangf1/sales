@@ -49,8 +49,11 @@ public class Product {
 	private List<AgencyEvent> agencyEvents;
 
 	@JsonIgnore
-	@OneToMany
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "BID_PRODUCT", joinColumns = {
+			@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "BID_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "BID_ID", "PRODUCT_ID" }) })
 	private List<Bid> bids;
 
 	@JsonIgnore

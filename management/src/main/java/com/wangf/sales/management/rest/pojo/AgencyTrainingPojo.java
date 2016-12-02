@@ -20,7 +20,7 @@ public class AgencyTrainingPojo extends AgencyEventPojo {
 		pojo.setDate(entity.getDate());
 		pojo.setId(entity.getId());
 		pojo.setLevel(entity.getAgency().getLevel());
-		pojo.setProduct(entity.getProduct().getName());
+		pojo.setProducts(AgencyEventPojo.getProductNames(entity.getProducts()));
 		pojo.setProvince(entity.getAgency().getProvince().getName());
 		pojo.setRegion(entity.getAgency().getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());

@@ -62,6 +62,10 @@ sap.ui.jsview("sales.basicData.Province", (function() {
                 path: columName,
                 type: new sales.common.StringArrayAsCommaStringType()
             },
+            tooltip: {
+                path: columName,
+                type: new sales.common.StringArrayAsCommaStringType()
+            },
             enabled: false,
             change: function(e) {
                 oController.onCellLiveChange(e);

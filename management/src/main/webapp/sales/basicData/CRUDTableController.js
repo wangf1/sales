@@ -47,26 +47,32 @@ sap.ui.define([
         record[propertyName] = comboBox.getValue();
     }
 
-    function onCellLiveChange(e) {
-        setValueToModelForComboBox(e);
-
-        var record = e.getSource().getBindingContext().getObject();
-        if (record.id === undefined) {
+    function tableItemDataChanged(changedItem) {
+        if (changedItem.id === undefined) {
+            // Must refresh model in order UI can view model data item change
+            oViewModel.refresh();
             // For new added one, do not use inlineChangedRecords array to track, but use newAddedRecords to track
             return;
         }
         // Remove before add, to avoid duplicate add
-        ArrayUtils.removeFromById(viewModelData.inlineChangedRecords, record.id);
+        ArrayUtils.removeFromById(viewModelData.inlineChangedRecords, changedItem.id);
         /* The reason why create a new array rather than use existing array is if use existing array, the save button enable status binding "{=
          ${/inlineChangedRecords}.length>0 }" just not work.*/
         var allChangedRecords = [
-            record
+            changedItem
         ];
         viewModelData.inlineChangedRecords.forEach(function(item) {
             allChangedRecords.push(item);
         });
         viewModelData.inlineChangedRecords = allChangedRecords;
         oViewModel.refresh();
+    }
+
+    function onCellLiveChange(e) {
+        setValueToModelForComboBox(e);
+
+        var record = e.getSource().getBindingContext().getObject();
+        this.tableItemDataChanged(record);
     }
 
     function onQuickFilter(e) {
@@ -313,7 +319,8 @@ sap.ui.define([
         clearSelectAndChangedData: clearSelectAndChangedData,
         isSelectedRecordsDeletable: isSelectedRecordsDeletable,
         validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
-        validateHospital: validateHospital
+        validateHospital: validateHospital,
+        tableItemDataChanged: tableItemDataChanged
     });
     return controller;
 });

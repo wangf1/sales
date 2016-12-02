@@ -1,6 +1,7 @@
 package com.wangf.sales.management.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,10 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 
 @Entity
@@ -31,8 +36,13 @@ public abstract class AgencyEvent {
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	protected Agency agency;
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false)
-	protected Product product;
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "AGENCYEVENT_PRODUCT", joinColumns = {
+			@JoinColumn(name = "AGENCYEVENT_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "AGENCYEVENT_ID", "PRODUCT_ID" }) })
+	protected List<Product> products;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
@@ -62,12 +72,12 @@ public abstract class AgencyEvent {
 		this.agency = agency;
 	}
 
-	public Product getProduct() {
-		return product;
+	public List<Product> getProducts() {
+		return products;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 	public User getSalesPerson() {
@@ -81,7 +91,7 @@ public abstract class AgencyEvent {
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("agency", agency.getName())
-				.add("product", product.getName()).toString();
+				.toString();
 		return string;
 	}
 }

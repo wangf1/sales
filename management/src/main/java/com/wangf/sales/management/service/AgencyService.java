@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class AgencyService {
 	private UserService userService;
 	@Autowired
 	private AgencyTrainingRepository agencyTrainingRepository;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	public List<AgencyRecruitPojo> listAgencyRecruitsByCurrentUser(Date startAt, Date endAt) {
 		List<AgencyRecruit> entities;
@@ -128,26 +133,35 @@ public class AgencyService {
 	private AgencyRecruitPojo insertOrUpdateAgencyRecruit(AgencyRecruitPojo pojo) {
 		Agency agency = createAgencyIfNotExist(pojo);
 		AgencyRecruit entity = agencyRecruitRepository.findOne(pojo.getId());
-		if (entity == null) {
-			entity = agencyRecruitRepository.findByAgencyNameAndProductName(pojo.getAgency(), pojo.getProduct());
-		}
 		boolean isInsert = false;
 		if (entity == null) {
 			entity = new AgencyRecruit();
 			isInsert = true;
 		}
 		entity.setAgency(agency);
-		Product product = productRepository.findByName(pojo.getProduct());
-		entity.setProduct(product);
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
 			User salesPerson = userService.getCurrentUser();
 			entity.setSalesPerson(salesPerson);
 		}
-
+		// For new created province, Must save and flush and CLEAR province
+		// before save the user-province
+		// relationship. Otherwise for new created province, the user-province
+		// relationship will not be saved, root cause unknown.
 		agencyRecruitRepository.save(entity);
-		AgencyRecruitPojo savedPojo = AgencyRecruitPojo.from(entity);
+		em.flush();
+		em.clear();
+
+		AgencyRecruit alreadySaved = agencyRecruitRepository.findOne(entity.getId());
+		alreadySaved.getProducts().clear();
+		for (String prodName : pojo.getProducts()) {
+			Product product = productRepository.findByName(prodName);
+			alreadySaved.getProducts().add(product);
+		}
+		agencyRecruitRepository.save(alreadySaved);
+
+		AgencyRecruitPojo savedPojo = AgencyRecruitPojo.from(alreadySaved);
 		return savedPojo;
 	}
 
@@ -209,8 +223,6 @@ public class AgencyService {
 			isInsert = true;
 		}
 		entity.setAgency(agency);
-		Product product = productRepository.findByName(pojo.getProduct());
-		entity.setProduct(product);
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
@@ -219,8 +231,23 @@ public class AgencyService {
 		}
 		entity.setTrainingContent(pojo.getTrainingContent());
 
+		// For new created province, Must save and flush and CLEAR province
+		// before save the user-province
+		// relationship. Otherwise for new created province, the user-province
+		// relationship will not be saved, root cause unknown.
 		agencyTrainingRepository.save(entity);
-		AgencyTrainingPojo savedPojo = AgencyTrainingPojo.from(entity);
+		em.flush();
+		em.clear();
+
+		AgencyTraining alreadySaved = agencyTrainingRepository.findOne(entity.getId());
+		alreadySaved.getProducts().clear();
+		for (String prodName : pojo.getProducts()) {
+			Product product = productRepository.findByName(prodName);
+			alreadySaved.getProducts().add(product);
+		}
+		agencyTrainingRepository.save(alreadySaved);
+
+		AgencyTrainingPojo savedPojo = AgencyTrainingPojo.from(alreadySaved);
 		return savedPojo;
 	}
 

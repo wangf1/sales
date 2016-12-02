@@ -53,12 +53,6 @@ public class AgencyRecruitRepositoryTests extends TestBase {
 	}
 
 	@Test
-	public void findByAgencyNameAndProductName() throws Exception {
-		AgencyRecruit recruit = recruitRepository.findByAgencyNameAndProductName("经销商1", "PCT-Q");
-		System.out.println(recruit);
-	}
-
-	@Test
 	public void deleteById() throws Exception {
 		recruitRepository.deleteById(1L);
 		Iterable<AgencyRecruit> all = recruitRepository.findAll();

@@ -9,8 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
@@ -38,9 +41,12 @@ public class Product {
 	private List<ProductPrice> prices;
 
 	@JsonIgnore
-	@OneToMany
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
-	private List<AgencyRecruit> agencyRecruit;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "AGENCYEVENT_PRODUCT", joinColumns = {
+			@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "AGENCYEVENT_ID", referencedColumnName = "ID") }, uniqueConstraints = {
+							@UniqueConstraint(columnNames = { "AGENCYEVENT_ID", "PRODUCT_ID" }) })
+	private List<AgencyEvent> agencyEvents;
 
 	@JsonIgnore
 	@OneToMany
@@ -92,12 +98,12 @@ public class Product {
 		this.prices = prices;
 	}
 
-	public List<AgencyRecruit> getAgencyRecruit() {
-		return agencyRecruit;
+	public List<AgencyEvent> getAgencyRecruit() {
+		return agencyEvents;
 	}
 
-	public void setAgencyRecruit(List<AgencyRecruit> agencyRecruit) {
-		this.agencyRecruit = agencyRecruit;
+	public void setAgencyRecruit(List<AgencyEvent> agencyEvents) {
+		this.agencyEvents = agencyEvents;
 	}
 
 	public List<Bid> getBids() {

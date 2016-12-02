@@ -1,6 +1,8 @@
 sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
     "use strict";
 
+    jQuery.sap.require("sales.common.StringArrayAsCommaStringType");
+
     var getControllerName = function() {
         return "sales.datacollect.AgencyRecruit";
     };
@@ -84,7 +86,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
 
     function initColumnNamesAccordingToUsageType(thisController) {
         var columns = [
-            "date", "region", "province", "salesPersonFullName", "agency", "product"
+            "date", "region", "province", "salesPersonFullName", "agency", "products"
         ];
         var viewData = thisController.getView().getViewData();
         if (!viewData.usedForAgencyTraining) {
@@ -94,6 +96,33 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             columns.push("trainingContent");
         }
         thisController.columnNames = columns;
+    }
+
+    function createProductsCell(oController, columName) {
+        var hBox = new sap.m.HBox();
+
+        var input = new sap.m.Input({
+            value: {
+                path: columName,
+                type: new sales.common.StringArrayAsCommaStringType()
+            },
+            tooltip: {
+                path: columName,
+                type: new sales.common.StringArrayAsCommaStringType()
+            },
+            enabled: false
+        });
+        hBox.addItem(input);
+
+        var button = new sap.m.Button({
+            icon: "sap-icon://edit",
+            press: function(e) {
+                oController.onEditProducts(e);
+            }
+        });
+        hBox.addItem(button);
+
+        return hBox;
     }
 
     function createTable(oController) {
@@ -131,23 +160,9 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                 })
             }));
             var enableIfInThisMonth = "{= Date.parse(${date}) >= ${/firstDayOfCurrentMonth} || ${permissionModel>/user/delete} }";
-            if (columName === "product") {
-                tableCells.push(new sap.m.Select({
-                    change: function(e) {
-                        oController.onCellLiveChange(e);
-                    },
-                    value: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
-                    selectedKey: "{" + columName + "}",
-                    items: {
-                        path: "/allProducts",
-                        template: new sap.ui.core.Item({
-                            key: "{name}",
-                            text: "{name}"
-                        }),
-                        templateShareable: true
-                    }
-                }));
+            if (columName === "products") {
+                var hBox = createProductsCell(oController, columName);
+                tableCells.push(hBox);
             } else if (columName === "date" || columName === "salesPersonFullName") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",

@@ -1,6 +1,10 @@
 package com.wangf.sales.management.rest.pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.wangf.sales.management.entity.Product;
 
 public class AgencyEventPojo extends PoJoBase {
 	private long id;
@@ -13,7 +17,7 @@ public class AgencyEventPojo extends PoJoBase {
 
 	private String agency;
 
-	private String product;
+	private List<String> products;
 
 	private String salesPerson;
 
@@ -59,12 +63,15 @@ public class AgencyEventPojo extends PoJoBase {
 		this.agency = agency;
 	}
 
-	public String getProduct() {
-		return product;
+	public List<String> getProducts() {
+		if (products == null) {
+			products = new ArrayList<>();
+		}
+		return products;
 	}
 
-	public void setProduct(String product) {
-		this.product = product;
+	public void setProducts(List<String> products) {
+		this.products = products;
 	}
 
 	public String getSalesPerson() {
@@ -83,10 +90,18 @@ public class AgencyEventPojo extends PoJoBase {
 		this.level = level;
 	}
 
+	public static List<String> getProductNames(List<Product> products) {
+		List<String> productNames = new ArrayList<>();
+		for (Product product : products) {
+			productNames.add(product.getName());
+		}
+		return productNames;
+	}
+
 	@Override
 	public String toString() {
 		return "AgencyRecruitPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province
-				+ ", agency=" + agency + ", product=" + product + ", salesPerson=" + salesPerson + ", level=" + level
+				+ ", agency=" + agency + ", products=" + products + ", salesPerson=" + salesPerson + ", level=" + level
 				+ "]";
 	}
 

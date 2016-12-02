@@ -26,13 +26,6 @@ public interface AgencyRecruitRepository extends PagingAndSortingRepository<Agen
 	List<AgencyRecruit> findByUserAndBetweenDate(@Param("startAt") Date startAt, @Param("endAt") Date endAt,
 			@Param("salesPerson") User salesPerson);
 
-	String query_findByAgencyNameAndProductName = "select ar from AgencyRecruit ar " + " join ar.agency ag "
-			+ " join ar.product p " + " where ag.name = :agencyName " + " and p.name = :productName ";
-
-	@Query(query_findByAgencyNameAndProductName)
-	AgencyRecruit findByAgencyNameAndProductName(@Param("agencyName") String agencyName,
-			@Param("productName") String productName);
-
 	String jpql_deleteById = "delete from AgencyRecruit a where a.id = :id";
 
 	@Modifying

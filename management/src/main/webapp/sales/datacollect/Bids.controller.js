@@ -102,7 +102,6 @@ sap.ui.define([
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
-        newAdded["product"] = oViewModel.getProperty("/allProducts")[0].name;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["bidStatus"] = oViewModel.getProperty("/bidStatuses")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);

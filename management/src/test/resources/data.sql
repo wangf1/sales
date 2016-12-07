@@ -83,6 +83,6 @@ insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PER
 insert into sales_record(id, ORDER_DEPARTMENT_ID, INSTALL_LOCATION_ID, SALES_PERSON, quantity) values(3, 2, 2, 'wangf', 300);
 
 insert into Agency(id, name, province_id, level) values (1, '经销商1', 1, '一级');
-insert into Agency_Recruit(id, agency_id, product_id, sales_person) values (1, 1, 1, 'wangf');
+insert into Agency_Recruit(id, agency_id, sales_person) values (1, 1, 'wangf');
 
-insert into bid(id, province_id, sales_person, description,  product_id, price) values (1, 1, 'wangf', '上海市标', 1, 10.25)
+insert into bid(id, province_id, sales_person, description, price) values (1, 1, 'wangf', '上海市标', 10.25)

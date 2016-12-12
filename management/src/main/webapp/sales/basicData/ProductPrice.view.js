@@ -100,7 +100,8 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
                     },
                     // Also bind value to model value, take advantage of the side effect that user cannot easily input value partly same as existing
                     // choice value
-                    value: "{" + columName + "}",
+                    // Do not bind value, user has difficulty to input value that same as existing value
+                    // value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {
                         path: "filteredHospitals",

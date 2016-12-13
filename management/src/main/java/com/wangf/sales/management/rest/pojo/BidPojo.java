@@ -101,6 +101,11 @@ public class BidPojo extends PoJoBase {
 		this.bidStatus = bidSatus;
 	}
 
+	public String getProductNamesString() {
+		String namesString = AgencyEventPojo.buildCommaStringFromStringList(getProducts());
+		return namesString;
+	}
+
 	@Override
 	public String toString() {
 		return "BidPojo [id=" + id + ", date=" + date + ", province=" + province + ", region=" + region

@@ -98,6 +98,23 @@ public class AgencyEventPojo extends PoJoBase {
 		return productNames;
 	}
 
+	public String getProductNamesString() {
+		String namesString = buildCommaStringFromStringList(getProducts());
+		return namesString;
+	}
+
+	static String buildCommaStringFromStringList(List<String> strings) {
+		String namesString = "";
+		for (String name : strings) {
+			if (namesString == "") {
+				namesString = name;
+			} else {
+				namesString = namesString + ", " + name;
+			}
+		}
+		return namesString;
+	}
+
 	@Override
 	public String toString() {
 		return "AgencyRecruitPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province

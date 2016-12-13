@@ -25,4 +25,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
 
 	@Query(query_listAllUsageTypes)
 	List<String> listAllUsageTypes();
+
+	List<Product> findByUsageTypeIn(List<String> usageTypes);
 }

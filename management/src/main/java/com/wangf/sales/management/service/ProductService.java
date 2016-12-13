@@ -22,6 +22,11 @@ import com.wangf.sales.management.rest.pojo.ProductPojo;
 @Service
 @Transactional
 public class ProductService {
+
+	private static final String PRODUCT_USAGE_TYPE_NORMAL = "normal";
+	private static final String PRODUCT_USAGE_TYPE_NORMAL_AND_ForDepartmentMeeting = "normal&ForDepartmentMeeting";
+	private static final String PRODUCT_USAGE_TYPE_ONLY_ForDepartmentMeeting = "only_ForDepartmentMeeting";
+
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
@@ -38,13 +43,17 @@ public class ProductService {
 			pojos.add(pojo);
 		}
 
+		sortProductByName(pojos);
+		return pojos;
+	}
+
+	private void sortProductByName(List<ProductPojo> pojos) {
 		Comparator<ProductPojo> compareByName = (ProductPojo a, ProductPojo b) -> {
 			Collator chineseCollator = Collator.getInstance(Locale.CHINESE);
 			int compareResult = chineseCollator.compare(a.getName(), b.getName());
 			return compareResult;
 		};
 		Collections.sort(pojos, compareByName);
-		return pojos;
 	}
 
 	public List<String> listAllProductUsageTypes() {
@@ -105,5 +114,30 @@ public class ProductService {
 
 			companyService.deleteIfNoChildProduct(company);
 		}
+	}
+
+	public List<ProductPojo> listNormalProducts() {
+		List<String> usageTypes = new ArrayList<>();
+		usageTypes.add(PRODUCT_USAGE_TYPE_NORMAL);
+		usageTypes.add(PRODUCT_USAGE_TYPE_NORMAL_AND_ForDepartmentMeeting);
+		return listProductsByUsageType(usageTypes);
+	}
+
+	private List<ProductPojo> listProductsByUsageType(List<String> usageTypes) {
+		List<Product> products = productRepository.findByUsageTypeIn(usageTypes);
+		List<ProductPojo> pojos = new ArrayList<>();
+		for (Product prod : products) {
+			ProductPojo pojo = ProductPojo.from(prod);
+			pojos.add(pojo);
+		}
+		sortProductByName(pojos);
+		return pojos;
+	}
+
+	public List<ProductPojo> listDepartmentMeetingProducts() {
+		List<String> usageTypes = new ArrayList<>();
+		usageTypes.add(PRODUCT_USAGE_TYPE_ONLY_ForDepartmentMeeting);
+		usageTypes.add(PRODUCT_USAGE_TYPE_NORMAL_AND_ForDepartmentMeeting);
+		return listProductsByUsageType(usageTypes);
 	}
 }

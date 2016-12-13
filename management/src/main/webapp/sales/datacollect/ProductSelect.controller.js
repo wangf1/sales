@@ -13,7 +13,7 @@ sap.ui.define([
     function setTableModel() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProducts",
+            url: "listNormalProducts",
             dataType: "json",
             contentType: "application/json"
         });

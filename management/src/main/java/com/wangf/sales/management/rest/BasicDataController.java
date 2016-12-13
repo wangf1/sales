@@ -108,6 +108,28 @@ public class BasicDataController {
 		return departNames;
 	}
 
+	/**
+	 * List product with usage type "normal".
+	 * 
+	 * @return
+	 */
+	@RequestMapping(path = "/listNormalProducts", method = RequestMethod.GET)
+	public List<ProductPojo> listNormalProducts() {
+		List<ProductPojo> departNames = productService.listNormalProducts();
+		return departNames;
+	}
+
+	/**
+	 * List product with usage type "ForDepartmentMeeting".
+	 * 
+	 * @return
+	 */
+	@RequestMapping(path = "/listDepartmentMeetingProducts", method = RequestMethod.GET)
+	public List<ProductPojo> listDepartmentMeetingProducts() {
+		List<ProductPojo> departNames = productService.listDepartmentMeetingProducts();
+		return departNames;
+	}
+
 	@RequestMapping(path = "/saveProducts", method = RequestMethod.POST)
 	public List<ProductPojo> saveProducts(@RequestBody List<ProductPojo> pojos) {
 		List<ProductPojo> allSaved = productService.insertOrUpdate(pojos);

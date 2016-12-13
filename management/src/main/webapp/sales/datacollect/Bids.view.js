@@ -120,12 +120,16 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
+            var headerText = "{i18n>" + columName + "}";
+            if (columName === "price") {
+                headerText = "{i18n>bidding_price}";
+            }
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
                 visible: columnVisible,
                 header: new sap.m.Button({
-                    text: "{i18n>" + columName + "}",
+                    text: headerText,
                     press: function(e) {
                         oController.sortTable(e);
                     },

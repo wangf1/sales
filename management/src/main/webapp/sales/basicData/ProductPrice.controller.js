@@ -69,7 +69,7 @@ sap.ui.define([
     function refreshProducts() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "listAllProducts",
+            url: "listNormalProducts",
             dataType: "json",
             contentType: "application/json"
         });

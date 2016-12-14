@@ -151,7 +151,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/salesRecords}.length>0 }",
-// visible: "{permissionModel>/user/delete}",
+            visible: "{permissionModel>/user/delete}",
             press: function() {
                 oController.onExportSalesRecords();
             }

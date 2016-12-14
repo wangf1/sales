@@ -15,13 +15,6 @@ sap.ui.jsview("sales.analysis.LostCustomer", (function() {
             }
         }));
         toolbarContent.push(new sap.m.ToolbarSpacer());
-        toolbarContent.push(new sap.m.Button({
-            text: "{i18n>refresh}",
-            icon: "sap-icon://refresh",
-            press: function(e) {
-                oController.onRefresh(e);
-            }
-        }));
 
         var hBox = new sap.m.HBox();
         hBox.setAlignItems(sap.m.FlexAlignItems.Center);
@@ -42,6 +35,14 @@ sap.ui.jsview("sales.analysis.LostCustomer", (function() {
             displayFormat: "yyyy-MM"
         }));
         toolbarContent.push(hBox);
+
+        toolbarContent.push(new sap.m.Button({
+            text: "{i18n>search}",
+            icon: "sap-icon://search",
+            press: function(e) {
+                oController.onRefresh(e);
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent

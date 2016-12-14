@@ -102,6 +102,7 @@ sap.ui.define([
 
     function onAdd() {
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
+        newAdded["price"] = 0;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["bidStatus"] = oViewModel.getProperty("/bidStatuses")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
@@ -119,8 +120,8 @@ sap.ui.define([
     }
 
     function isPriceValid(object) {
-        if (!ValidateUtils.isGreaterThan0(object.price)) {
-            var message = resBundle.getText("price_invalid");
+        if (!ValidateUtils.isGreaterOrEqualThan0(object.price)) {
+            var message = resBundle.getText("bid_price_invalid");
             UIUtils.showMessageToast(message);
             return false;
         }
@@ -139,7 +140,7 @@ sap.ui.define([
                 continue;
             }
             var value = object[key];
-            if (!value) {
+            if (value === undefined || value === null || value === "") {
                 var message = resBundle.getText("before_save_validate_fail");
                 UIUtils.showMessageToast(message);
                 return false;

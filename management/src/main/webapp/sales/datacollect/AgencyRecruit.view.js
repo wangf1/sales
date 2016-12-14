@@ -72,7 +72,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/tableData}.length>0 }",
-// visible: "{permissionModel>/user/delete}",
+            visible: "{permissionModel>/user/delete}",
             press: function() {
                 oController.onExport();
             }

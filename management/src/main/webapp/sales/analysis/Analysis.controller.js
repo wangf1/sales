@@ -24,6 +24,9 @@ sap.ui.define([
             case "lostCustomer":
                 viewName = "sales.analysis.LostCustomer"
                 break;
+            case "salesQuantityReport":
+                viewName = "sales.analysis.SalesQuantityReport"
+                break;
             default:
                 break;
         }

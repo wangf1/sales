@@ -19,7 +19,11 @@ sap.ui.jsview("sales.analysis.Analysis", (function() {
                 }), new sap.m.IconTabFilter({
                     text: "{i18n>lost_customer}",
                     key: "lostCustomer",
-                })
+                }),
+// new sap.m.IconTabFilter({
+// text: "{i18n>sales_quantity_chart_title}",
+// key: "salesQuantityReport",
+// })
             ]
         });
         iconTabBar.addStyleClass("emptyIconTabFilter");

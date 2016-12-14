@@ -404,20 +404,6 @@ sap.ui.define([
         oViewModel.refresh();
     }
 
-    function onResetSearchCondition() {
-        this.byId("filterRegion").removeSelectedKeys();
-        this.byId("filterProvince").removeSelectedKeys();
-        this.byId("filterHospital").removeSelectedKeys();
-        this.byId("filterInstallDepartment").removeSelectedKeys();
-        this.byId("filterOrderDepartment").removeSelectedKeys();
-        this.byId("filterProduct").removeSelectedKeys();
-        this.byId("facetFilter").rerender();// call rerender otherwise the facetFilter cannot refresh
-
-        viewModelData.startAt = DateTimeUtils.firstDayOfCurrentMonth();
-        viewModelData.endAt = DateTimeUtils.today();
-        oViewModel.refresh();
-    }
-
     function onQuantityLiveChange(e) {
         var record = e.getSource().getBindingContext().getObject();
         var quantity = e.getSource().getValue();
@@ -514,7 +500,6 @@ sap.ui.define([
         onAddOrEditSalesRecord: onAddOrEditSalesRecord,
         onDeleteSalesRecord: onDeleteSalesRecord,
         onRecordTableSelectionChange: onRecordTableSelectionChange,
-        onResetSearchCondition: onResetSearchCondition,
         onQuantityLiveChange: onQuantityLiveChange,
         onSaveAllSalesRecords: onSaveAllSalesRecords,
         sortTable: sortTable,

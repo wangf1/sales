@@ -1,6 +1,7 @@
 jQuery.sap.require("sales.common.ObjectUtils");
 
 jQuery.sap.declare("sales.records.SalesRecordsUIHelper");
+jQuery.sap.declare("sales.common.DateTimeUtils");
 
 sales.records.SalesRecordsUIHelper = (function() {
     "use strict";
@@ -149,8 +150,101 @@ sales.records.SalesRecordsUIHelper = (function() {
         return facetFilter;
     }
 
+    function onResetSearchCondition(oController) {
+        oController.byId("filterRegion").removeSelectedKeys();
+        oController.byId("filterProvince").removeSelectedKeys();
+        oController.byId("filterHospital").removeSelectedKeys();
+        oController.byId("filterInstallDepartment").removeSelectedKeys();
+        oController.byId("filterOrderDepartment").removeSelectedKeys();
+        oController.byId("filterProduct").removeSelectedKeys();
+        oController.byId("facetFilter").rerender();// call rerender otherwise the facetFilter cannot refresh
+
+        var oViewModel = oController.getView().getModel();
+        var viewModelData = oViewModel.getData();
+        viewModelData.startAt = sales.common.DateTimeUtils.firstDayOfCurrentMonth();
+        viewModelData.endAt = sales.common.DateTimeUtils.today();
+        oViewModel.refresh();
+    }
+
+    function createSearchPanel(oController) {
+
+        var searchPanelLabel = new sap.m.Text({
+            textAlign: sap.ui.core.TextAlign.Center,
+            text: "{i18n>searchPanelHeader}"
+        });
+        var searchPanelLabelHBox = new sap.m.HBox({
+            alignItems: sap.m.FlexAlignItems.Center,
+            items: [
+                searchPanelLabel
+            ]
+        });
+
+        var facetFilter = createFacetFilter(oController);
+
+        var hBoxStartAt = new sap.m.HBox();
+        hBoxStartAt.setAlignItems(sap.m.FlexAlignItems.Center);
+        hBoxStartAt.addItem(new sap.m.Label({
+            text: "{i18n>startAt}"
+        }));
+        hBoxStartAt.addItem(new sap.m.DatePicker({
+            value: "{/startAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
+        }));
+
+        var hBoxEndAt = new sap.m.HBox();
+        hBoxEndAt.setAlignItems(sap.m.FlexAlignItems.Center);
+        hBoxEndAt.addItem(new sap.m.Label({
+            text: "{i18n>endAt}"
+        }));
+        hBoxEndAt.addItem(new sap.m.DatePicker({
+            value: "{/endAt}",
+            valueFormat: "yyyy-MM-dd",
+            displayFormat: "yyyy-MM-dd"
+        }));
+        hBoxEndAt.addItem(new sap.m.ToolbarSpacer());
+
+        var searchButton = new sap.m.Button({
+            text: "{i18n>search}",
+            icon: "sap-icon://search",
+            type: sap.m.ButtonType.Emphasized,
+            press: function() {
+                oController.onRefresh();
+            }
+        });
+        var resetButton = new sap.m.Button({
+            text: "{i18n>resetSearchCondition}",
+            icon: "sap-icon://reset",
+            press: function() {
+                onResetSearchCondition(oController);
+            }
+        });
+
+        var hBoxAll = new sap.m.HBox({
+            items: [
+                searchPanelLabelHBox, facetFilter, hBoxStartAt, hBoxEndAt, searchButton, resetButton
+            ]
+        });
+
+        var form = new sap.ui.layout.form.SimpleForm({
+            // Must explicitly set layout type, otherwise in non-debug mode in Chrome browser, the UI will no response. Should be a UI5 bug.
+            layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+            labelSpanL: 1,
+            labelSpanM: 1,
+            labelSpanS: 1,
+            emptySpanL: 0,
+            emptySpanM: 0,
+            editable: true,
+            content: [
+                hBoxAll
+            ]
+        });
+        form.addStyleClass("noPaddingAndMargin");
+        return form;
+    }
+
     var toExpose = {
-        createFacetFilter: createFacetFilter
+        createSearchPanel: createSearchPanel
     };
     return toExpose;
 })();

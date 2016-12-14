@@ -9,83 +9,6 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         return "sales.records.ListInTable";
     };
 
-    function createSearchPanel(oController) {
-
-        var searchPanelLabel = new sap.m.Text({
-            textAlign: sap.ui.core.TextAlign.Center,
-            text: "{i18n>searchPanelHeader}"
-        });
-        var searchPanelLabelHBox = new sap.m.HBox({
-            alignItems: sap.m.FlexAlignItems.Center,
-            items: [
-                searchPanelLabel
-            ]
-        });
-
-        var facetFilter = sales.records.SalesRecordsUIHelper.createFacetFilter(oController);
-
-        var hBoxStartAt = new sap.m.HBox();
-        hBoxStartAt.setAlignItems(sap.m.FlexAlignItems.Center);
-        hBoxStartAt.addItem(new sap.m.Label({
-            text: "{i18n>startAt}"
-        }));
-        hBoxStartAt.addItem(new sap.m.DatePicker({
-            value: "{/startAt}",
-            valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd"
-        }));
-
-        var hBoxEndAt = new sap.m.HBox();
-        hBoxEndAt.setAlignItems(sap.m.FlexAlignItems.Center);
-        hBoxEndAt.addItem(new sap.m.Label({
-            text: "{i18n>endAt}"
-        }));
-        hBoxEndAt.addItem(new sap.m.DatePicker({
-            value: "{/endAt}",
-            valueFormat: "yyyy-MM-dd",
-            displayFormat: "yyyy-MM-dd"
-        }));
-        hBoxEndAt.addItem(new sap.m.ToolbarSpacer());
-
-        var searchButton = new sap.m.Button({
-            text: "{i18n>search}",
-            icon: "sap-icon://search",
-            type: sap.m.ButtonType.Emphasized,
-            press: function() {
-                oController.onRefresh();
-            }
-        });
-        var resetButton = new sap.m.Button({
-            text: "{i18n>resetSearchCondition}",
-            icon: "sap-icon://reset",
-            press: function() {
-                oController.onResetSearchCondition();
-            }
-        });
-
-        var hBoxAll = new sap.m.HBox({
-            items: [
-                searchPanelLabelHBox, facetFilter, hBoxStartAt, hBoxEndAt, searchButton, resetButton
-            ]
-        });
-
-        var form = new sap.ui.layout.form.SimpleForm({
-            // Must explicitly set layout type, otherwise in non-debug mode in Chrome browser, the UI will no response. Should be a UI5 bug.
-            layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
-            labelSpanL: 1,
-            labelSpanM: 1,
-            labelSpanS: 1,
-            emptySpanL: 0,
-            emptySpanM: 0,
-            editable: true,
-            content: [
-                hBoxAll
-            ]
-        });
-        form.addStyleClass("noPaddingAndMargin");
-        return form;
-    }
-
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
         toolbarContent.push(new sap.m.SearchField({
@@ -255,7 +178,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         return table;
     };
     var createContent = function(oController) {
-        var searchPanel = createSearchPanel(oController);
+        var searchPanel = sales.records.SalesRecordsUIHelper.createSearchPanel(oController);
         var table = createTable(oController);
         var content = new sap.m.VBox({
             width: "100%",

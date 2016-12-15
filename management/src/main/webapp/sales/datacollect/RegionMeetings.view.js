@@ -40,8 +40,8 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
         toolbarContent.push(hBox);
 
         toolbarContent.push(new sap.m.Button({
-            text: "{i18n>refresh}",
-            icon: "sap-icon://refresh",
+            text: "{i18n>search}",
+            icon: "sap-icon://search",
             press: function(e) {
                 oController.onRefresh(e);
             }

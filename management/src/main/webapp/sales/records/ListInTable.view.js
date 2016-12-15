@@ -20,8 +20,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         }));
         toolbarContent.push(new sap.m.ToolbarSpacer());
         toolbarContent.push(new sap.m.Button({
-            text: "{i18n>refresh}",
-            icon: "sap-icon://refresh",
+            text: "{i18n>search}",
+            icon: "sap-icon://search",
             tooltip: "{i18n>refresh_sales_record_tooltip}",
             press: function(e) {
                 oController.onRefresh();

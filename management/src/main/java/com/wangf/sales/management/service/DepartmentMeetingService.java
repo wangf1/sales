@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.DepartmentMeetingRepository;
 import com.wangf.sales.management.dao.ProductRepository;
+import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
+import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.DepartmentMeeting;
 import com.wangf.sales.management.entity.Product;
@@ -30,6 +32,7 @@ public class DepartmentMeetingService {
 	private DepartmentService departmentService;
 	@Autowired
 	private ProductRepository productRepository;
+	private UserRepository userRepository;
 
 	public List<DepartmentMeetingPojo> getDepartmentMeetingsByCurrentUser(Date startAt, Date endAt) {
 		List<DepartmentMeeting> entities;
@@ -104,6 +107,33 @@ public class DepartmentMeetingService {
 	public Set<String> getDepartmentMeetingStatuses() {
 		Set<String> types = departmentMeetingRepository.getDepartmentMeetingStatuses();
 		return types;
+	}
+
+	public List<DepartmentMeetingPojo> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
+		if (!SecurityUtils.isCurrentUserAdmin()) {
+			// For non-admin user, only view data created by himself
+			String salesPersonName = SecurityUtils.getCurrentUserName();
+			List<String> salesPerson = new ArrayList<>();
+			salesPerson.add(salesPersonName);
+			criteria.setSalesPersonNames(salesPerson);
+		}
+		List<String> allEmployeesIncludeSelf = new ArrayList<>();
+		for (String managerName : criteria.getSalesPersonNames()) {
+			// If the user is a manager, also get all records of his employees
+			User manager = userRepository.findOne(managerName);
+			List<User> employeesIncludeSelf = userService.getAllUnderlineEmployeesIncludeSelf(manager);
+			for (User employee : employeesIncludeSelf) {
+				allEmployeesIncludeSelf.add(employee.getUserName());
+			}
+		}
+		criteria.setSalesPersonNames(allEmployeesIncludeSelf);
+		List<DepartmentMeeting> records = departmentMeetingRepository.searchAgainstMultipleValues(criteria);
+		List<DepartmentMeetingPojo> result = new ArrayList<>();
+		for (DepartmentMeeting record : records) {
+			DepartmentMeetingPojo pojo = DepartmentMeetingPojo.from(record);
+			result.add(pojo);
+		}
+		return result;
 	}
 
 }

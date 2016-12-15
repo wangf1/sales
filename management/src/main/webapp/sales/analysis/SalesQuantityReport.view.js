@@ -2,22 +2,22 @@ sap.ui.jsview("sales.analysis.SalesQuantityReport", (function() {
     "use strict";
 
     jQuery.sap.require("sales.records.SalesRecordsUIHelper");
-    jQuery.sap.require('sap.viz.ui5.controls.VizFrame');
-    jQuery.sap.require('sap.suite.ui.commons.ChartContainer');
+    jQuery.sap.require("sap.viz.ui5.controls.VizFrame");
+    jQuery.sap.require("sap.suite.ui.commons.ChartContainer");
 
     var getControllerName = function() {
         return "sales.analysis.SalesQuantityReport";
     };
 
     function createVizFrame(oController) {
-        var vizFrame = new sap.viz.ui5.controls.VizFrame(oController.createId('viz_frame'), {
-            height: '100%',
-            width: '100%',
+        var vizFrame = new sap.viz.ui5.controls.VizFrame(oController.createId("viz_frame"), {
+            height: "100%",
+            width: "100%",
             uiConfig: {
-                'applicationSet': 'fiori',
-                'showErrorMessage': 'true'
+                "applicationSet": "fiori",
+                "showErrorMessage": "true"
             }
-        }).addStyleClass('server-viz-frame');
+        }).addStyleClass("server-viz-frame");
         var popOver = new sap.viz.ui5.controls.Popover();
         popOver.connect(vizFrame.getVizUid());
         return vizFrame;
@@ -31,7 +31,15 @@ sap.ui.jsview("sales.analysis.SalesQuantityReport", (function() {
             showZoom: false,
             showFullScreen: true,
             showPersonalization: false,
-            title: '{i18n>sales_quantity_chart_title}',
+            title: "{i18n>sales_quantity_chart_title}",
+            customIcons: new sap.ui.core.Icon(oController.createId("info_icon"), {
+                src: "sap-icon://message-information",
+                tooltip: "{i18n>sales_quantity_report_search_icon_tooltip}",
+                width: "2em",
+                press: function(oEvent) {
+                    oController.showSearchHelp();
+                }
+            }),
             content: [
                 new sap.suite.ui.commons.ChartContainerContent({
                     content: [
@@ -45,25 +53,20 @@ sap.ui.jsview("sales.analysis.SalesQuantityReport", (function() {
 
     function createFixFlexLayout(oController) {
         var searchPanel = sales.records.SalesRecordsUIHelper.createSearchPanel(oController);
+        var theHBox = searchPanel.getContent()[0];
+        // Set the search panel height to "3em", in order to make it not automatically change height, which can cause the flex content flicker
+        theHBox.setHeight("3em");
         var chartContainer = createChartContainer(oController);
-        var content = new sap.m.VBox({
-            width: "100%",
-            height: "100%",
-            items: [
-                searchPanel, chartContainer
-            ]
+        var fixFlex = new sap.ui.layout.FixFlex(oController.createId("idFixFlex"), {
+            minFlexSize: 500,
+            fixContent: [
+                searchPanel
+            ],
+            flexContent: chartContainer
+
         });
-// var fixFlex = new sap.ui.layout.FixFlex({
-// minFlexSize: 250,
-// fixContent: [
-// searchPanel
-// ],
-// flexContent: [
-// chartContainer
-// ]
-// });
-// return fixFlex;
-        return content;
+        return fixFlex;
+
     }
 
     var createContent = function(oController) {
@@ -72,7 +75,6 @@ sap.ui.jsview("sales.analysis.SalesQuantityReport", (function() {
     };
 
     var view = {
-        height: "100%",
         getControllerName: getControllerName,
         createContent: createContent
     };

@@ -14,7 +14,8 @@ import com.wangf.sales.management.entity.DepartmentMeeting;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface DepartmentMeetingRepository extends PagingAndSortingRepository<DepartmentMeeting, Long> {
+public interface DepartmentMeetingRepository
+		extends PagingAndSortingRepository<DepartmentMeeting, Long>, DepartmentMeetingCustomQuery {
 	String query_findBetweenDate = "select dm from DepartmentMeeting dm " + " where dm.date >= :startAt "
 			+ " and dm.date < :endAt ";
 

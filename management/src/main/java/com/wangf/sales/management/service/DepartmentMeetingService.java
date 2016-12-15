@@ -32,6 +32,7 @@ public class DepartmentMeetingService {
 	private DepartmentService departmentService;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
 	private UserRepository userRepository;
 
 	public List<DepartmentMeetingPojo> getDepartmentMeetingsByCurrentUser(Date startAt, Date endAt) {

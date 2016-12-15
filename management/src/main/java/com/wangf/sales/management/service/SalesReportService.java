@@ -51,11 +51,10 @@ public class SalesReportService {
 			if (reportData == null) {
 				reportData = new SalesQuantityReportData();
 				reportData.setDate(key);
-				float quantityInK = (float) record.getQuantity() / 1000;
-				reportData.setSalesQuantity(quantityInK);
+				reportData.setSalesQuantity(record.getQuantity());
 				dateReportDataMap.put(key, reportData);
 			} else {
-				float salesQuantitySum = reportData.getSalesQuantity() + (float) record.getQuantity() / 1000;
+				int salesQuantitySum = reportData.getSalesQuantity() + record.getQuantity();
 				reportData.setSalesQuantity(salesQuantitySum);
 			}
 		}

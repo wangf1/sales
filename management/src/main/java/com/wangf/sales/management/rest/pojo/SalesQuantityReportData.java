@@ -5,7 +5,7 @@ public class SalesQuantityReportData {
 	 * The format should be "yyyy-MM", e.g. 2016-12
 	 */
 	private String date;
-	private Float salesQuantity = Float.valueOf(0);
+	private Integer salesQuantity = Integer.valueOf(0);
 	private Integer departmentMeetingQuantity = Integer.valueOf(0);
 
 	public String getDate() {
@@ -16,11 +16,11 @@ public class SalesQuantityReportData {
 		this.date = date;
 	}
 
-	public Float getSalesQuantity() {
+	public Integer getSalesQuantity() {
 		return salesQuantity;
 	}
 
-	public void setSalesQuantity(Float salesQuantity) {
+	public void setSalesQuantity(Integer salesQuantity) {
 		this.salesQuantity = salesQuantity;
 	}
 

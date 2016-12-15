@@ -152,15 +152,18 @@ sap.ui.define([
         var oDataset = new sap.viz.ui5.data.FlattenedDataset({
             dimensions: [
                 {
+                    axis: 2,
                     name: dateText,
                     value: "{date}"
                 }
             ],
             measures: [
                 {
+                    group: 1,
                     name: salesQuantityText,
                     value: "{salesQuantity}"
                 }, {
+                    group: 2,
                     name: departmentMeetingQuantityText,
                     value: "{departmentMeetingQuantity}"
                 }
@@ -173,9 +176,17 @@ sap.ui.define([
             "uid": "primaryValues",
             "type": "Measure",
             "values": [
-                salesQuantityText, departmentMeetingQuantityText
+                salesQuantityText
             ]
-        }), feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
+        });
+        var feedSecondaryValues = new sap.viz.ui5.controls.common.feeds.FeedItem({
+            "uid": "secondaryValues",
+            "type": "Measure",
+            "values": [
+                departmentMeetingQuantityText
+            ]
+        })
+        var feedAxisLabels = new sap.viz.ui5.controls.common.feeds.FeedItem({
             "uid": "axisLabels",
             "type": "Dimension",
             "values": [
@@ -188,8 +199,9 @@ sap.ui.define([
         oVizFrame.setDataset(oDataset);
         oVizFrame.setModel(oViewModel);
         oVizFrame.addFeed(feedPrimaryValues);
+        oVizFrame.addFeed(feedSecondaryValues);
         oVizFrame.addFeed(feedAxisLabels);
-        oVizFrame.setVizType("line");
+        oVizFrame.setVizType("dual_line");
         oVizFrame.setVizProperties({
             plotArea: {
                 dataLabel: {

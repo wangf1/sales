@@ -228,28 +228,25 @@ sap.ui.define([
     }
 
     function showSearchHelp() {
-// var msgStrip = this.byId("msgStrip");
-// if (!msgStrip) {
-// createMsgStrip(this);
-// }
-        var message = resBundle.getText("sales_quantity_report_search_help");
-        UIUtils.showMessageToast(message);
+        var msgStrip = this.byId("msgStrip");
+        if (!msgStrip) {
+            createMsgStrip(this);
+        }
     }
 
-// function createMsgStrip(thisController) {
-// Cannot use message strip, after the fix part height change, the flex part will always flicker, root cause not found
-// var fixFlex = thisController.byId("idFixFlex");
-// var msgStrip = new sap.m.MessageStrip(thisController.createId("msgStrip"), {
-// text: resBundle.getText("sales_quantity_report_search_help"),
-// showCloseButton: true,
-// showIcon: false,
-// type: "Information",
-// close: function() {
-// this.destroy();
-// }
-// });
-// fixFlex.getFlexContent().shift(msgStrip);
-// }
+    function createMsgStrip(thisController) {
+        var fixFlex = thisController.byId("idFixFlex");
+        var msgStrip = new sap.m.MessageStrip(thisController.createId("msgStrip"), {
+            text: resBundle.getText("sales_quantity_report_search_help"),
+            showCloseButton: true,
+            showIcon: false,
+            type: "Information",
+            close: function() {
+                this.destroy();
+            }
+        });
+        fixFlex.addFixContent(msgStrip);
+    }
 
     var controller = Controller.extend("sales.analysis.SalesQuantityReport", {
         onInit: init,

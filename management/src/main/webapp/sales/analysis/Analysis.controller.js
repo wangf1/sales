@@ -33,6 +33,10 @@ sap.ui.define([
         var view = sap.ui.view({
             type: sap.ui.core.mvc.ViewType.JS,
             viewName: viewName,
+            // It's very important to set view height to 100% for two reason:
+            // 1. if not set to 100%, the FixFlex container's flex part will always flicker when the window size is smaller than the minFlexSize.
+            // 2. if not set to 100%, view content may not be seen.
+            height: "100%"
         });
         var page = new sap.m.Page(thisController.createId(key), {
             showHeader: false,

@@ -53,12 +53,9 @@ sap.ui.jsview("sales.analysis.SalesQuantityReport", (function() {
 
     function createFixFlexLayout(oController) {
         var searchPanel = sales.records.SalesRecordsUIHelper.createSearchPanel(oController);
-        var theHBox = searchPanel.getContent()[0];
-        // Set the search panel height to "3em", in order to make it not automatically change height, which can cause the flex content flicker
-        theHBox.setHeight("3em");
         var chartContainer = createChartContainer(oController);
         var fixFlex = new sap.ui.layout.FixFlex(oController.createId("idFixFlex"), {
-            minFlexSize: 500,
+            minFlexSize: 300,
             fixContent: [
                 searchPanel
             ],

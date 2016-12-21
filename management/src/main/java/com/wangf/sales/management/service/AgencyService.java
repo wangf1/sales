@@ -139,11 +139,14 @@ public class AgencyService {
 			isInsert = true;
 		}
 		entity.setAgency(agency);
+		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			User salesPerson = userService.getCurrentUser();
-			entity.setSalesPerson(salesPerson);
+			entity.setSalesPerson(currentUser);
+		} else {
+			entity.setLastModifyBy(currentUser);
+			entity.setLastModifyAt(new Date());
 		}
 		// For new created province, Must save and flush and CLEAR province
 		// before save the user-province
@@ -223,11 +226,14 @@ public class AgencyService {
 			isInsert = true;
 		}
 		entity.setAgency(agency);
+		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			User salesPerson = userService.getCurrentUser();
-			entity.setSalesPerson(salesPerson);
+			entity.setSalesPerson(currentUser);
+		} else {
+			entity.setLastModifyBy(currentUser);
+			entity.setLastModifyAt(new Date());
 		}
 		entity.setTrainingContent(pojo.getTrainingContent());
 

@@ -23,6 +23,10 @@ public class AgencyEventPojo extends PoJoBase {
 
 	private String level;
 
+	private Date lastModifyAt;
+
+	private String lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -101,6 +105,22 @@ public class AgencyEventPojo extends PoJoBase {
 	public String getProductNamesString() {
 		String namesString = buildCommaStringFromStringList(getProducts());
 		return namesString;
+	}
+
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public String getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(String lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
 	}
 
 	static String buildCommaStringFromStringList(List<String> strings) {

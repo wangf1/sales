@@ -6,6 +6,11 @@ sap.ui.define([
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
+    function initColumnVisiableModel(thisController) {
+        var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(thisController.columnNames);
+        oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
+    }
+
     function initAccordingToViewUsage(thisController) {
         var viewData = thisController.getView().getViewData();
         if (viewData.usedForAgencyTraining) {
@@ -31,6 +36,7 @@ sap.ui.define([
         var endAt = DateTimeUtils.today();
         oViewModel.setProperty("/startAt", startAt);
         oViewModel.setProperty("/endAt", endAt);
+        initColumnVisiableModel(this);
     }
 
     function filterProvinceByRegion(region) {
@@ -196,7 +202,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPersonFullName") {
+            if (key === "date" || key === "salesPersonFullName" || key === "lastModifyBy" || key === "lastModifyAt") {
                 continue;
             }
             var value = object[key];

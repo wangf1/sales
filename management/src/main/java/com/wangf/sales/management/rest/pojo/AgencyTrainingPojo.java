@@ -26,6 +26,10 @@ public class AgencyTrainingPojo extends AgencyEventPojo {
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
 		pojo.setTrainingContent(entity.getTrainingContent());
+		if (entity.getLastModifyBy() != null) {
+			pojo.setLastModifyBy(PojoUtils.getFullName(entity.getLastModifyBy()));
+		}
+		pojo.setLastModifyAt(entity.getLastModifyAt());
 		return pojo;
 	}
 

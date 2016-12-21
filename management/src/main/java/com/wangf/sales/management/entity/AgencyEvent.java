@@ -48,6 +48,12 @@ public abstract class AgencyEvent {
 	@JoinColumn(name = "SALES_PERSON", referencedColumnName = "USERNAME")
 	protected User salesPerson;
 
+	private Date lastModifyAt;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
+	private User lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -86,6 +92,22 @@ public abstract class AgencyEvent {
 
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
+	}
+
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public User getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(User lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
 	}
 
 	@Override

@@ -77,6 +77,14 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                 oController.onExport();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            icon: "sap-icon://user-settings",
+            tooltip: "{i18n>customize_table_tooltip}",
+            enabled: "{= ${/tableData}.length>0 }",
+            press: function() {
+                oController.onCustomizeTable();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
@@ -95,6 +103,8 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         } else {
             columns.push("trainingContent");
         }
+        columns.push("lastModifyAt");
+        columns.push("lastModifyBy");
         thisController.columnNames = columns;
     }
 
@@ -130,7 +140,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         var tableColumns = [];
         initColumnNamesAccordingToUsageType(oController);
         oController.columnNames.forEach(function(columName) {
-            var columnVisible = true;
+            var columnVisible = "{= ${/columnVisiableModel/" + columName + "} }";
             if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
@@ -163,7 +173,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             if (columName === "products") {
                 var hBox = createProductsCell(oController, columName);
                 tableCells.push(hBox);
-            } else if (columName === "date" || columName === "salesPersonFullName") {
+            } else if (columName === "date" || columName === "salesPersonFullName" || columName === "lastModifyAt" || columName === "lastModifyBy") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
                 }));

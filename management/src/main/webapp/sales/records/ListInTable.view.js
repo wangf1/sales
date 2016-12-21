@@ -110,7 +110,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/user/delete}";
             }
-            if (name === "salesPerson") {
+            if (name === "salesPersonFullName") {
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
             var width = "auto";

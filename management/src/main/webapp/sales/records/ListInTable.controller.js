@@ -28,24 +28,7 @@ sap.ui.define([
         endAt: DateTimeUtils.today(),
         selectedRecords: [],
         inlineChangedRecords: [],
-        columnVisiableModel: {
-            // do not support invisible salesPersonFullName to avoid complex
-            // "salesPersonFullName": true,
-            "region": true,
-            "province": true,
-            // do not support invisible salesPersonFullName to avoid complex and confuse for sales user
-            // "managerFullName": true,
-            "hospital": true,
-            "hospitalLevel": true,
-            "product": true,
-            "installDepartment": true,
-            "orderDepartment": true,
-            "quantity": true,
-            "price": true,
-            "date": true,
-            "lastModifyAt": false,
-            "lastModifyBy": false
-        }
+        columnVisiableModel: UIUtils.buildColumnVisiableModelFromColumns(columNames)
     };
 
     var oViewModel = new JSONModel(viewModelData);

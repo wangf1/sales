@@ -8,21 +8,13 @@ sap.ui
             "use strict";
 
             var oViewModel = CRUDTableController.prototype.oViewModel;
-            var columnVisiableModel = {
-                "date": true,
-                "region": true,
-                "province": true,
-                // do not support invible salesPersonFullName to avoid complex
-                // "salesPersonFullName": true,
-                "hospital": true,
-                "department": true,
-                "product": true,
-                "purpose": true,
-                "status": true,
-                "columnsNeedInOneCell": true,
-                "lastModifyAt": false,
-                "lastModifyBy": false
-            };
+
+            var columnNames =
+                              [
+                                  "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell",
+                                  "lastModifyAt", "lastModifyBy"
+                              ]
+            var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
             oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
 
             var resBundle = i18nUtils.initAndGetResourceBundle();
@@ -392,24 +384,20 @@ sap.ui
                 return readableMessage;
             }
 
-            var controller =
-                             CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
-                                 columnNames: [
-                                     "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell",
-                                     "lastModifyAt", "lastModifyBy"
-                                 ],
-                                 onInit: init,
-                                 urlForListAll: "getDepartmentMeetingsByCurrentUser",
-                                 urlForSaveAll: "saveDepartmentMeetings",
-                                 urlForDeleteAll: "deleteDepartmentMeetings",
-                                 urlForExport: "exportDepartmentMeetings",
-                                 onRefresh: onRefresh,
-                                 onAdd: onAdd,
-                                 setTableModel: setTableModel,
-                                 onRegionChanged: onRegionChanged,
-                                 validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
-                                 onExport: onExport,
-                                 onProvinceChanged: onProvinceChanged,
-                             });
+            var controller = CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
+                columnNames: columnNames,
+                onInit: init,
+                urlForListAll: "getDepartmentMeetingsByCurrentUser",
+                urlForSaveAll: "saveDepartmentMeetings",
+                urlForDeleteAll: "deleteDepartmentMeetings",
+                urlForExport: "exportDepartmentMeetings",
+                onRefresh: onRefresh,
+                onAdd: onAdd,
+                setTableModel: setTableModel,
+                onRegionChanged: onRegionChanged,
+                validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
+                onExport: onExport,
+                onProvinceChanged: onProvinceChanged,
+            });
             return controller;
         });

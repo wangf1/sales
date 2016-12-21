@@ -7,9 +7,11 @@ sap.ui.define([
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
-    var columNames = [
-        "region", "province", "managerFullName", "salesPersonFullName", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment", "quantity", "price", "date"
-    ];
+    var columNames =
+                     [
+                         "region", "province", "managerFullName", "salesPersonFullName", "hospital", "hospitalLevel", "product", "installDepartment", "orderDepartment",
+                         "quantity", "price", "date", "lastModifyAt", "lastModifyBy"
+                     ];
 
     var viewModelData = {
         salesRecords: [],
@@ -25,7 +27,24 @@ sap.ui.define([
         isSelectedSalesRecordEditable: false,
         endAt: DateTimeUtils.today(),
         selectedRecords: [],
-        inlineChangedRecords: []
+        inlineChangedRecords: [],
+        columnVisiableModel: {
+            // do not support invible salesPersonFullName to avoid complex
+            // "salesPersonFullName": true,
+            "region": true,
+            "province": true,
+            "managerFullName": true,
+            "hospital": true,
+            "hospitalLevel": true,
+            "product": true,
+            "installDepartment": true,
+            "orderDepartment": true,
+            "quantity": true,
+            "price": true,
+            "date": true,
+            "lastModifyAt": false,
+            "lastModifyBy": false
+        }
     };
 
     var oViewModel = new JSONModel(viewModelData);
@@ -492,6 +511,38 @@ sap.ui.define([
         });
     }
 
+    var columnSelectDialog;
+    function onCustomizeTable() {
+        if (!columnSelectDialog) {
+            columnSelectDialog = sap.ui.view({
+                type: sap.ui.core.mvc.ViewType.JS,
+                viewName: "sales.datacollect.ColumnSelect"
+            });
+            // Should attach confirm event listener ONLY one time
+            columnSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+                onSelectColumnDialogConfirm(selectConfirmEvent);
+            });
+        }
+        columnSelectDialog.getController().setTableModel(viewModelData.columnVisiableModel);
+        // Must call addDependent otherwise the dialog will cannot access the i18n model
+        this.getView().addDependent(columnSelectDialog);
+        columnSelectDialog.dialog.open();
+    }
+
+    function onSelectColumnDialogConfirm(oEvent) {
+        // 1. Set all data to false
+        Object.keys(viewModelData.columnVisiableModel).forEach(function(key) {
+            viewModelData.columnVisiableModel[key] = false;
+        });
+        // 2. Set selected columns to true
+        var aContexts = oEvent.getParameter("selectedContexts");
+        aContexts.forEach(function(oContext) {
+            var columnData = oContext.getObject();
+            viewModelData.columnVisiableModel[columnData.name] = true;
+        });
+        oViewModel.refresh();
+    }
+
     var controller = Controller.extend("sales.records.ListInTable", {
         onInit: init,
         onFilterRecords: onFilterRecords,
@@ -505,7 +556,8 @@ sap.ui.define([
         sortTable: sortTable,
         onExportSalesRecords: onExportSalesRecords,
         cloneLastMonthData: cloneLastMonthData,
-        onAddSalesRecords: onAddSalesRecords
+        onAddSalesRecords: onAddSalesRecords,
+        onCustomizeTable: onCustomizeTable
     });
     return controller;
 });

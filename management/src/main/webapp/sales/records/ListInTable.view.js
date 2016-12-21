@@ -87,6 +87,14 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
                 oController.cloneLastMonthData();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            icon: "sap-icon://user-settings",
+            tooltip: "{i18n>customize_table_tooltip}",
+            enabled: "{= ${/tableData}.length>0 }",
+            press: function() {
+                oController.onCustomizeTable();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
@@ -97,8 +105,8 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var tableColumns = [];
         var tableCells = [];
         oController.columNames.forEach(function(name) {
-            var columnVisible = true;
-            if (name === "manager" || name === "price") {
+            var columnVisible = "{= ${/columnVisiableModel/" + name + "} }";
+            if (name === "manager") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/user/delete}";
             }

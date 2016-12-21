@@ -2,6 +2,7 @@ package com.wangf.sales.management.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,12 @@ public class SalesRecord {
 	@Column(nullable = false, insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+
+	private Date lastModifyAt;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
+	private User lastModifyBy;
 
 	public long getId() {
 		return id;
@@ -85,6 +92,22 @@ public class SalesRecord {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public User getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(User lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
 	}
 
 	@Override

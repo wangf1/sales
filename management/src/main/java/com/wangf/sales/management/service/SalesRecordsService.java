@@ -118,6 +118,10 @@ public class SalesRecordsService {
 			// manager or admin may modify sales record for a user, should not
 			// change the sales person of a sales record
 			record.setSalesPerson(salesPerson);
+		} else {
+			User currentUser = userService.getCurrentUser();
+			record.setLastModifyBy(currentUser);
+			record.setLastModifyAt(new Date());
 		}
 		record.setQuantity(pojo.getQuantity());
 		if (alreadyExisting) {

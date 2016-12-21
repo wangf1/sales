@@ -29,6 +29,10 @@ public class SalesRecordPojo extends PoJoBase {
 
 	private Date date;
 
+	private Date lastModifyAt;
+
+	private String lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -141,6 +145,22 @@ public class SalesRecordPojo extends PoJoBase {
 		this.price = price;
 	}
 
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public String getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(String lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
+	}
+
 	@Override
 	public String toString() {
 		return "SalesRecordPojo [id=" + id + ", region=" + region + ", province=" + province + ", manager=" + manager
@@ -214,6 +234,10 @@ public class SalesRecordPojo extends PoJoBase {
 		pojo.setDate(record.getDate());
 		pojo.setHospitalLevel(record.getInstallLocation().getDepartment().getHospital().getLevel().getName());
 		pojo.setPrice(getProductPrice(record));
+		if (record.getLastModifyBy() != null) {
+			pojo.setLastModifyBy(PojoUtils.getFullName(record.getLastModifyBy()));
+		}
+		pojo.setLastModifyAt(record.getLastModifyAt());
 
 		return pojo;
 	}

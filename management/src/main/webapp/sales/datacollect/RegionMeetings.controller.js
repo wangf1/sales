@@ -7,6 +7,12 @@ sap.ui
             "use strict";
 
             var oViewModel = CRUDTableController.prototype.oViewModel;
+            var columnNames = [
+                "date", "name", "region", "province", "salesPersonFullName", "type", "form", "status", "allKindsOfInputs", "lastModifyAt", "lastModifyBy"
+            ]
+            var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
+            oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
+
             var resBundle = i18nUtils.initAndGetResourceBundle();
 
             var STATUS_PLAN = resBundle.getText("department_meeting_STATUS_PLAN");
@@ -264,7 +270,7 @@ sap.ui
                     if (!object.hasOwnProperty(key)) {
                         continue;
                     }
-                    if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE") {
+                    if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "satelliteMeetingCost" || key === "exhibitionCost" || key === "speakerCost" || key === "otherCost" || key === "otherTAndE" || key === "lastModifyBy" || key === "lastModifyAt") {
                         continue;
                     }
                     var value = object[key];
@@ -326,9 +332,7 @@ sap.ui
             }
 
             var controller = CRUDTableController.extend("sales.datacollect.RegionMeetings", {
-                columnNames: [
-                    "date", "name", "region", "province", "salesPersonFullName", "type", "form", "status", "allKindsOfInputs"
-                ],
+                columnNames: columnNames,
                 onInit: init,
                 urlForListAll: "getRegionMeetingsByCurrentUser",
                 urlForSaveAll: "saveRegionMeetings",

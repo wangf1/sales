@@ -54,6 +54,12 @@ public class RegionMeeting {
 	private double otherCost;
 	private double otherTAndE;
 
+	private Date lastModifyAt;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
+	private User lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -166,6 +172,22 @@ public class RegionMeeting {
 		this.otherTAndE = otherTAndE;
 	}
 
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public User getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(User lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
+	}
+
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("name", name)
@@ -173,4 +195,5 @@ public class RegionMeeting {
 				.toString();
 		return string;
 	}
+
 }

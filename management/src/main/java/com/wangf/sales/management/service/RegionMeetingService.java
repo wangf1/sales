@@ -80,11 +80,14 @@ public class RegionMeetingService {
 		entity.setSpeakerCost(pojo.getSpeakerCost());
 		entity.setStatus(pojo.getStatus());
 		entity.setType(pojo.getType());
+		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			User salesPerson = userService.getCurrentUser();
-			entity.setSalesPerson(salesPerson);
+			entity.setSalesPerson(currentUser);
+		} else {
+			entity.setLastModifyBy(currentUser);
+			entity.setLastModifyAt(new Date());
 		}
 
 		regionMeetingRepository.save(entity);

@@ -78,6 +78,14 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                 oController.onExport();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            icon: "sap-icon://user-settings",
+            tooltip: "{i18n>customize_table_tooltip}",
+            enabled: "{= ${/tableData}.length>0 }",
+            press: function() {
+                oController.onCustomizeTable();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
@@ -89,7 +97,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
         var tableCells = [];
         var tableColumns = [];
         oController.columnNames.forEach(function(columName) {
-            var columnVisible = true;
+            var columnVisible = "{= ${/columnVisiableModel/" + columName + "} }";
             if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
@@ -122,7 +130,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     ]
                 })
             }));
-            if (columName === "date" || columName === "salesPersonFullName") {
+            if (columName === "date" || columName === "salesPersonFullName" || columName === "lastModifyAt" || columName === "lastModifyBy") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
                 }));

@@ -110,7 +110,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
                 path: columName,
                 type: new sales.common.StringArrayAsCommaStringType()
             },
-            enabled: false
+            editable: false
         });
         hBox.addItem(input);
 
@@ -254,7 +254,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
+                    editable: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

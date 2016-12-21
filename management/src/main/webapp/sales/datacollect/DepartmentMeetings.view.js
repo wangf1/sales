@@ -140,10 +140,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                     }
                 }));
             } else if (columName === "date" || columName === "salesPersonFullName") {
-                tableCells.push(new sap.m.Input({
-                    value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
-                    enabled: false
+                tableCells.push(new sap.m.Text({
+                    text: "{" + columName + "}",
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
@@ -294,7 +292,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                             type: new sales.common.FloatTypeOnlyFormatValue()
                         },
                         tooltip: "{" + inputColumn + "}",
-                        enabled: inputEnabled,
+                        editable: inputEnabled,
                         textAlign: sap.ui.core.TextAlign.Right,
                         liveChange: function(e) {
                             oController.onCellLiveChange(e);
@@ -308,7 +306,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
-                    enabled: enableIfInThisMonthOrLastMonth,
+                    editable: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

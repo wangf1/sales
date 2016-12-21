@@ -123,10 +123,8 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                 })
             }));
             if (columName === "date" || columName === "salesPersonFullName") {
-                tableCells.push(new sap.m.Input({
-                    value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
-                    enabled: false
+                tableCells.push(new sap.m.Text({
+                    text: "{" + columName + "}",
                 }));
             } else if (columName === "region") {
                 tableCells.push(new sap.m.Select({
@@ -223,7 +221,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
+                    editable: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }
@@ -252,7 +250,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                             type: valueType
                         },
                         tooltip: "{" + inputColumn + "}",
-                        enabled: inputEnabled,
+                        editable: inputEnabled,
                         textAlign: sap.ui.core.TextAlign.Right,
                         liveChange: function(e) {
                             oController.onCellLiveChange(e);
@@ -265,7 +263,7 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
-                    enabled: enableIfInThisMonthOrLastMonth,
+                    editable: enableIfInThisMonthOrLastMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

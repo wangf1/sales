@@ -96,7 +96,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                 path: columName,
                 type: new sales.common.StringArrayAsCommaStringType()
             },
-            enabled: false
+            editable: false
         });
         hBox.addItem(input);
 
@@ -192,7 +192,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                         path: columName,
                         type: new sales.common.FloatTypeOnlyFormatValue()
                     },
-                    enabled: enableIfInThisMonth,
+                    editable: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }
@@ -215,7 +215,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
+                    editable: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

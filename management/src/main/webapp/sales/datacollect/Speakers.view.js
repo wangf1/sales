@@ -207,7 +207,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
             } else {
                 tableCells.push(new sap.m.Input({
                     value: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
+                    editable: enableIfInThisMonth,
                     liveChange: function(e) {
                         oController.onCellLiveChange(e);
                     }

@@ -77,6 +77,14 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                 oController.onExport();
             }
         }));
+        toolbarContent.push(new sap.m.Button({
+            icon: "sap-icon://user-settings",
+            tooltip: "{i18n>customize_table_tooltip}",
+            enabled: "{= ${/tableData}.length>0 }",
+            press: function() {
+                oController.onCustomizeTable();
+            }
+        }));
 
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
@@ -88,7 +96,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
         var tableCells = [];
         var tableColumns = [];
         oController.columnNames.forEach(function(columName) {
-            var columnVisible = true;
+            var columnVisible = "{= ${/columnVisiableModel/" + columName + "} }";
             if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";

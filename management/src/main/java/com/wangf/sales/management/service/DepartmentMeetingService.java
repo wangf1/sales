@@ -86,11 +86,14 @@ public class DepartmentMeetingService {
 		entity.setPurpose(pojo.getPurpose());
 		entity.setStatus(pojo.getStatus());
 		entity.setSubject(pojo.getSubject());
+		User salesPerson = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			User salesPerson = userService.getCurrentUser();
 			entity.setSalesPerson(salesPerson);
+		} else {
+			entity.setLastModifyBy(salesPerson);
+			entity.setLastModifyAt(new Date());
 		}
 
 		departmentMeetingRepository.save(entity);

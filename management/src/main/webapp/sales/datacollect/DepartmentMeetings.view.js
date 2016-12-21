@@ -147,7 +147,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "date" || columName === "salesPersonFullName") {
+            } else if (columName === "date" || columName === "salesPersonFullName" || columName === "lastModifyAt" || columName === "lastModifyBy") {
                 tableCells.push(new sap.m.Text({
                     text: "{" + columName + "}",
                 }));

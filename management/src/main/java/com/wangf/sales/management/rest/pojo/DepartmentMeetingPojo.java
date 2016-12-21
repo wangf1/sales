@@ -31,6 +31,10 @@ public class DepartmentMeetingPojo extends PoJoBase {
 
 	private double actualCost;
 
+	private Date lastModifyAt;
+
+	private String lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -135,6 +139,22 @@ public class DepartmentMeetingPojo extends PoJoBase {
 		this.actualCost = actualCost;
 	}
 
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public String getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(String lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
+	}
+
 	@Override
 	public String toString() {
 		return "DepartmentMeetingPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province
@@ -159,6 +179,10 @@ public class DepartmentMeetingPojo extends PoJoBase {
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(d.getSalesPerson()));
 		pojo.setStatus(d.getStatus());
 		pojo.setSubject(d.getSubject());
+		if (d.getLastModifyBy() != null) {
+			pojo.setLastModifyBy(PojoUtils.getFullName(d.getLastModifyBy()));
+		}
+		pojo.setLastModifyAt(d.getLastModifyAt());
 
 		return pojo;
 	}

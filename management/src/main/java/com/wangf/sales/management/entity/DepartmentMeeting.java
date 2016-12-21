@@ -46,6 +46,12 @@ public class DepartmentMeeting {
 
 	private double actualCost;
 
+	private Date lastModifyAt;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
+	private User lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -124,6 +130,22 @@ public class DepartmentMeeting {
 
 	public void setActualCost(double actualCost) {
 		this.actualCost = actualCost;
+	}
+
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public User getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(User lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
 	}
 
 	@Override

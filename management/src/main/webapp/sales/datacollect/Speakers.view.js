@@ -187,7 +187,7 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "type") {
+            } else if (columName === "department") {
                 tableCells.push(new sap.m.Select({
                     change: function(e) {
                         oController.onCellLiveChange(e);
@@ -196,10 +196,10 @@ sap.ui.jsview("sales.datacollect.Speakers", (function() {
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/allTypes",
+                        path: "/departmentNames",
                         template: new sap.ui.core.Item({
-                            key: "{}",
-                            text: "{}"
+                            key: "{name}",
+                            text: "{name}"
                         }),
                         templateShareable: true
                     }

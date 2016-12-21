@@ -17,7 +17,7 @@ public class SpeakerPojo extends PoJoBase {
 
 	private String hospital;
 
-	private String type;
+	private String department;
 
 	private String speakerName;
 
@@ -69,12 +69,12 @@ public class SpeakerPojo extends PoJoBase {
 		this.hospital = hospital;
 	}
 
-	public String getType() {
-		return type;
+	public String getDepartment() {
+		return department;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 
 	public String getSpeakerName() {
@@ -88,8 +88,8 @@ public class SpeakerPojo extends PoJoBase {
 	@Override
 	public String toString() {
 		return "SpeakerPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province
-				+ ", salesPerson=" + salesPerson + ", hospital=" + hospital + ", type=" + type + ", speakerName="
-				+ speakerName + "]";
+				+ ", salesPerson=" + salesPerson + ", hospital=" + hospital + ", department=" + department
+				+ ", speakerName=" + speakerName + "]";
 	}
 
 	public static SpeakerPojo from(Speaker entity) {
@@ -101,7 +101,7 @@ public class SpeakerPojo extends PoJoBase {
 		pojo.setRegion(entity.getProvince().getRegion());
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
-		pojo.setType(entity.getType());
+		pojo.setDepartment(entity.getDepartment().getName().getName());
 		pojo.setSpeakerName(entity.getSpeakerName());
 		return pojo;
 	}

@@ -3,7 +3,6 @@ package com.wangf.sales.management.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.wangf.sales.management.dao.HospitalRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
 import com.wangf.sales.management.dao.SpeakerRepository;
+import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.Speaker;
@@ -35,6 +35,9 @@ public class SpeakerService {
 
 	@Autowired
 	private ProvinceRepository provinceRepository;
+
+	@Autowired
+	private DepartmentService departmentService;
 
 	public List<SpeakerPojo> getSpeakersByCurrentUser(Date startAt, Date endAt) {
 		List<Speaker> entities;
@@ -81,7 +84,9 @@ public class SpeakerService {
 		Province province = provinceRepository.findByName(pojo.getProvince());
 		entity.setProvince(province);
 		entity.setSpeakerName(pojo.getSpeakerName());
-		entity.setType(pojo.getType());
+		Department department = departmentService.findOrCreateByDepartNameAndHospitalName(pojo.getDepartment(),
+				pojo.getHospital());
+		entity.setDepartment(department);
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
@@ -101,8 +106,8 @@ public class SpeakerService {
 		return ids;
 	}
 
-	public Set<String> getSpeakerTypes() {
-		Set<String> types = speakerRepository.getSpeakerTypes();
-		return types;
-	}
+	// public Set<String> getSpeakerTypes() {
+	// Set<String> types = speakerRepository.getSpeakerTypes();
+	// return types;
+	// }
 }

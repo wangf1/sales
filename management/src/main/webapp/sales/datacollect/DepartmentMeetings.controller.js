@@ -261,7 +261,7 @@ sap.ui.define([
         } else {
             dataItem["province"] = undefined;
         }
-        onProvinceChanged(e);
+        this.onProvinceChanged(e);
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 

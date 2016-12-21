@@ -2,7 +2,6 @@ package com.wangf.sales.management.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,8 +32,8 @@ public interface SpeakerRepository extends PagingAndSortingRepository<Speaker, L
 	@Query(jpql_deleteById)
 	void deleteById(@Param("id") Long id);
 
-	String query_getSpeakerTypes = "select distinct s.type from Speaker s ";
-
-	@Query(query_getSpeakerTypes)
-	Set<String> getSpeakerTypes();
+	// String query_getSpeakerTypes = "select distinct s.type from Speaker s ";
+	//
+	// @Query(query_getSpeakerTypes)
+	// Set<String> getSpeakerTypes();
 }

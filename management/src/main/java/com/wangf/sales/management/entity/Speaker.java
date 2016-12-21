@@ -35,7 +35,9 @@ public class Speaker {
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)
 	private Hospital hospital;
 
-	private String type;
+	@ManyToOne(cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
+	private Department department;
 
 	private String speakerName;
 
@@ -79,12 +81,12 @@ public class Speaker {
 		this.hospital = hospital;
 	}
 
-	public String getType() {
-		return type;
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	public String getSpeakerName() {
@@ -98,8 +100,8 @@ public class Speaker {
 	@Override
 	public String toString() {
 		String string = MoreObjects.toStringHelper(this.getClass()).add("id", id).add("speakerName", speakerName)
-				.add("type", type).add("province", province.getName()).add("hospital", hospital.getName())
-				.add("salesPerson", salesPerson.getUserName()).toString();
+				.add("department", getDepartment().getName().getName()).add("province", province.getName())
+				.add("hospital", hospital.getName()).add("salesPerson", salesPerson.getUserName()).toString();
 		return string;
 	}
 }

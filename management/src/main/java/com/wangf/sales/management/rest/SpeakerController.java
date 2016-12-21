@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -76,10 +75,10 @@ public class SpeakerController {
 		response.flushBuffer();
 	}
 
-	@RequestMapping(path = "/getSpeakerTypes", method = RequestMethod.GET)
-	public Set<String> getSpeakerTypes() {
-		Set<String> types = speakerService.getSpeakerTypes();
-		return types;
-	}
+	// @RequestMapping(path = "/getSpeakerTypes", method = RequestMethod.GET)
+	// public Set<String> getSpeakerTypes() {
+	// Set<String> types = speakerService.getSpeakerTypes();
+	// return types;
+	// }
 
 }

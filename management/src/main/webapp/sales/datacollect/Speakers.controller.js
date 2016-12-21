@@ -106,24 +106,35 @@ sap.ui.define([
         });
         return promiseAfterGetAllHospitals;
     }
-    function refreshSpeakerTypes() {
+// function refreshSpeakerTypes() {
+// var promise = AjaxUtils.ajaxCallAsPromise({
+// method: "GET",
+// url: "getSpeakerTypes",
+// dataType: "json",
+// contentType: "application/json"
+// });
+// promise.then(function(result) {
+// var types = result.data;
+// var fixedTypes = [
+// "临床", "检验"
+// ];
+// fixedTypes.forEach(function(type) {
+// if (types.indexOf(type) < 0) {
+// types.push(type);
+// }
+// });
+// oViewModel.setProperty("/allTypes", types);
+// });
+// }
+    function refreshDepartments() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
-            url: "getSpeakerTypes",
+            url: "listAllDepartments",
             dataType: "json",
             contentType: "application/json"
         });
         promise.then(function(result) {
-            var types = result.data;
-            var fixedTypes = [
-                "临床", "检验"
-            ];
-            fixedTypes.forEach(function(type) {
-                if (types.indexOf(type) < 0) {
-                    types.push(type);
-                }
-            });
-            oViewModel.setProperty("/allTypes", types);
+            oViewModel.setProperty("/departmentNames", result.data);
         });
     }
 
@@ -139,7 +150,7 @@ sap.ui.define([
         });
         refreshAvailableRegions();
         refreshProducts();
-        refreshSpeakerTypes();
+        refreshDepartments();
     }
 
     function onAdd() {
@@ -154,7 +165,7 @@ sap.ui.define([
         } else {
             newAdded["hospital"] = undefined;
         }
-        newAdded["type"] = oViewModel.getProperty("/allTypes")[0];
+        newAdded["department"] = oViewModel.getProperty("/departmentNames")[0].name;
         // Purpose of set a date is the cell enabled status depends on date
         newAdded["date"] = DateTimeUtils.today();
         oViewModel.refresh();
@@ -169,7 +180,7 @@ sap.ui.define([
         } else {
             dataItem["province"] = undefined;
         }
-        onProvinceChanged(e);
+        this.onProvinceChanged(e);
         CRUDTableController.prototype.onCellLiveChange.call(this, e);
     }
 
@@ -247,7 +258,7 @@ sap.ui.define([
 
     var controller = CRUDTableController.extend("sales.datacollect.Speakers", {
         columnNames: [
-            "date", "region", "province", "salesPersonFullName", "hospital", "type", "speakerName"
+            "date", "region", "province", "salesPersonFullName", "hospital", "department", "speakerName"
         ],
         onInit: init,
         urlForListAll: "getSpeakersByCurrentUser",

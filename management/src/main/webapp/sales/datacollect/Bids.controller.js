@@ -5,6 +5,13 @@ sap.ui.define([
     "use strict";
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
+
+    var columnNames = [
+        "date", "region", "province", "salesPersonFullName", "description", "products", "price", "bidStatus", "lastModifyAt", "lastModifyBy"
+    ];
+    var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
+    oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
+
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
     var bidStatuses = [
@@ -136,7 +143,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPersonFullName") {
+            if (key === "date" || key === "salesPersonFullName" || key === "lastModifyBy" || key === "lastModifyAt") {
                 continue;
             }
             var value = object[key];
@@ -211,9 +218,7 @@ sap.ui.define([
     }
 
     var controller = CRUDTableController.extend("sales.datacollect.Bids", {
-        columnNames: [
-            "date", "region", "province", "salesPersonFullName", "description", "products", "price", "bidStatus"
-        ],
+        columnNames: columnNames,
         onInit: init,
         urlForListAll: "getBidsByCurrentUser",
         urlForSaveAll: "saveBids",

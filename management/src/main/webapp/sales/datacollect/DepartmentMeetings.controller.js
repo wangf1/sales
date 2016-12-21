@@ -13,7 +13,7 @@ sap.ui
                               [
                                   "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell",
                                   "lastModifyAt", "lastModifyBy"
-                              ]
+                              ];
             var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
             oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
 

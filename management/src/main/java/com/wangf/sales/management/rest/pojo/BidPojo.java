@@ -29,6 +29,10 @@ public class BidPojo extends PoJoBase {
 	 */
 	private String bidStatus;
 
+	private Date lastModifyAt;
+
+	private String lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -106,6 +110,22 @@ public class BidPojo extends PoJoBase {
 		return namesString;
 	}
 
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public String getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(String lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
+	}
+
 	@Override
 	public String toString() {
 		return "BidPojo [id=" + id + ", date=" + date + ", province=" + province + ", region=" + region
@@ -125,6 +145,10 @@ public class BidPojo extends PoJoBase {
 		pojo.setSalesPerson(entity.getSalesPerson().getUserName());
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
 		pojo.setBidStatus(entity.getStatus());
+		if (entity.getLastModifyBy() != null) {
+			pojo.setLastModifyBy(PojoUtils.getFullName(entity.getLastModifyBy()));
+		}
+		pojo.setLastModifyAt(entity.getLastModifyAt());
 		return pojo;
 	}
 

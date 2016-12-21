@@ -82,11 +82,14 @@ public class BidService {
 		}
 		entity.setDescription(pojo.getDescription());
 		entity.setPrice(pojo.getPrice());
+		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			User salesPerson = userService.getCurrentUser();
-			entity.setSalesPerson(salesPerson);
+			entity.setSalesPerson(currentUser);
+		} else {
+			entity.setLastModifyBy(currentUser);
+			entity.setLastModifyAt(new Date());
 		}
 		Province province = provinceRepository.findByName(pojo.getProvince());
 		entity.setProvince(province);

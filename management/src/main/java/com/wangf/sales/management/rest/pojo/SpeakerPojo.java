@@ -21,6 +21,10 @@ public class SpeakerPojo extends PoJoBase {
 
 	private String speakerName;
 
+	private Date lastModifyAt;
+
+	private String lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -85,6 +89,22 @@ public class SpeakerPojo extends PoJoBase {
 		this.speakerName = speakerName;
 	}
 
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public String getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(String lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
+	}
+
 	@Override
 	public String toString() {
 		return "SpeakerPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province
@@ -103,6 +123,10 @@ public class SpeakerPojo extends PoJoBase {
 		pojo.setSalesPersonFullName(PojoUtils.getFullName(entity.getSalesPerson()));
 		pojo.setDepartment(entity.getDepartment().getName().getName());
 		pojo.setSpeakerName(entity.getSpeakerName());
+		if (entity.getLastModifyBy() != null) {
+			pojo.setLastModifyBy(PojoUtils.getFullName(entity.getLastModifyBy()));
+		}
+		pojo.setLastModifyAt(entity.getLastModifyAt());
 		return pojo;
 	}
 }

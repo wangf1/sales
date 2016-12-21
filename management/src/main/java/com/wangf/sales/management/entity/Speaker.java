@@ -41,6 +41,12 @@ public class Speaker {
 
 	private String speakerName;
 
+	private Date lastModifyAt;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
+	private User lastModifyBy;
+
 	public long getId() {
 		return id;
 	}
@@ -95,6 +101,22 @@ public class Speaker {
 
 	public void setSpeakerName(String speakerName) {
 		this.speakerName = speakerName;
+	}
+
+	public Date getLastModifyAt() {
+		return lastModifyAt;
+	}
+
+	public void setLastModifyAt(Date lastModifyAt) {
+		this.lastModifyAt = lastModifyAt;
+	}
+
+	public User getLastModifyBy() {
+		return lastModifyBy;
+	}
+
+	public void setLastModifyBy(User lastModifyBy) {
+		this.lastModifyBy = lastModifyBy;
 	}
 
 	@Override

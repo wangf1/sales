@@ -5,6 +5,11 @@ sap.ui.define([
     "use strict";
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
+    var columnNames = [
+        "date", "region", "province", "salesPersonFullName", "hospital", "department", "speakerName", "lastModifyAt", "lastModifyBy"
+    ];
+    var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
+    oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
@@ -204,7 +209,7 @@ sap.ui.define([
             if (!object.hasOwnProperty(key)) {
                 continue;
             }
-            if (key === "date" || key === "salesPersonFullName") {
+            if (key === "date" || key === "salesPersonFullName" || key === "lastModifyBy" || key === "lastModifyAt") {
                 continue;
             }
             var value = object[key];
@@ -257,9 +262,7 @@ sap.ui.define([
     }
 
     var controller = CRUDTableController.extend("sales.datacollect.Speakers", {
-        columnNames: [
-            "date", "region", "province", "salesPersonFullName", "hospital", "department", "speakerName"
-        ],
+        columnNames: columnNames,
         onInit: init,
         urlForListAll: "getSpeakersByCurrentUser",
         urlForSaveAll: "saveSpeakers",

@@ -392,39 +392,6 @@ sap.ui
                 return readableMessage;
             }
 
-            var columnSelectDialog;
-
-            function onCustomizeTable() {
-                if (!columnSelectDialog) {
-                    columnSelectDialog = sap.ui.view({
-                        type: sap.ui.core.mvc.ViewType.JS,
-                        viewName: "sales.datacollect.ColumnSelect"
-                    });
-                    // Should attach confirm event listener ONLY one time
-                    columnSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
-                        onSelectColumnDialogConfirm(selectConfirmEvent);
-                    });
-                }
-                columnSelectDialog.getController().setTableModel(columnVisiableModel);
-                // Must call addDependent otherwise the dialog will cannot access the i18n model
-                this.getView().addDependent(columnSelectDialog);
-                columnSelectDialog.dialog.open();
-            }
-
-            function onSelectColumnDialogConfirm(oEvent) {
-                // 1. Set all data to false
-                Object.keys(columnVisiableModel).forEach(function(key) {
-                    columnVisiableModel[key] = false;
-                });
-                // 2. Set selected columns to true
-                var aContexts = oEvent.getParameter("selectedContexts");
-                aContexts.forEach(function(oContext) {
-                    var columnData = oContext.getObject();
-                    columnVisiableModel[columnData.name] = true;
-                });
-                oViewModel.refresh();
-            }
-
             var controller =
                              CRUDTableController.extend("sales.datacollect.DepartmentMeetings", {
                                  columnNames: [
@@ -443,7 +410,6 @@ sap.ui
                                  validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
                                  onExport: onExport,
                                  onProvinceChanged: onProvinceChanged,
-                                 onCustomizeTable: onCustomizeTable
                              });
             return controller;
         });

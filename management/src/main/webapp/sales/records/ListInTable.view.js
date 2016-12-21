@@ -106,7 +106,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         var tableCells = [];
         oController.columNames.forEach(function(name) {
             var columnVisible = "{= ${/columnVisiableModel/" + name + "} }";
-            if (name === "manager") {
+            if (name === "managerFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/user/delete}";
             }

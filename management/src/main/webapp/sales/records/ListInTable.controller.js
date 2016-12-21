@@ -29,11 +29,12 @@ sap.ui.define([
         selectedRecords: [],
         inlineChangedRecords: [],
         columnVisiableModel: {
-            // do not support invible salesPersonFullName to avoid complex
+            // do not support invisible salesPersonFullName to avoid complex
             // "salesPersonFullName": true,
             "region": true,
             "province": true,
-            "managerFullName": true,
+            // do not support invisible salesPersonFullName to avoid complex and confuse for sales user
+            // "managerFullName": true,
             "hospital": true,
             "hospitalLevel": true,
             "product": true,

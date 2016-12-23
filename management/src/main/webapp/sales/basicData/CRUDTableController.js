@@ -87,7 +87,20 @@ sap.ui.define([
         } else {
             var fs = [];
             this.columnNames.forEach(function(column) {
-                fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
+                if (column == "products") {
+                    // products is not string, need custom filter function
+                    var productFilter = new sap.ui.model.Filter({
+                        path: column,
+                        test: function(products) {
+                            var productsString = ArrayUtils.stringArrayToCommaString(products);
+                            var result = productsString.indexOf(value) >= 0;
+                            return result;
+                        }
+                    });
+                    fs.push(productFilter);
+                } else {
+                    fs.push(new sap.ui.model.Filter(column, sap.ui.model.FilterOperator.Contains, value));
+                }
             });
             var filters = new sap.ui.model.Filter(fs, false);
             binding.filter(filters);

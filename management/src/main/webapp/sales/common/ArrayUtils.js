@@ -16,8 +16,24 @@ sales.common.ArrayUtils = (function() {
         }
     }
 
+    function stringArrayToCommaString(stringArray) {
+        var commaSeparateString = "";
+        if (!stringArray) {
+            return commaSeparateString;
+        }
+        stringArray.forEach(function(string) {
+            if (commaSeparateString !== "") {
+                commaSeparateString = commaSeparateString + ", " + string;
+            } else {
+                commaSeparateString = string;
+            }
+        });
+        return commaSeparateString;
+    }
+
     var toExpose = {
-        removeFromById: removeFromById
+        removeFromById: removeFromById,
+        stringArrayToCommaString: stringArrayToCommaString
     };
     return toExpose;
 })();

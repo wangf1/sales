@@ -1,4 +1,5 @@
 jQuery.sap.require("sap.ui.model.SimpleType");
+jQuery.sap.require("sales.common.ArrayUtils");
 
 jQuery.sap.declare("sales.common.StringArrayAsCommaStringType");
 
@@ -8,17 +9,7 @@ sap.ui.model.SimpleType.extend("sales.common.StringArrayAsCommaStringType", (fun
     var toExpose = {
 
         formatValue: function(stringArray) {
-            var commaSeparateString = "";
-            if (!stringArray) {
-                return commaSeparateString;
-            }
-            stringArray.forEach(function(string) {
-                if (commaSeparateString !== "") {
-                    commaSeparateString = commaSeparateString + ", " + string;
-                } else {
-                    commaSeparateString = string;
-                }
-            });
+            var commaSeparateString = sales.common.ArrayUtils.stringArrayToCommaString(stringArray);
             return commaSeparateString;
         },
 

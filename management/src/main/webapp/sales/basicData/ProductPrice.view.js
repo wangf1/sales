@@ -9,10 +9,10 @@ sap.ui.jsview("sales.basicData.ProductPrice", (function() {
 
     var createTableHeaderToolBar = function(oController) {
         var toolbarContent = [];
-        toolbarContent.push(new sap.m.SearchField({
+        toolbarContent.push(new sap.m.Input({
             placeholder: "{i18n>quickSearchPlaceHolder}",
             width: "50%",
-            search: function(e) {
+            change: function(e) {
                 oController.onQuickFilter(e);
             }
         }));

@@ -1,5 +1,6 @@
 package com.wangf.sales.management.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,5 +51,12 @@ public class DateUtils {
 		setToFirstDayOfMonth(calendar);
 		Date result = calendar.getTime();
 		return result;
+	}
+
+	public static String getDateStringAsYYYYMM(Date date) {
+		String pattern = "yyyy-MM";
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		String key = format.format(date);
+		return key;
 	}
 }

@@ -491,7 +491,12 @@ sap.ui.define([
             url: "cloneLastMonthSalesRecords",
         });
         promise.then(function(result) {
-            that.onRefresh();
+            if (result.data.statusKey === "already_cloned_last_month") {
+                var message = resBundle.getText("already_cloned_last_month");
+                UIUtils.showMessageToast(message);
+            } else {
+                that.onRefresh();
+            }
         });
     }
 

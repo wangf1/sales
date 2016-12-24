@@ -1,11 +1,9 @@
 package com.wangf.sales.management.service;
 
 import java.text.Collator;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +17,7 @@ import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.rest.pojo.DepartmentMeetingPojo;
 import com.wangf.sales.management.rest.pojo.SalesQuantityReportData;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
+import com.wangf.sales.management.utils.DateUtils;
 
 @Service
 @Transactional
@@ -46,7 +45,7 @@ public class SalesReportService {
 			Map<String, SalesQuantityReportData> dateReportDataMap) {
 		List<SalesRecordPojo> salesRecords = salesRecordsService.searchAgainstMultipleValues(criteria);
 		for (SalesRecordPojo record : salesRecords) {
-			String key = getDateStringAsYYYYMM(record.getDate());
+			String key = DateUtils.getDateStringAsYYYYMM(record.getDate());
 			SalesQuantityReportData reportData = dateReportDataMap.get(key);
 			if (reportData == null) {
 				reportData = new SalesQuantityReportData();
@@ -64,7 +63,7 @@ public class SalesReportService {
 			Map<String, SalesQuantityReportData> dateReportDataMap) {
 		List<DepartmentMeetingPojo> meetings = departmentMeetingService.searchAgainstMultipleValues(criteria);
 		for (DepartmentMeetingPojo meeting : meetings) {
-			String key = getDateStringAsYYYYMM(meeting.getDate());
+			String key = DateUtils.getDateStringAsYYYYMM(meeting.getDate());
 			SalesQuantityReportData reportData = dateReportDataMap.get(key);
 			if (reportData == null) {
 				reportData = new SalesQuantityReportData();
@@ -76,13 +75,6 @@ public class SalesReportService {
 				reportData.setDepartmentMeetingQuantity(meetingQuantitySum);
 			}
 		}
-	}
-
-	private String getDateStringAsYYYYMM(Date date) {
-		String pattern = "yyyy-MM";
-		SimpleDateFormat format = new SimpleDateFormat(pattern);
-		String key = format.format(date);
-		return key;
 	}
 
 	private void sortReportDataByDate(List<SalesQuantityReportData> reportDatas) {

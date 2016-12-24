@@ -22,6 +22,7 @@ import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
+import com.wangf.sales.management.rest.pojo.StatusPojo;
 import com.wangf.sales.management.service.SalesRecordsService;
 import com.wangf.sales.management.utils.SecurityUtils;
 
@@ -152,7 +153,8 @@ public class SalesRecordsController {
 	}
 
 	@RequestMapping(path = "/cloneLastMonthSalesRecords", method = RequestMethod.POST)
-	public void cloneLastMonthSalesRecords() {
-		salesRecordsService.cloneLastMonthData();
+	public StatusPojo cloneLastMonthSalesRecords() {
+		StatusPojo pojo = salesRecordsService.cloneLastMonthData();
+		return pojo;
 	}
 }

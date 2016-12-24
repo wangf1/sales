@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.SalesRecordRepository;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
+import com.wangf.sales.management.dao.UserPreferenceRepository;
 import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Department;
 import com.wangf.sales.management.entity.ProductInstallLocation;
 import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
+import com.wangf.sales.management.entity.UserPreference;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
+import com.wangf.sales.management.rest.pojo.StatusPojo;
 import com.wangf.sales.management.utils.DateUtils;
 import com.wangf.sales.management.utils.SecurityUtils;
 
@@ -35,6 +38,8 @@ public class SalesRecordsService {
 	private UserService userService;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private UserPreferenceRepository userPreferenceRepository;
 
 	public List<SalesRecordPojo> searchAgainstSingleValues(String productName, String salesPersonName,
 			String hospitalName, String locationDepartmentName, String orderDepartName, Date startFrom) {
@@ -154,12 +159,15 @@ public class SalesRecordsService {
 	}
 
 	public void deleteSalesRecords(List<Long> salesRecordIds) {
-		for (Long id : salesRecordIds) {
-			salesRecordRepository.delete(id);
-		}
+		salesRecordRepository.deleteByIds(salesRecordIds);
 	}
 
-	public void cloneLastMonthData() {
+	public StatusPojo cloneLastMonthData() {
+		StatusPojo statusPojo = new StatusPojo();
+		if (isAlreadyCloned()) {
+			statusPojo.setStatusKey(StatusPojo.STATUS_KEY_ALREADY_CLONED_LAST_MONTH);
+			return statusPojo;
+		}
 		List<SalesRecord> salesRecordsOfLastMonth = getSalesRrecordOfLastMonthForCurrentUser();
 		for (SalesRecord record : salesRecordsOfLastMonth) {
 			SalesRecordPojo pojo = SalesRecordPojo.from(record);
@@ -167,6 +175,37 @@ public class SalesRecordsService {
 			pojo.setId(0);
 			insertOrUpdate(pojo);
 		}
+		updateLastCloneMonth();
+		return statusPojo;
+	}
+
+	private boolean isAlreadyCloned() {
+		User currentUser = userService.getCurrentUser();
+		UserPreference lastCloneMonthProperty = userPreferenceRepository.findByUserAndPropertyName(currentUser,
+				UserPreference.PROPERTY_LAST_CLONE_MONTH);
+		String lastCloneMonth = "";
+		if (lastCloneMonthProperty != null) {
+			lastCloneMonth = lastCloneMonthProperty.getPropertyValue();
+		}
+		Date lastMonth = DateUtils.getFirstDayOfLastMonth();
+		String lastMonthString = DateUtils.getDateStringAsYYYYMM(lastMonth);
+		boolean alreadyCloned = lastMonthString.equals(lastCloneMonth);
+		return alreadyCloned;
+	}
+
+	private void updateLastCloneMonth() {
+		User currentUser = userService.getCurrentUser();
+		UserPreference lastCloneMonthProperty = userPreferenceRepository.findByUserAndPropertyName(currentUser,
+				UserPreference.PROPERTY_LAST_CLONE_MONTH);
+		if (lastCloneMonthProperty == null) {
+			lastCloneMonthProperty = new UserPreference();
+		}
+		lastCloneMonthProperty.setUser(currentUser);
+		lastCloneMonthProperty.setPropertyName(UserPreference.PROPERTY_LAST_CLONE_MONTH);
+		Date lastMonth = DateUtils.getFirstDayOfLastMonth();
+		String lastMonthString = DateUtils.getDateStringAsYYYYMM(lastMonth);
+		lastCloneMonthProperty.setPropertyValue(lastMonthString);
+		userPreferenceRepository.save(lastCloneMonthProperty);
 	}
 
 	private List<SalesRecord> getSalesRrecordOfLastMonthForCurrentUser() {

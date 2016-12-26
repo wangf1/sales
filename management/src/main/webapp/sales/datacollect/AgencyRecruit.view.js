@@ -140,7 +140,7 @@ sap.ui.jsview("sales.datacollect.AgencyRecruit", (function() {
         var tableColumns = [];
         initColumnNamesAccordingToUsageType(oController);
         oController.columnNames.forEach(function(columName) {
-            var columnVisible = "{= ${/columnVisiableModel/" + columName + "} }";
+            var columnVisible = "{= ${columnVisiableModel>/" + columName + "} }";
             if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";

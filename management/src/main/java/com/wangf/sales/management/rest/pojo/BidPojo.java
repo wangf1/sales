@@ -20,7 +20,7 @@ public class BidPojo extends PoJoBase {
 
 	private List<String> products;
 
-	private double price;
+	private double biddingPrice;
 
 	/**
 	 * The reason why names as bidStatus instead of status is to avoid UI
@@ -89,12 +89,12 @@ public class BidPojo extends PoJoBase {
 		this.products = products;
 	}
 
-	public double getPrice() {
-		return price;
+	public double getBiddingPrice() {
+		return biddingPrice;
 	}
 
-	public void setPrice(double price) {
-		this.price = price;
+	public void setBiddingPrice(double price) {
+		this.biddingPrice = price;
 	}
 
 	public String getBidStatus() {
@@ -130,7 +130,7 @@ public class BidPojo extends PoJoBase {
 	public String toString() {
 		return "BidPojo [id=" + id + ", date=" + date + ", province=" + province + ", region=" + region
 				+ ", salesPerson=" + salesPerson + ", description=" + description + ", product=" + products + ", price="
-				+ price + "]";
+				+ biddingPrice + "]";
 	}
 
 	public static BidPojo from(Bid entity) {
@@ -138,7 +138,7 @@ public class BidPojo extends PoJoBase {
 		pojo.setDate(entity.getDate());
 		pojo.setDescription(entity.getDescription());
 		pojo.setId(entity.getId());
-		pojo.setPrice(entity.getPrice());
+		pojo.setBiddingPrice(entity.getPrice());
 		pojo.setProducts(AgencyEventPojo.getProductNames(entity.getProducts()));
 		pojo.setProvince(entity.getProvince().getName());
 		pojo.setRegion(entity.getProvince().getRegion());

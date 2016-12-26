@@ -123,15 +123,12 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
         var tableCells = [];
         var tableColumns = [];
         oController.columnNames.forEach(function(columName) {
-            var columnVisible = "{= ${/columnVisiableModel/" + columName + "} }";
+            var columnVisible = "{= ${columnVisiableModel>/" + columName + "} }";
             if (columName === "salesPersonFullName") {
                 // Each sales person do not need see above columns
                 columnVisible = "{permissionModel>/showSalesPersonForSalesRecord/read}";
             }
             var headerText = "{i18n>" + columName + "}";
-            if (columName === "price") {
-                headerText = "{i18n>bidding_price}";
-            }
             tableColumns.push(new sap.m.Column({
                 width: "30%",
                 hAlign: sap.ui.core.TextAlign.Center,
@@ -194,7 +191,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "price") {
+            } else if (columName === "biddingPrice") {
                 tableCells.push(new sap.m.Input({
                     value: {
                         path: columName,

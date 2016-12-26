@@ -12,10 +12,12 @@ sales.common.UIUtils = (function() {
         });
     }
 
-    function buildColumnVisiableModelFromColumns(columns) {
+    function buildColumnVisiableModelFromColumns(columns, dataType) {
         var columnVisiableModel = {};
         columns.forEach(function(column) {
             if (column === "lastModifyAt" || column === "lastModifyBy") {
+                columnVisiableModel[column] = false;
+            } else if (dataType === "SalesRecord" && column === "price") {
                 columnVisiableModel[column] = false;
             } else if (column === "salesPersonFullName" || column === "managerFullName") {
                 // Do not let user config salesPerson and Manager name visibility, to avoid confusion, since sales user cannot view thiese two column

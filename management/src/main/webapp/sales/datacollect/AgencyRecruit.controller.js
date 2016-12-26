@@ -6,11 +6,6 @@ sap.ui.define([
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
-    function initColumnVisiableModel(thisController) {
-        var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(thisController.columnNames);
-        oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
-    }
-
     function initAccordingToViewUsage(thisController) {
         var viewData = thisController.getView().getViewData();
         if (viewData.usedForAgencyTraining) {
@@ -27,6 +22,16 @@ sap.ui.define([
         }
     }
 
+    function initColumnVisiableModel() {
+        CRUDTableController.prototype.initColumnVisiableModel.call(this);
+    }
+    function onSelectColumnDialogConfirm(selectConfirmEvent) {
+        CRUDTableController.prototype.onSelectColumnDialogConfirm.call(this, selectConfirmEvent);
+    }
+    function onCustomizeTable() {
+        CRUDTableController.prototype.onCustomizeTable.call(this);
+    }
+
     function init() {
         CRUDTableController.prototype.onInit.call(this);
 
@@ -36,7 +41,6 @@ sap.ui.define([
         var endAt = DateTimeUtils.today();
         oViewModel.setProperty("/startAt", startAt);
         oViewModel.setProperty("/endAt", endAt);
-        initColumnVisiableModel(this);
     }
 
     function filterProvinceByRegion(region) {
@@ -150,6 +154,9 @@ sap.ui.define([
     }
 
     function onAdd() {
+        // When Add new item, must set all required column visible
+        this.initColumnVisiableModel();
+
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
@@ -281,7 +288,10 @@ sap.ui.define([
         validateEachItemBeforeSave: validateEachItemBeforeSave,
         onExport: onExport,
         onAgencyChanged: onAgencyChanged,
-        onEditProducts: onEditProducts
+        onEditProducts: onEditProducts,
+        initColumnVisiableModel: initColumnVisiableModel,
+        onCustomizeTable: onCustomizeTable,
+        onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
     });
     return controller;
 });

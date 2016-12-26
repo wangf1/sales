@@ -28,7 +28,7 @@ sap.ui.define([
         endAt: DateTimeUtils.today(),
         selectedRecords: [],
         inlineChangedRecords: [],
-        columnVisiableModel: UIUtils.buildColumnVisiableModelFromColumns(columNames)
+        columnVisiableModel: UIUtils.buildColumnVisiableModelFromColumns(columNames, "SalesRecord")
     };
 
     var oViewModel = new JSONModel(viewModelData);

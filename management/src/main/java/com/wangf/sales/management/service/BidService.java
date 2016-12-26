@@ -81,7 +81,7 @@ public class BidService {
 			isInsert = true;
 		}
 		entity.setDescription(pojo.getDescription());
-		entity.setPrice(pojo.getPrice());
+		entity.setPrice(pojo.getBiddingPrice());
 		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or

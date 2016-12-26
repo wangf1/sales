@@ -7,16 +7,24 @@ sap.ui.define([
     var oViewModel = CRUDTableController.prototype.oViewModel;
 
     var columnNames = [
-        "date", "region", "province", "salesPersonFullName", "description", "products", "price", "bidStatus", "lastModifyAt", "lastModifyBy"
+        "date", "region", "province", "salesPersonFullName", "description", "products", "biddingPrice", "bidStatus", "lastModifyAt", "lastModifyBy"
     ];
-    var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
-    oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
     var bidStatuses = [
         resBundle.getText("bids_satuse_before"), resBundle.getText("bids_satuse_middle"), resBundle.getText("bids_satuse_finish")
     ];
+
+    function initColumnVisiableModel() {
+        CRUDTableController.prototype.initColumnVisiableModel.call(this);
+    }
+    function onSelectColumnDialogConfirm(selectConfirmEvent) {
+        CRUDTableController.prototype.onSelectColumnDialogConfirm.call(this, selectConfirmEvent);
+    }
+    function onCustomizeTable() {
+        CRUDTableController.prototype.onCustomizeTable.call(this);
+    }
 
     function init() {
         CRUDTableController.prototype.onInit.call(this);
@@ -108,6 +116,9 @@ sap.ui.define([
     }
 
     function onAdd() {
+        // When Add new item, must set all required column visible
+        this.initColumnVisiableModel();
+
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["price"] = 0;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
@@ -230,7 +241,10 @@ sap.ui.define([
         onRegionChanged: onRegionChanged,
         validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
         onExport: onExport,
-        onEditProducts: onEditProducts
+        onEditProducts: onEditProducts,
+        initColumnVisiableModel: initColumnVisiableModel,
+        onCustomizeTable: onCustomizeTable,
+        onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
     });
     return controller;
 });

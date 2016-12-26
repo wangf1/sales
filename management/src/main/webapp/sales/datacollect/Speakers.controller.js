@@ -8,8 +8,16 @@ sap.ui.define([
     var columnNames = [
         "date", "region", "province", "salesPersonFullName", "hospital", "department", "speakerName", "lastModifyAt", "lastModifyBy"
     ];
-    var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
-    oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
+
+    function initColumnVisiableModel() {
+        CRUDTableController.prototype.initColumnVisiableModel.call(this);
+    }
+    function onSelectColumnDialogConfirm(selectConfirmEvent) {
+        CRUDTableController.prototype.onSelectColumnDialogConfirm.call(this, selectConfirmEvent);
+    }
+    function onCustomizeTable() {
+        CRUDTableController.prototype.onCustomizeTable.call(this);
+    }
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
@@ -159,6 +167,9 @@ sap.ui.define([
     }
 
     function onAdd() {
+        // When Add new item, must set all required column visible
+        this.initColumnVisiableModel();
+
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
         newAdded["product"] = oViewModel.getProperty("/allProducts")[0].name;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
@@ -281,7 +292,10 @@ sap.ui.define([
         onRegionChanged: onRegionChanged,
         onExport: onExport,
         onProvinceChanged: onProvinceChanged,
-        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
+        initColumnVisiableModel: initColumnVisiableModel,
+        onCustomizeTable: onCustomizeTable,
+        onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
     });
     return controller;
 });

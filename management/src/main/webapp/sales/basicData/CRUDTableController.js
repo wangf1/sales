@@ -16,6 +16,12 @@ sap.ui.define([
 
     var oViewModel = new JSONModel(viewModelData);
 
+    function initColumnVisiableModel() {
+        var columnVisiableModelData = UIUtils.buildColumnVisiableModelFromColumns(this.columnNames);
+        var columnVisiableModel = new JSONModel(columnVisiableModelData);
+        this.getView().setModel(columnVisiableModel, "columnVisiableModel");
+    }
+
     function setTableModel() {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
@@ -32,6 +38,7 @@ sap.ui.define([
     function init() {
 // setTableModel(this);
         this.getView().setModel(oViewModel);
+        this.initColumnVisiableModel();
     }
 
     function setValueToModelForComboBox(e) {
@@ -311,19 +318,20 @@ sap.ui.define([
         return hospitalValid;
     }
 
-    var columnSelectDialog;
     function onCustomizeTable() {
-        if (!columnSelectDialog) {
-            columnSelectDialog = sap.ui.view({
-                type: sap.ui.core.mvc.ViewType.JS,
-                viewName: "sales.datacollect.ColumnSelect"
-            });
-            // Should attach confirm event listener ONLY one time
-            columnSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
-                onSelectColumnDialogConfirm(selectConfirmEvent);
-            });
-        }
-        var columnVisiableModel = oViewModel.getProperty("/columnVisiableModel");
+        var columnSelectDialog = sap.ui.view({
+            type: sap.ui.core.mvc.ViewType.JS,
+            viewName: "sales.datacollect.ColumnSelect"
+        });
+        var that = this;
+        // Should attach confirm event listener ONLY one time
+        columnSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+            that.onSelectColumnDialogConfirm(selectConfirmEvent);
+            columnSelectDialog.destroy();
+        });
+
+// var columnVisiableModel = oViewModel.getProperty("/columnVisiableModel");
+        var columnVisiableModel = this.getView().getModel("columnVisiableModel").getData();
         columnSelectDialog.getController().setTableModel(columnVisiableModel);
         // Must call addDependent otherwise the dialog will cannot access the i18n model
         this.getView().addDependent(columnSelectDialog);
@@ -331,7 +339,8 @@ sap.ui.define([
     }
 
     function onSelectColumnDialogConfirm(oEvent) {
-        var columnVisiableModel = oViewModel.getProperty("/columnVisiableModel");
+// var columnVisiableModel = oViewModel.getProperty("/columnVisiableModel");
+        var columnVisiableModel = this.getView().getModel("columnVisiableModel").getData();
         // 1. Set all data to false
         Object.keys(columnVisiableModel).forEach(function(key) {
             columnVisiableModel[key] = false;
@@ -342,7 +351,7 @@ sap.ui.define([
             var columnData = oContext.getObject();
             columnVisiableModel[columnData.name] = true;
         });
-        oViewModel.refresh();
+        this.getView().getModel("columnVisiableModel").refresh();
     }
 
     var controller = Controller.extend("sales.basicData.CRUDTableController", {
@@ -368,7 +377,9 @@ sap.ui.define([
         validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
         validateHospital: validateHospital,
         tableItemDataChanged: tableItemDataChanged,
-        onCustomizeTable: onCustomizeTable
+        onCustomizeTable: onCustomizeTable,
+        initColumnVisiableModel: initColumnVisiableModel,
+        onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
     });
     return controller;
 });

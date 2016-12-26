@@ -10,8 +10,16 @@ sap.ui
             var columnNames = [
                 "date", "name", "region", "province", "salesPersonFullName", "type", "form", "status", "allKindsOfInputs", "lastModifyAt", "lastModifyBy"
             ]
-            var columnVisiableModel = UIUtils.buildColumnVisiableModelFromColumns(columnNames);
-            oViewModel.setProperty("/columnVisiableModel", columnVisiableModel);
+
+            function initColumnVisiableModel() {
+                CRUDTableController.prototype.initColumnVisiableModel.call(this);
+            }
+            function onSelectColumnDialogConfirm(selectConfirmEvent) {
+                CRUDTableController.prototype.onSelectColumnDialogConfirm.call(this, selectConfirmEvent);
+            }
+            function onCustomizeTable() {
+                CRUDTableController.prototype.onCustomizeTable.call(this);
+            }
 
             var resBundle = i18nUtils.initAndGetResourceBundle();
 
@@ -203,6 +211,9 @@ sap.ui
             }
 
             function onAdd() {
+                // When Add new item, must set all required column visible
+                this.initColumnVisiableModel();
+
                 var newAdded = CRUDTableController.prototype.onAdd.call(this);
                 newAdded["region"] = oViewModel.getProperty("/regions")[0];
                 newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
@@ -344,6 +355,9 @@ sap.ui
                 onRegionChanged: onRegionChanged,
                 validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast,
                 onExport: onExport,
+                initColumnVisiableModel: initColumnVisiableModel,
+                onCustomizeTable: onCustomizeTable,
+                onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
             });
             return controller;
         });

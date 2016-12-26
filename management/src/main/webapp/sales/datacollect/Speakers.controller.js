@@ -192,6 +192,13 @@ sap.ui.define([
     function onProvinceChanged(e) {
         var dataItem = e.getSource().getBindingContext().getObject()
         dataItem["filteredHospitals"] = filterHospitalByProvince(dataItem.province);
+
+        // Not sure why when model only bind to ComboBox selectedKey property, and when dataItem["hospital"] change from a non-empry value to
+        // another non-empty value, ComboBox's value will not refresh. To walkaround, change the model value to empty, and refresh the model,
+        // and then change the model value and refresh model again.
+        dataItem["hospital"] = undefined;
+        oViewModel.refresh();
+
         if (dataItem["filteredHospitals"][0]) {
             dataItem["hospital"] = dataItem["filteredHospitals"][0].name;
         } else {

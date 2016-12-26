@@ -17,13 +17,17 @@ sales.common.UIUtils = (function() {
         columns.forEach(function(column) {
             if (column === "lastModifyAt" || column === "lastModifyBy") {
                 columnVisiableModel[column] = false;
-            } else if (dataType === "SalesRecord" && column === "price") {
-                columnVisiableModel[column] = false;
             } else if (column === "salesPersonFullName" || column === "managerFullName") {
                 // Do not let user config salesPerson and Manager name visibility, to avoid confusion, since sales user cannot view thiese two column
                 return;
             } else {
                 columnVisiableModel[column] = true;
+            }
+            // Type specific setting
+            if (dataType === "SalesRecord") {
+                columnVisiableModel["region"] = false;
+                columnVisiableModel["price"] = false;
+                columnVisiableModel["hospitalLevel"] = false;
             }
         });
         return columnVisiableModel;

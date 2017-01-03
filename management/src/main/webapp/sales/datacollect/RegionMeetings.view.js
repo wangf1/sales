@@ -257,7 +257,9 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                             path: inputColumn,
                             type: valueType
                         },
-                        tooltip: "{" + inputColumn + "}",
+                        tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error: "1"
+                                                            // is not valid for aggregation "tooltip" of Element" error which happen when input a
+                                                            // number
                         editable: inputEnabled,
                         textAlign: sap.ui.core.TextAlign.Right,
                         liveChange: function(e) {

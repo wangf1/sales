@@ -7,7 +7,7 @@ sap.ui.jsview("sales.main", (function() {
 
     var createContent = function(oController) {
 
-        var iconTabBar = new sap.m.IconTabBar({
+        var iconTabBar = new sap.m.IconTabBar(this.createId("id_iconTabBar"), {
             upperCase: true,
             select: function(e) {
                 oController.onTabSelect(e);

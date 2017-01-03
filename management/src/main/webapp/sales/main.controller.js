@@ -38,10 +38,12 @@ sap.ui.define([
         getCurrentUserName();
         getResourcePermissionForCurrentUser();
         this.getView().setModel(oViewModel);
-        // initial screen is the salesRecords page
+        // initial screen is the dataCollect page, to avoid salesRecords page have large data and to slow to load
+        var iconTabBar = this.byId("id_iconTabBar");
+        iconTabBar.setSelectedKey("dataCollect");
         onTabSelect.bind(this, {
             getParameter: function(key) {
-                return "salesRecords";
+                return "dataCollect";
             }
         })();
     }

@@ -163,6 +163,10 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             id: oController.createId("recordsTable"),
             headerText: "{i18n>salesRecords}",
             mode: sap.m.ListMode.MultiSelect,
+            // Important note: When make the table growing, a in-row ComboBox which has a change event handler will cannot input value, the reason is
+            // unknown. So when table can grow, do not use inline edit/add, use a dialog to edit/add table items.
+            growing: true,
+            growingThreshold: 200,
             width: "auto",
             selectionChange: function() {
                 oController.onRecordTableSelectionChange();

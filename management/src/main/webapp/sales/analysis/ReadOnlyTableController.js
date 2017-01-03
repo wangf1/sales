@@ -10,7 +10,7 @@ sap.ui.define([
         tableData: [],
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     function setTableModel() {
         // must clear table selection status

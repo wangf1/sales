@@ -8,7 +8,7 @@ sap.ui.define([
         currentUser: {}
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     var resBundle = i18nUtils.initAndGetResourceBundle();
 
@@ -29,7 +29,7 @@ sap.ui.define([
             url: "getResourcePermissionForCurrentUser",
         });
         promise.then(function(result) {
-            var permissionModel = new JSONModel(result.data);
+            var permissionModel = UIUtils.createJsonModelWithSizeLimit10000(result.data);
             sap.ui.getCore().setModel(permissionModel, "permissionModel");
         });
     }

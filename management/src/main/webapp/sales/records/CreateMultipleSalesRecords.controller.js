@@ -21,7 +21,7 @@ sap.ui.define([
         selectedOrderDepartments: []
     };
 
-    var salesRecordsModel = new JSONModel(salesRecordsData);
+    var salesRecordsModel = UIUtils.createJsonModelWithSizeLimit10000(salesRecordsData);
 
     function init() {
         this.getView().setModel(salesRecordsModel, "salesRecordsData");

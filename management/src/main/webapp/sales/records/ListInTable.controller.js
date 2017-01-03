@@ -31,7 +31,7 @@ sap.ui.define([
         columnVisiableModel: UIUtils.buildColumnVisiableModelFromColumns(columNames, "SalesRecord")
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     function setRegionsModel() {
         var promise = AjaxUtils.ajaxCallAsPromise({

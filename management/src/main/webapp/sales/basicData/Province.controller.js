@@ -18,7 +18,7 @@ sap.ui.define([
         regions: []
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     var userSelectDialog;
     var provinceToEditSalesPersons;

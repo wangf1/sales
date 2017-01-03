@@ -1,4 +1,5 @@
 jQuery.sap.require("sap.m.MessageToast");
+jQuery.sap.require("sap.ui.model.json.JSONModel");
 
 jQuery.sap.declare("sales.common.UIUtils");
 sales.common.UIUtils = (function() {
@@ -33,9 +34,16 @@ sales.common.UIUtils = (function() {
         return columnVisiableModel;
     }
 
+    function createJsonModelWithSizeLimit10000(modelData) {
+        var oViewModel = new sap.ui.model.json.JSONModel(modelData);
+        oViewModel.setSizeLimit(10000);
+        return oViewModel;
+    }
+
     var toExpose = {
         showMessageToast: showMessageToast,
-        buildColumnVisiableModelFromColumns: buildColumnVisiableModelFromColumns
+        buildColumnVisiableModelFromColumns: buildColumnVisiableModelFromColumns,
+        createJsonModelWithSizeLimit10000: createJsonModelWithSizeLimit10000
     };
     return toExpose;
 })();

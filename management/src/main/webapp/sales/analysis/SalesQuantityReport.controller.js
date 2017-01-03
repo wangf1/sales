@@ -19,7 +19,7 @@ sap.ui.define([
         endAt: DateTimeUtils.today(),
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     function buildSearchCriteria(thisController) {
         var selectedHospitals = thisController.byId("filterHospital").getSelectedKeys();

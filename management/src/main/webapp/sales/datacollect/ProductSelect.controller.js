@@ -8,7 +8,7 @@ sap.ui.define([
         products: []
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     function setTableModel() {
         var promise = AjaxUtils.ajaxCallAsPromise({

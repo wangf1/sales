@@ -14,11 +14,11 @@ sap.ui.define([
         firstDayOfCurrentMonth: Date.parse(DateTimeUtils.firstDayOfCurrentMonth())
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
     function initColumnVisiableModel() {
         var columnVisiableModelData = UIUtils.buildColumnVisiableModelFromColumns(this.columnNames);
-        var columnVisiableModel = new JSONModel(columnVisiableModelData);
+        var columnVisiableModel = UIUtils.createJsonModelWithSizeLimit10000(columnVisiableModelData);
         this.getView().setModel(columnVisiableModel, "columnVisiableModel");
     }
 

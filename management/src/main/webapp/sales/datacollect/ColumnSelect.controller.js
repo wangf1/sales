@@ -8,7 +8,7 @@ sap.ui.define([
         columnVisiableArray: []
     };
 
-    var oViewModel = new JSONModel(viewModelData);
+    var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
     /**
      * Input like this:
             columnVisiableModel = {

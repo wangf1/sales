@@ -15,7 +15,7 @@ sap.ui.define([
         quantity: 0,
     };
 
-    var salesRecordModel = new JSONModel(salesRecordData);
+    var salesRecordModel = UIUtils.createJsonModelWithSizeLimit10000(salesRecordData);
 
     function init() {
         this.getView().setModel(salesRecordModel, "salesRecord");

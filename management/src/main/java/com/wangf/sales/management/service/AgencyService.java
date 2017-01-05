@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.wangf.sales.management.dao.AgencyRepository;
 import com.wangf.sales.management.dao.AgencyTrainingRepository;
 import com.wangf.sales.management.dao.ProductRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
+import com.wangf.sales.management.dao.UserRepository;
 import com.wangf.sales.management.entity.Agency;
 import com.wangf.sales.management.entity.AgencyRecruit;
 import com.wangf.sales.management.entity.AgencyTraining;
@@ -48,6 +50,8 @@ public class AgencyService {
 	private UserService userService;
 	@Autowired
 	private AgencyTrainingRepository agencyTrainingRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -139,11 +143,19 @@ public class AgencyService {
 			isInsert = true;
 		}
 		entity.setAgency(agency);
+
 		User currentUser = userService.getCurrentUser();
+		User salesPerson;
+		if (StringUtils.isNotBlank(pojo.getSalesPerson())) {
+			// For the import case
+			salesPerson = userRepository.findByUserName(pojo.getSalesPerson().trim());
+		} else {
+			salesPerson = currentUser;
+		}
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or
 			// admin may update the entity, should not change the entity's owner
-			entity.setSalesPerson(currentUser);
+			entity.setSalesPerson(salesPerson);
 		} else {
 			entity.setLastModifyBy(currentUser);
 			entity.setLastModifyAt(new Date());

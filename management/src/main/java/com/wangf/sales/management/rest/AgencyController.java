@@ -11,17 +11,23 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
 
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
 import com.wangf.sales.management.dao.SalesRecordSearchCriteria;
 import com.wangf.sales.management.dataexport.MiscDataExporter;
+import com.wangf.sales.management.dataimport.AgencyEventImporter;
 import com.wangf.sales.management.rest.pojo.AgencyPojo;
 import com.wangf.sales.management.rest.pojo.AgencyRecruitPojo;
 import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
@@ -39,6 +45,9 @@ public class AgencyController {
 
 	@Autowired
 	private MiscDataExporter miscDataExporter;
+
+	@Autowired
+	private AgencyEventImporter agencyEventImporter;
 
 	private static Map<String, byte[]> AGENCY_RECRUITS_EXCEL_FILE_CACHE = new HashMap<>();
 	private static Map<String, byte[]> AGENCY_TRAININGS_EXCEL_FILE_CACHE = new HashMap<>();
@@ -135,5 +144,12 @@ public class AgencyController {
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AgencyTrainings.xlsx\"");
 		IOUtils.copy(in, response.getOutputStream());
 		response.flushBuffer();
+	}
+
+	@PostMapping("/importAgencyRecruits")
+	public void importAgencyRecruits(@RequestParam("file") MultipartFile file)
+			throws IOException, InvalidFormatException, SAXException {
+		InputStream inputXLS = file.getInputStream();
+		agencyEventImporter.importAgencyRecruit(inputXLS);
 	}
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workbook>
+	<worksheet name="Sheet1">
+		<loop startRow="1" endRow="1" items="agencyRecruits" var="agencyRecruit"
+			varType="com.wangf.sales.management.rest.pojo.AgencyRecruitPojo">
+			<section startRow="1" endRow="1">
+				<mapping row="1" col="0">agencyRecruit.province</mapping>
+				<mapping row="1" col="1">agencyRecruit.salesPerson</mapping>
+				<mapping row="1" col="2">agencyRecruit.agency</mapping>
+				<mapping row="1" col="3">agencyRecruit.products</mapping>
+				<mapping row="1" col="4">agencyRecruit.level</mapping>
+			</section>
+			<loopbreakcondition>
+				<rowcheck offset="0">
+					<cellcheck offset="0">End</cellcheck>
+				</rowcheck>
+			</loopbreakcondition>
+		</loop>
+	</worksheet>
+</workbook>

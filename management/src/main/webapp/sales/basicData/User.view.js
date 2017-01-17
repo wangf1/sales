@@ -110,7 +110,7 @@ sap.ui.jsview("sales.basicData.User", (function() {
                     value: "{" + columName + "}",
                     selectedKey: "{" + columName + "}",
                     items: {
-                        path: "/tableData",
+                        path: "/managers",
                         template: new sap.ui.core.Item({
                             key: "{userName}",
                             text: "{userName}"

@@ -18,6 +18,23 @@ sap.ui.define([
         });
     }
 
+    function setTableModel() {
+        var promiseAfterSetTableModel = CRUDTableController.prototype.setTableModel.call(this);
+        var managers = [];
+        promiseAfterSetTableModel.then(function() {
+            var tableData = oViewModel.getProperty("/tableData");
+            tableData.forEach(function(user) {
+                managers.push(user);
+            });
+            var emtpyItem = {
+                userName: ""
+            };
+            managers.unshift(emtpyItem);
+            oViewModel.setProperty("/managers", managers);
+            oViewModel.refresh();
+        });
+    }
+
     function onRefresh() {
         refreshAllRoles();
         CRUDTableController.prototype.onRefresh.call(this);
@@ -37,6 +54,36 @@ sap.ui.define([
         return newAdded;
     }
 
+    function validateRequiredFieldNotNull(object) {
+        for ( var key in object) {
+            if (!object.hasOwnProperty(key)) {
+                continue;
+            }
+            if (key === "manager") {
+                continue;
+            }
+            var value = object[key];
+            if (value === undefined || value === null || value === "") {
+                var message = resBundle.getText("before_save_validate_fail");
+                UIUtils.showMessageToast(message);
+                return false;
+            }
+            if (value.trim) {
+                if (value.trim() === "") {
+                    var message = resBundle.getText("before_save_validate_fail");
+                    UIUtils.showMessageToast(message);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function validateBeforeSaveShowMessageToast(object) {
+        var isValid = validateRequiredFieldNotNull(object, this);
+        return isValid;
+    }
+
     var controller = CRUDTableController.extend("sales.basicData.User", {
         columnNames: [
             "userName", "password", "firstName", "lastName", "roles", "manager"
@@ -45,7 +92,9 @@ sap.ui.define([
         urlForSaveAll: "saveUsers",
         urlForDeleteAll: "deleteUsers",
         onRefresh: onRefresh,
-        onAdd: onAdd
+        onAdd: onAdd,
+        setTableModel: setTableModel,
+        validateBeforeSaveShowMessageToast: validateBeforeSaveShowMessageToast
     });
     return controller;
 });

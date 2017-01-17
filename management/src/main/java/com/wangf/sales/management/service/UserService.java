@@ -190,7 +190,8 @@ public class UserService {
 		}
 		userRepository.save(toSave);
 		em.flush();
-		// em.detach(toSave);
+		// When set manager to null, must flush and save again, not sure why.
+		userRepository.save(toSave);
 
 		updateRoles(pojo);
 

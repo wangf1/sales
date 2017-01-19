@@ -154,6 +154,12 @@ public class BasicDataController {
 		return ids;
 	}
 
+	@RequestMapping(path = "/searchHospitalsByProvinces", method = RequestMethod.POST)
+	public List<HospitalPojo> searchHospitalsByProvinces(@RequestBody List<String> provinces) {
+		List<HospitalPojo> hospitals = hospitalService.searchHospitalsByProvinces(provinces);
+		return hospitals;
+	}
+
 	@RequestMapping(path = "/saveHospitals", method = RequestMethod.POST)
 	public List<Long> saveHospitals(@RequestBody List<HospitalPojo> pojos) {
 		List<Long> ids = hospitalService.insertOrUpdateHospitals(pojos);

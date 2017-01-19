@@ -166,4 +166,19 @@ public class HospitalService {
 		ids.add(hospitalId);
 		deleteByIds(ids);
 	}
+
+	public List<HospitalPojo> searchHospitalsByProvinces(List<String> provinceNames) {
+		List<Province> provinces = new ArrayList<>();
+		for (String name : provinceNames) {
+			Province province = provinceRepository.findByName(name);
+			provinces.add(province);
+		}
+		List<Hospital> hospitals = hospitalRepository.findByProvinceIn(provinces);
+		List<HospitalPojo> pojos = new ArrayList<>();
+		for (Hospital hospital : hospitals) {
+			HospitalPojo pojo = HospitalPojo.from(hospital);
+			pojos.add(pojo);
+		}
+		return pojos;
+	}
 }

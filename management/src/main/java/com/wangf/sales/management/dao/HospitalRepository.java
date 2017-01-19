@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.wangf.sales.management.entity.Hospital;
+import com.wangf.sales.management.entity.Province;
 
 @Repository
 public interface HospitalRepository extends PagingAndSortingRepository<Hospital, Long> {
@@ -26,5 +27,7 @@ public interface HospitalRepository extends PagingAndSortingRepository<Hospital,
 	@Modifying
 	@Query(jpql_deleteById)
 	void deleteById(@Param("id") Long id);
+
+	List<Hospital> findByProvinceIn(List<Province> provinces);
 
 }

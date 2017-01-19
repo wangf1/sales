@@ -1,10 +1,59 @@
 sap.ui.define([
     "sales/basicData/CRUDTableController", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sales/common/AjaxUtils", "sales/common/i18nUtils",
-    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sales/common/UIUtils", "sales/common/ArrayUtils", "sap/m/MessageBox"
-], function(CRUDTableController, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox) {
+    "sales/common/DateTimeUtils", "sales/common/ValidateUtils", "sales/common/UIUtils", "sales/common/ArrayUtils", "sap/m/MessageBox", "sales/common/ObjectUtils"
+], function(CRUDTableController, JSONModel, Filter, FilterOperator, AjaxUtils, i18nUtils, DateTimeUtils, ValidateUtils, UIUtils, ArrayUtils, MessageBox, ObjectUtils) {
     "use strict";
 
     var oViewModel = CRUDTableController.prototype.oViewModel;
+
+    var resBundle = i18nUtils.initAndGetResourceBundle();
+
+    function doSearchHospitals(thisController) {
+        var searchCriteria = buildSearchCriteria(thisController);
+        if (searchCriteria.length === 0) {
+            var message = resBundle.getText("search_hospital_no_province");
+            UIUtils.showMessageToast(message);
+            return;
+        }
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: thisController.urlForListAll,
+            data: JSON.stringify(searchCriteria),
+            dataType: "json",
+            contentType: "application/json"
+        });
+        var promiseAfterSetTableModel = promise.then(function(result) {
+            oViewModel.setProperty("/tableData", result.data);
+        });
+        promiseAfterSetTableModel.then(function() {
+            var hospitals = oViewModel.getProperty("/tableData");
+            hospitals.forEach(function(hospital) {
+                hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
+            });
+            // Must refresh model for each hospital, otherwise UI will not update
+            oViewModel.refresh();
+        });
+    }
+
+    function onSearchHospitals() {
+        var that = this;
+        // Must get all provinces before search hospitals, since we should set "filteredProvinces" for each hospital
+        var promiseAfterGetAllProvinces = refreshAvailableProvinces();
+        promiseAfterGetAllProvinces.then(function() {
+            doSearchHospitals(that);
+        });
+        // Refresh other data
+        this.clearSelectAndChangedData();
+        refreshAvailableRegions();
+        refreshAvailableLevels();
+
+    }
+
+    function buildSearchCriteria(thisController) {
+        var selectedProvinces = thisController.byId("filterProvince").getSelectedKeys();
+        var provinces = ObjectUtils.getAllOwnPropertyAsArray(selectedProvinces);
+        return provinces;
+    }
 
     function refreshAvailableProvinces() {
         var promise = AjaxUtils.ajaxCallAsPromise({
@@ -78,27 +127,11 @@ sap.ui.define([
         });
     }
 
-    function setTableModel() {
-        var promiseAfterSetTableModel = CRUDTableController.prototype.setTableModel.call(this);
-        promiseAfterSetTableModel.then(function() {
-            var hospitals = oViewModel.getProperty("/tableData");
-            hospitals.forEach(function(hospital) {
-                hospital["filteredProvinces"] = filterProvinceByRegion(hospital.region);
-            });
-            // Must refresh model for each hospital, otherwise UI will not update
-            oViewModel.refresh();
-        });
-    }
-
     function onRefresh() {
-        var that = this;
-        var promiseAfterGetAllProvinces = refreshAvailableProvinces();
-        promiseAfterGetAllProvinces.then(function() {
-            CRUDTableController.prototype.onRefresh.call(that);
-        });
-
-        refreshAvailableRegions();
-        refreshAvailableLevels();
+        // this.onSearchHospitals() may not fetch data if filter value not set. So must clear table data, the data is other pages data when jump from
+        // other page to this page. And
+        oViewModel.setProperty("/tableData", []);
+        this.onSearchHospitals();
     }
 
     function filterProvinceByRegion(region) {
@@ -121,14 +154,14 @@ sap.ui.define([
         columnNames: [
             "name", "level", "region", "province"
         ],
-        urlForListAll: "getHospitalsByCurrentUser",
+        urlForListAll: "searchHospitalsByProvinces",
         urlForSaveAll: "saveHospitals",
         urlForDeleteAll: "deleteHospitals",
         onInit: init,
         onAdd: onAdd,
         onRefresh: onRefresh,
         onRegionChanged: onRegionChanged,
-        setTableModel: setTableModel
+        onSearchHospitals: onSearchHospitals
     });
     return controller;
 });

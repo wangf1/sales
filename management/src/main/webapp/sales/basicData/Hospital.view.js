@@ -16,13 +16,6 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
         }));
         toolbarContent.push(new sap.m.ToolbarSpacer());
         toolbarContent.push(new sap.m.Button({
-            text: "{i18n>refresh}",
-            icon: "sap-icon://refresh",
-            press: function(e) {
-                oController.onRefresh(e);
-            }
-        }));
-        toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
             icon: "sap-icon://add",
             press: function(e) {
@@ -138,7 +131,7 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
             // Important note: When make the table growing, a in-row ComboBox which has a change event handler will cannot input value, the reason is
             // unknown. So when table can grow, do not use inline edit/add, use a dialog to edit/add table items.
             growing: true,
-            growingThreshold: 200,
+            growingThreshold: 50,
             width: "auto",
             selectionChange: function() {
                 oController.onTableSelectionChange();
@@ -158,9 +151,57 @@ sap.ui.jsview("sales.basicData.Hospital", (function() {
         return table;
     }
 
+    function createFacetFilter(oController) {
+        var filters = [];
+        filters.push(new sap.m.FacetFilterList(oController.createId("filterProvince"), {
+            title: "{i18n>province}",
+            key: "province",
+        }).bindItems({
+            path: "/allProvinces",
+            template: new sap.m.FacetFilterItem({
+                key: "{name}",
+                text: "{name}"
+            })
+        }));
+
+        var facetFilter = new sap.m.FacetFilter(oController.createId("facetFilter"), {
+            type: "Simple",
+            showReset: false,
+            lists: filters
+        });
+        return facetFilter;
+    }
+
+    function createSearchPanel(oController) {
+        var filter = createFacetFilter(oController);
+
+        var searchButton = new sap.m.Button({
+            text: "{i18n>search}",
+            icon: "sap-icon://refresh",
+            press: function(e) {
+                oController.onSearchHospitals();
+            }
+        });
+
+        var searchPanel = new sap.m.HBox({
+            width: "100%",
+            items: [
+                filter, searchButton
+            ]
+        });
+        return searchPanel;
+    }
+
     var createContent = function(oController) {
+        var searchPanel = createSearchPanel(oController);
         var table = createTable(oController);
-        return table;
+        var content = new sap.m.VBox({
+            width: "100%",
+            items: [
+                searchPanel, table
+            ]
+        });
+        return content;
     };
 
     var view = {

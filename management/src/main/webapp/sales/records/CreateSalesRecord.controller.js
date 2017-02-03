@@ -87,8 +87,20 @@ sap.ui.define([
             }
         });
         viewModel.getData().provinces = filteredProvinces;
-        // Set the province to a new province in order to filterHospitalByProvince() function can works against new province
-        salesRecordData.province = filteredProvinces[0].name;
+
+        var currentProvinceWithinRegion = false;
+        for (var i = 0; i < filteredProvinces.length; i++) {
+            if (filteredProvinces[i].name === salesRecordData.province) {
+                currentProvinceWithinRegion = true;
+                break;
+            }
+        }
+        if (!currentProvinceWithinRegion) {
+            // only set province to first one when the province is not in current region
+            if (filteredProvinces[0]) {
+                salesRecordData.province = filteredProvinces[0].name;
+            }
+        }
         viewModel.refresh();
     }
 

@@ -32,6 +32,12 @@ sales.common.AjaxUtils = (function() {
         return dialog;
     }
 
+    function handleSessionTimeout(jqXHR) {
+        if (jqXHR.responseText.indexOf("<html><head><title>Login Page") === 0) {
+            window.location.href = "login";
+        }
+    }
+
     function ajaxCallAsPromise(ajaxmeta, settings) {
         if (!ajaxmeta.method) {
             ajaxmeta.method = "GET";
@@ -83,6 +89,7 @@ sales.common.AjaxUtils = (function() {
                     });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    handleSessionTimeout(jqXHR);
                     if (dialog) {
                         dialog.close();
                     }

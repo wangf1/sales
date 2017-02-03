@@ -36,7 +36,7 @@ public class ProductPriceService {
 
 	public Iterable<ProductPricePojo> listProductPricesByCurrentUser() {
 		List<ProductPricePojo> result = new ArrayList<>();
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			Iterable<ProductPrice> allPrices = priceRepository.findAll();
 			for (ProductPrice price : allPrices) {
 				ProductPricePojo pojo = ProductPricePojo.from(price);

@@ -42,7 +42,7 @@ public class BidService {
 
 	public List<BidPojo> getBidsByCurrentUser(Date startAt, Date endAt) {
 		List<Bid> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = bidRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();

@@ -5,6 +5,7 @@ public class Permission {
 	private boolean create;
 	private boolean update;
 	private boolean delete;
+	private boolean export;
 
 	public boolean isRead() {
 		return read;
@@ -36,6 +37,14 @@ public class Permission {
 
 	public void setDelete(boolean delete) {
 		this.delete = delete;
+	}
+
+	public boolean isExport() {
+		return export;
+	}
+
+	public void setExport(boolean export) {
+		this.export = export;
 	}
 
 }

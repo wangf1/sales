@@ -63,7 +63,7 @@ public class SalesRecordsService {
 	}
 
 	public List<SalesRecordPojo> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
-		if (!SecurityUtils.isCurrentUserAdmin()) {
+		if (!SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			// For non-admin user, only view sales records created by himself
 			String salesPersonName = SecurityUtils.getCurrentUserName();
 			List<String> salesPerson = new ArrayList<>();

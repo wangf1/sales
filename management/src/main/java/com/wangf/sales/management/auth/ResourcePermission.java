@@ -9,6 +9,9 @@ public class ResourcePermission {
 	private Permission product = new Permission();
 	private Permission user = new Permission();
 	private Permission showSalesPersonForSalesRecord = new Permission();
+	private Permission productPrice = new Permission();
+	private Permission dataCollect = new Permission();
+	private Permission analysis = new Permission();
 
 	public Permission getSalesRecord() {
 		return salesRecord;
@@ -72,6 +75,30 @@ public class ResourcePermission {
 
 	public void setShowSalesPersonForSalesRecord(Permission showSalesPersonForSalesRecord) {
 		this.showSalesPersonForSalesRecord = showSalesPersonForSalesRecord;
+	}
+
+	public Permission getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(Permission productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public Permission getDataCollect() {
+		return dataCollect;
+	}
+
+	public void setDataCollect(Permission dataCollect) {
+		this.dataCollect = dataCollect;
+	}
+
+	public Permission getAnalysis() {
+		return analysis;
+	}
+
+	public void setAnalysis(Permission analysis) {
+		this.analysis = analysis;
 	}
 
 }

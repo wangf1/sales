@@ -2,7 +2,7 @@
     {
         "role":"Admin",
         "resourcePermission":{
-            "salesRecord": {"create":true,"delete":true,"read":true,"update":true},
+            "salesRecord": {"create":true,"delete":true,"read":true,"update":true, "export":true},
             "province": {"create":true,"delete":true,"read":true,"update":true},
             "hospital": {"create":true,"delete":true,"read":true,"update":true},
             "department": {"create":true,"delete":true,"read":true,"update":true},
@@ -10,7 +10,9 @@
             "product": {"create":true,"delete":true,"read":true,"update":true},
             "user": {"create":true,"delete":true,"read":true,"update":true},
             "productPrice": {"create":true,"delete":true,"read":true,"update":true},
-            "showSalesPersonForSalesRecord": {"read":true}
+            "showSalesPersonForSalesRecord": {"read":true},
+            "dataCollect": {"update":true, "export":true},
+            "analysis": {"export":true}
         }
     },
     {
@@ -23,7 +25,8 @@
             "departmentName": {"create":false,"delete":false,"read":true,"update":false},
             "product": {"create":false,"delete":false,"read":true,"update":false},
             "user": {"create":false,"delete":false,"read":false,"update":true},
-            "productPrice": {"create":true,"delete":true,"read":true,"update":true}
+            "productPrice": {"create":true,"delete":true,"read":true,"update":true},
+            "dataCollect": {"update":true}
         }
     },
     {
@@ -37,7 +40,24 @@
             "product": {"create":false,"delete":false,"read":true,"update":false},
             "user": {"create":false,"delete":false,"read":false,"update":true},
             "productPrice": {"create":true,"delete":true,"read":true,"update":true},
-            "showSalesPersonForSalesRecord": {"read":true}
+            "showSalesPersonForSalesRecord": {"read":true},
+            "dataCollect": {"update":true}
+        }
+    },
+    {
+        "role":"ReadOnly",
+        "resourcePermission":{
+            "salesRecord": {"create":false,"delete":false,"read":true,"update":false,"export":true},
+            "province": {"create":false,"delete":false,"read":true,"update":false},
+            "hospital": {"create":false,"delete":false,"read":true,"update":false},
+            "department": {"create":false,"delete":false,"read":true,"update":false},
+            "departmentName": {"create":false,"delete":false,"read":true,"update":false},
+            "product": {"create":false,"delete":false,"read":true,"update":false},
+            "user": {"create":false,"delete":false,"read":true,"update":true},
+            "productPrice": {"create":false,"delete":false,"read":false,"update":false},
+            "showSalesPersonForSalesRecord": {"read":true},
+            "dataCollect": {"update":false, "export":true},
+            "analysis": {"export":true}
         }
     }
 ]

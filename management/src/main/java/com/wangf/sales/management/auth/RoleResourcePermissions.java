@@ -74,6 +74,18 @@ public class RoleResourcePermissions {
 			permission = resourcePermission.getShowSalesPersonForSalesRecord();
 			merged = result.getShowSalesPersonForSalesRecord();
 			mergePermission(permission, merged);
+
+			permission = resourcePermission.getProductPrice();
+			merged = result.getProductPrice();
+			mergePermission(permission, merged);
+
+			permission = resourcePermission.getAnalysis();
+			merged = result.getAnalysis();
+			mergePermission(permission, merged);
+
+			permission = resourcePermission.getDataCollect();
+			merged = result.getDataCollect();
+			mergePermission(permission, merged);
 		}
 		return result;
 	}
@@ -90,6 +102,9 @@ public class RoleResourcePermissions {
 		}
 		if (permission.isUpdate()) {
 			merged.setUpdate(true);
+		}
+		if (permission.isExport()) {
+			merged.setExport(true);
 		}
 	}
 }

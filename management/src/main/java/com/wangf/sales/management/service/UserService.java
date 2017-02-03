@@ -47,7 +47,7 @@ public class UserService {
 
 	public List<String> listRegionsForUser(String userName) {
 		Set<String> regionsSet = new HashSet<>();
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			Set<String> all = provinceService.listAllRegions();
 			regionsSet.addAll(all);
 		} else {
@@ -76,7 +76,7 @@ public class UserService {
 
 	public List<ProvincePojo> listProvincesForUser(String userName) {
 		List<ProvincePojo> pojos = new ArrayList<>();
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			List<ProvincePojo> all = provinceService.listAll();
 			pojos.addAll(all);
 		} else {
@@ -106,7 +106,7 @@ public class UserService {
 
 	public List<HospitalPojo> listHospitalsForUser(String userName) {
 		List<Hospital> hospitals = new ArrayList<>();
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			Iterable<Hospital> all = hospitalRepository.findAll();
 			for (Hospital hospital : all) {
 				hospitals.add(hospital);

@@ -41,7 +41,7 @@ public class SpeakerService {
 
 	public List<SpeakerPojo> getSpeakersByCurrentUser(Date startAt, Date endAt) {
 		List<Speaker> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = speakerRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();

@@ -37,7 +37,7 @@ public class DepartmentMeetingService {
 
 	public List<DepartmentMeetingPojo> getDepartmentMeetingsByCurrentUser(Date startAt, Date endAt) {
 		List<DepartmentMeeting> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = departmentMeetingRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
@@ -115,7 +115,7 @@ public class DepartmentMeetingService {
 	}
 
 	public List<DepartmentMeetingPojo> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
-		if (!SecurityUtils.isCurrentUserAdmin()) {
+		if (!SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			// For non-admin user, only view data created by himself
 			String salesPersonName = SecurityUtils.getCurrentUserName();
 			List<String> salesPerson = new ArrayList<>();

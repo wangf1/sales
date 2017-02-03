@@ -14,6 +14,7 @@ public class SecurityUtils {
 
 	public static final String ROLE_ADMIN = "Admin";
 	public static final String ROLE_USER = "User";
+	public static final String ROLE_READONLY = "ReadOnly";
 
 	private static UserDetails getCurrentUserDetails() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -46,6 +47,12 @@ public class SecurityUtils {
 			roles.add(role);
 		}
 		return roles;
+	}
+
+	public static boolean isCurrentUserAdminOrReadOnlyUser() {
+		boolean isAdmin = SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_ADMIN);
+		boolean isReadOnly = SecurityUtils.getCurrentUserRoles().contains(SecurityUtils.ROLE_READONLY);
+		return isAdmin || isReadOnly;
 	}
 
 	public static boolean isCurrentUserAdmin() {

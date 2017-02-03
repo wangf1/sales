@@ -30,7 +30,7 @@ public class RegionMeetingService {
 
 	public List<RegionMeetingPojo> getRegionMeetingsByCurrentUser(Date startAt, Date endAt) {
 		List<RegionMeeting> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = regionMeetingRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();

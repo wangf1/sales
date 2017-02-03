@@ -30,6 +30,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
             icon: "sap-icon://add",
+            visible: "{permissionModel>/salesRecord/create}",
             customData: [
                 new sap.ui.core.CustomData({
                     key: "action",
@@ -44,6 +45,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>edit}",
             icon: "sap-icon://edit",
             enabled: "{= ${/selectedRecords}.length===1 && ${/isSelectedSalesRecordEditable} }",
+            visible: "{permissionModel>/salesRecord/update}",
             customData: [
                 new sap.ui.core.CustomData({
                     key: "action",
@@ -58,6 +60,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
             enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedSalesRecordEditable} }",
+            visible: "{permissionModel>/salesRecord/delete}",
             press: function() {
                 oController.onDeleteSalesRecord();
             }
@@ -66,6 +69,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>save}",
             icon: "sap-icon://save",
             enabled: "{= ${/inlineChangedRecords}.length>0 }",
+            visible: "{permissionModel>/salesRecord/update}",
             press: function() {
                 oController.onSaveAllSalesRecords();
             }
@@ -74,7 +78,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>export}",
             icon: "sap-icon://action",
             enabled: "{= ${/salesRecords}.length>0 }",
-            visible: "{permissionModel>/user/delete}",
+            visible: "{permissionModel>/salesRecord/export}",
             press: function() {
                 oController.onExportSalesRecords();
             }
@@ -83,6 +87,7 @@ sap.ui.jsview("sales.records.ListInTable", (function() {
             text: "{i18n>cloneLastMonthData}",
             tooltip: "{i18n>cloneLastMonthData_tooltip}",
             icon: "sap-icon://copy",
+            visible: "{permissionModel>/salesRecord/create}",
             press: function() {
                 oController.cloneLastMonthData();
             }

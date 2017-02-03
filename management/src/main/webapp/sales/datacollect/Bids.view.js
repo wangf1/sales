@@ -48,6 +48,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
         toolbarContent.push(new sap.m.Button({
             text: "{i18n>add}",
             icon: "sap-icon://add",
+            visible: "{permissionModel>/dataCollect/update}",
             press: function(e) {
                 oController.onAdd(e);
             }
@@ -56,6 +57,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
             text: "{i18n>delete}",
             icon: "sap-icon://delete",
             enabled: "{= ${/selectedRecords}.length>0 && ${/isSelectedRecordsEditable} }",
+            visible: "{permissionModel>/dataCollect/update}",
             press: function() {
                 oController.onDelete();
             }
@@ -64,6 +66,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
             text: "{i18n>save}",
             icon: "sap-icon://save",
             enabled: "{= ${/inlineChangedRecords}.length>0 || ${/newAddedRecords}.length>0}",
+            visible: "{permissionModel>/dataCollect/update}",
             press: function() {
                 oController.onSaveAll();
             }
@@ -73,6 +76,7 @@ sap.ui.jsview("sales.datacollect.Bids", (function() {
             icon: "sap-icon://action",
             enabled: "{= ${/tableData}.length>0 }",
             visible: "{permissionModel>/user/delete}",
+            visible: "{permissionModel>/dataCollect/export}",
             press: function() {
                 oController.onExport();
             }

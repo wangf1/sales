@@ -58,7 +58,7 @@ public class AgencyService {
 
 	public List<AgencyRecruitPojo> listAgencyRecruitsByCurrentUser(Date startAt, Date endAt) {
 		List<AgencyRecruit> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = agencyRecruitRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();
@@ -82,7 +82,7 @@ public class AgencyService {
 
 	public List<AgencyPojo> getAgenciesByCurrentUser() {
 		List<Agency> entities = new ArrayList<>();
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			Iterable<Agency> iterable = agencyRepository.findAll();
 			for (Agency agency : iterable) {
 				entities.add(agency);
@@ -207,7 +207,7 @@ public class AgencyService {
 
 	public List<AgencyTrainingPojo> listAgencyTrainingsByCurrentUser(Date startAt, Date endAt) {
 		List<AgencyTraining> entities;
-		if (SecurityUtils.isCurrentUserAdmin()) {
+		if (SecurityUtils.isCurrentUserAdminOrReadOnlyUser()) {
 			entities = agencyTrainingRepository.findBetweenDate(startAt, endAt);
 		} else {
 			entities = new ArrayList<>();

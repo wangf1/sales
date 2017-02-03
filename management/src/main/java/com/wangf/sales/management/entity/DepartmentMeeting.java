@@ -52,6 +52,8 @@ public class DepartmentMeeting {
 	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
 	private User lastModifyBy;
 
+	private int numberOfPeople;
+
 	public long getId() {
 		return id;
 	}
@@ -146,6 +148,14 @@ public class DepartmentMeeting {
 
 	public void setLastModifyBy(User lastModifyBy) {
 		this.lastModifyBy = lastModifyBy;
+	}
+
+	public int getNumberOfPeople() {
+		return numberOfPeople;
+	}
+
+	public void setNumberOfPeople(int numberOfPeople) {
+		this.numberOfPeople = numberOfPeople;
 	}
 
 	@Override

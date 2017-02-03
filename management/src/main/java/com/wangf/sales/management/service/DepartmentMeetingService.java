@@ -86,6 +86,7 @@ public class DepartmentMeetingService {
 		entity.setPurpose(pojo.getPurpose());
 		entity.setStatus(pojo.getStatus());
 		entity.setSubject(pojo.getSubject());
+		entity.setNumberOfPeople(pojo.getNumberOfPeople());
 		User salesPerson = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or

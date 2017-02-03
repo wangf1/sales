@@ -280,9 +280,9 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                         templateShareable: true
                     }
                 }));
-            } else if (columName === "columnsNeedInOneCell") {
+            } else if (columName === "allKindsOfInputs") {
                 var columnsInCell = [
-                    "planCost", "actualCost"
+                    "planCost", "actualCost", "numberOfPeople"
                 ];
                 var vBox = new sap.m.VBox();
                 columnsInCell.forEach(function(inputColumn) {
@@ -300,8 +300,8 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                             type: new sales.common.FloatTypeOnlyFormatValue()
                         },
                         tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error: "1"
-                                                            // is not valid for aggregation "tooltip" of Element" error which happen when input a
-                                                            // number
+                        // is not valid for aggregation "tooltip" of Element" error which happen when input a
+                        // number
                         editable: inputEnabled,
                         textAlign: sap.ui.core.TextAlign.Right,
                         liveChange: function(e) {

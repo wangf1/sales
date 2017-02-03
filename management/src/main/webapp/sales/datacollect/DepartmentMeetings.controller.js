@@ -9,11 +9,9 @@ sap.ui
 
             var oViewModel = CRUDTableController.prototype.oViewModel;
 
-            var columnNames =
-                              [
-                                  "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "columnsNeedInOneCell",
-                                  "lastModifyAt", "lastModifyBy"
-                              ];
+            var columnNames = [
+                "date", "region", "province", "salesPersonFullName", "hospital", "department", "product", "purpose", "status", "allKindsOfInputs", "lastModifyAt", "lastModifyBy"
+            ];
 
             function initColumnVisiableModel() {
                 CRUDTableController.prototype.initColumnVisiableModel.call(this);

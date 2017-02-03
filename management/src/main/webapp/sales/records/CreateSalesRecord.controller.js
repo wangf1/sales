@@ -59,6 +59,8 @@ sap.ui.define([
 
     function refreshUIForEditedRecord(recordToEdit) {
         salesRecordData.id = recordToEdit.id;
+        salesRecordData.region = recordToEdit.region;
+        salesRecordData.province = recordToEdit.province;
         salesRecordData.hospital = recordToEdit.hospital;
         salesRecordData.installDepartment = recordToEdit.installDepartment;
         salesRecordData.orderDepartment = recordToEdit.orderDepartment;
@@ -103,8 +105,18 @@ sap.ui.define([
             }
         });
         viewModel.getData().hospitals = filteredHospitals;
-        if (filteredHospitals[0]) {
-            salesRecordData.hospital = filteredHospitals[0].name;
+        var currentHospitalWithinProvince = false;
+        for (var i = 0; i < filteredHospitals.length; i++) {
+            if (filteredHospitals[i].name === salesRecordData.hospital) {
+                currentHospitalWithinProvince = true;
+                break;
+            }
+        }
+        if (!currentHospitalWithinProvince) {
+            // only set hospital to first one when the hospital is not in current province
+            if (filteredHospitals[0]) {
+                salesRecordData.hospital = filteredHospitals[0].name;
+            }
         }
         viewModel.refresh();
     }

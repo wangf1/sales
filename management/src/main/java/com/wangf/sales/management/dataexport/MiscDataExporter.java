@@ -16,8 +16,10 @@ import com.wangf.sales.management.rest.pojo.AgencyTrainingPojo;
 import com.wangf.sales.management.rest.pojo.BidPojo;
 import com.wangf.sales.management.rest.pojo.DepartmentMeetingPojo;
 import com.wangf.sales.management.rest.pojo.RegionMeetingPojo;
+import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
 import com.wangf.sales.management.rest.pojo.SpeakerPojo;
 import com.wangf.sales.management.service.AgencyService;
+import com.wangf.sales.management.service.AnalysisService;
 import com.wangf.sales.management.service.BidService;
 import com.wangf.sales.management.service.DepartmentMeetingService;
 import com.wangf.sales.management.service.RegionMeetingService;
@@ -39,6 +41,9 @@ public class MiscDataExporter {
 
 	@Autowired
 	private RegionMeetingService regionMeetingService;
+
+	@Autowired
+	private AnalysisService analysisService;
 
 	public byte[] exportAgencyRecruit(Date startAt, Date endAt) throws IOException {
 		List<AgencyRecruitPojo> data = agencyService.listAgencyRecruitsByCurrentUser(startAt, endAt);
@@ -117,4 +122,31 @@ public class MiscDataExporter {
 			}
 		}
 	}
+
+	public byte[] exportNewCustomers(Date thisMonth, Date previousMonth) throws IOException {
+		List<SalesRecordPojo> data = analysisService.findNewCustomer(thisMonth, previousMonth);
+		try (InputStream template = getClass().getResourceAsStream("/new_lost_customer_template.xlsx")) {
+			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+				Context context = new Context();
+				context.putVar("data", data);
+				JxlsHelper.getInstance().processTemplate(template, out, context);
+				byte[] result = out.toByteArray();
+				return result;
+			}
+		}
+	}
+
+	public byte[] exportLostCustomers(Date thisMonth, Date previousMonth) throws IOException {
+		List<SalesRecordPojo> data = analysisService.findLostCustomer(thisMonth, previousMonth);
+		try (InputStream template = getClass().getResourceAsStream("/new_lost_customer_template.xlsx")) {
+			try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+				Context context = new Context();
+				context.putVar("data", data);
+				JxlsHelper.getInstance().processTemplate(template, out, context);
+				byte[] result = out.toByteArray();
+				return result;
+			}
+		}
+	}
+
 }

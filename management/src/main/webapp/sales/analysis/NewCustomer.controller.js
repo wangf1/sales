@@ -6,14 +6,18 @@ sap.ui.define([
 
     var oViewModel = ReadOnlyTableController.prototype.oViewModel;
 
-    function setTableModel() {
+    function buildSearchCriteria() {
         var oldMonth = oViewModel.getProperty("/oldMonth");
         var newMonth = oViewModel.getProperty("/newMonth");
         var searchCriteria = {
             startAt: oldMonth,
             endAt: newMonth
         };
+        return searchCriteria;
+    }
 
+    function setTableModel() {
+        var searchCriteria = buildSearchCriteria();
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "POST",
             url: "findNewCustomer",
@@ -35,12 +39,30 @@ sap.ui.define([
         oViewModel.setProperty("/newMonth", newMonth);
     }
 
+    function onExport() {
+        var searchCriteria = buildSearchCriteria();
+        var promise = AjaxUtils.ajaxCallAsPromise({
+            method: "POST",
+            url: "exportNewCustomers",
+            data: JSON.stringify(searchCriteria),
+            dataType: "text",
+            contentType: "application/json"
+        });
+        promise.then(function(result) {
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("src", result.data);
+            iframe.setAttribute("style", "display: none");
+            document.body.appendChild(iframe);
+        });
+    }
+
     var controller = ReadOnlyTableController.extend("sales.analysis.NewCustomer", {
         columnNames: [
-            "hospital", "product"
+            "hospital", "product", "region", "province", "salesPersonFullName"
         ],
         onInit: init,
-        setTableModel: setTableModel
+        setTableModel: setTableModel,
+        onExport: onExport
     });
     return controller;
 });

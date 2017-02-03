@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wangf.sales.management.dao.SalesRecordViewRepository;
+import com.wangf.sales.management.dao.UserRepository;
+import com.wangf.sales.management.entity.User;
+import com.wangf.sales.management.rest.pojo.PojoUtils;
 import com.wangf.sales.management.rest.pojo.ProvincePojo;
 import com.wangf.sales.management.rest.pojo.SalesRecordPojo;
 import com.wangf.sales.management.utils.DateUtils;
@@ -22,6 +25,8 @@ public class AnalysisService {
 	private SalesRecordViewRepository salesRecordViewRepository;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserRepository userRepository;
 
 	public List<SalesRecordPojo> findNewCustomer(Date thisMonth, Date previousMonth) {
 
@@ -37,12 +42,22 @@ public class AnalysisService {
 		List<Object[]> queryResults = salesRecordViewRepository.findNewCustomer(thisMonthFirstDay, nextMonthFirstDay,
 				previousMonthFirstday, dayAfterPreviousMonthLastday, provinces);
 		for (Object[] result : queryResults) {
-			SalesRecordPojo pojo = new SalesRecordPojo();
-			pojo.setHospital((String) result[0]);
-			pojo.setProduct((String) result[1]);
+			SalesRecordPojo pojo = buildPojoFromQueryResult(result);
 			newCustomers.add(pojo);
 		}
 		return newCustomers;
+	}
+
+	private SalesRecordPojo buildPojoFromQueryResult(Object[] result) {
+		SalesRecordPojo pojo = new SalesRecordPojo();
+		pojo.setHospital((String) result[0]);
+		pojo.setProduct((String) result[1]);
+		pojo.setRegion((String) result[2]);
+		pojo.setProvince((String) result[3]);
+		User salesPerson = userRepository.findByUserName((String) result[4]);
+		String userFullName = PojoUtils.getFullName(salesPerson);
+		pojo.setSalesPersonFullName(userFullName);
+		return pojo;
 	}
 
 	public List<SalesRecordPojo> findLostCustomer(Date thisMonth, Date previousMonth) {
@@ -59,9 +74,7 @@ public class AnalysisService {
 		List<Object[]> queryResults = salesRecordViewRepository.findLostCustomer(thisMonthFirstDay, nextMonthFirstDay,
 				previousMonthFirstday, dayAfterPreviousMonthLastday, provinces);
 		for (Object[] result : queryResults) {
-			SalesRecordPojo pojo = new SalesRecordPojo();
-			pojo.setHospital((String) result[0]);
-			pojo.setProduct((String) result[1]);
+			SalesRecordPojo pojo = buildPojoFromQueryResult(result);
 			newCustomers.add(pojo);
 		}
 		return newCustomers;

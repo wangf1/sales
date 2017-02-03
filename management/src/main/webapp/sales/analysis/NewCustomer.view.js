@@ -44,6 +44,16 @@ sap.ui.jsview("sales.analysis.NewCustomer", (function() {
             }
         }));
 
+        toolbarContent.push(new sap.m.Button({
+            text: "{i18n>export}",
+            icon: "sap-icon://action",
+            enabled: "{= ${/tableData}.length>0 }",
+            visible: "{permissionModel>/user/delete}",
+            press: function() {
+                oController.onExport();
+            }
+        }));
+
         var toolBar = new sap.m.Toolbar({
             content: toolbarContent
         });

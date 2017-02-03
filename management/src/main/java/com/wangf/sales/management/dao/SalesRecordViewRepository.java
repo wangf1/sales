@@ -13,7 +13,7 @@ import com.wangf.sales.management.entity.SalesRecordView;
 @Repository
 public interface SalesRecordViewRepository extends PagingAndSortingRepository<SalesRecordView, Long> {
 
-	static final String jql_findNewCustomer = "select distinct thisMonth.hospital, thisMonth.product from\n"
+	static final String jql_findNewCustomer = "select distinct thisMonth.hospital, thisMonth.product, thisMonth.region, thisMonth.province, thisMonth.sales_person from\n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
 			+ "	where date >= :thisMonthFirstDay and date < :nextMonthFirstday) as thisMonth \n" + "left join \n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
@@ -29,7 +29,7 @@ public interface SalesRecordViewRepository extends PagingAndSortingRepository<Sa
 			@Param("dayAfterPrevioudMonthlastDay") Date dayAfterPrevioudMonthlastDay,
 			@Param("provinces") List<String> provinces);
 
-	static final String jql_findLostCustomer = "select distinct previoudMonth.hospital, previoudMonth.product from\n"
+	static final String jql_findLostCustomer = "select distinct previoudMonth.hospital, previoudMonth.product, previoudMonth.region, previoudMonth.province, previoudMonth.sales_person from\n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"
 			+ "	where date >= :thisMonthFirstDay and date < :nextMonthFirstday) as thisMonth \n" + "right join \n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"

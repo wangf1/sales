@@ -1,4 +1,5 @@
 jQuery.sap.require("sales.common.ObjectUtils");
+jQuery.sap.require("sap.ui.layout.form.SimpleForm");
 
 jQuery.sap.declare("sales.records.SalesRecordsUIHelper");
 jQuery.sap.declare("sales.common.DateTimeUtils");

@@ -58,17 +58,13 @@ sap.ui.define([
     function onTabSelect(e) {
         var container = this.byId("pageContainer");
         var key = e.getParameter("selectedKey");
-        var selectedPage;
         var pages = container.getPages();
         pages.forEach(function(page) {
-            if (page.getCustomData()[0].getValue() === key) {
-                selectedPage = page;
-            }
+            // Destroy pages can dramatically improve UI performance
+            page.destroy();
         })
-        if (!selectedPage) {
-            selectedPage = createPageByTabKey(key, this);
-            container.addPage(selectedPage);
-        }
+        var selectedPage = createPageByTabKey(key, this);
+        container.addPage(selectedPage);
         container.to(selectedPage);
         if (selectedPage.getContent()[0].getController().afterShow) {
             selectedPage.getContent()[0].getController().afterShow();

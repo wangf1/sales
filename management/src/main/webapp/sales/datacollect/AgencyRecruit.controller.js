@@ -242,21 +242,18 @@ sap.ui.define([
         });
     }
 
-    var productSelectDialog;
     var agencyToEditProducts;
 
     function onEditProducts(e) {
         agencyToEditProducts = e.getSource().getBindingContext().getObject();
-        if (!productSelectDialog) {
-            productSelectDialog = sap.ui.view({
-                type: sap.ui.core.mvc.ViewType.JS,
-                viewName: "sales.datacollect.ProductSelect"
-            });
-            // Should attach confirm event listener ONLY one time
-            productSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
-                onEditProductsDialogConfirm(selectConfirmEvent);
-            });
-        }
+        var productSelectDialog = sap.ui.view({
+            type: sap.ui.core.mvc.ViewType.JS,
+            viewName: "sales.datacollect.ProductSelect"
+        });
+        // Should attach confirm event listener ONLY one time
+        productSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+            onEditProductsDialogConfirm(selectConfirmEvent);
+        });
         productSelectDialog.getController().initSelection(agencyToEditProducts.products);
         // Must call addDependent otherwise the dialog will cannot access the i18n model
         this.getView().addDependent(productSelectDialog);

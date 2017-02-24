@@ -10,8 +10,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangf.sales.management.dao.DepartmentNameRepository;
 import com.wangf.sales.management.dao.ProvinceRepository;
 import com.wangf.sales.management.dao.RegionMeetingRepository;
+import com.wangf.sales.management.entity.DepartmentName;
 import com.wangf.sales.management.entity.Province;
 import com.wangf.sales.management.entity.RegionMeeting;
 import com.wangf.sales.management.entity.User;
@@ -27,6 +29,8 @@ public class RegionMeetingService {
 	private UserService userService;
 	@Autowired
 	private ProvinceRepository provinceRepository;
+	@Autowired
+	private DepartmentNameRepository departmentNameRepository;
 
 	public List<RegionMeetingPojo> getRegionMeetingsByCurrentUser(Date startAt, Date endAt) {
 		List<RegionMeeting> entities;
@@ -80,6 +84,8 @@ public class RegionMeetingService {
 		entity.setSpeakerCost(pojo.getSpeakerCost());
 		entity.setStatus(pojo.getStatus());
 		entity.setType(pojo.getType());
+		DepartmentName departmentName = departmentNameRepository.findByName(pojo.getDepartment());
+		entity.setDepartmentName(departmentName);
 		User currentUser = userService.getCurrentUser();
 		if (isInsert) {
 			// Only set salesPerson for new created entity, since manager or

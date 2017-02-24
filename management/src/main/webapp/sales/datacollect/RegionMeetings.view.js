@@ -240,12 +240,19 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
             } else if (columName === "allKindsOfInputs") {
                 var vBox = new sap.m.VBox();
                 var inputColumNames = [
-                    "numberOfPeople", "satelliteMeetingCost", "exhibitionCost", "speakerCost", "otherCost", "otherTAndE"
+                    "numberOfPeople", "satelliteMeetingCost", "exhibitionCost", "speakerCost", "otherCost", "otherTAndE", "department"
                 ];
                 inputColumNames.forEach(function(inputColumn) {
                     var hBox = new sap.m.HBox();
+                    var labelText;
+                    if (inputColumn === "department") {
+                        labelText = "{i18n>department_form_label}";
+                    } else {
+                        labelText = "{i18n>" + inputColumn + "}";
+                    }
                     hBox.addItem(new sap.m.Label({
-                        text: "{i18n>" + inputColumn + "}"
+                        text: labelText,
+                        width: "4.5em"
                     }));
                     var inputEnabled = enableIfInThisMonthOrLastMonth;
                     var valueType = new sales.common.FloatTypeOnlyFormatValue()
@@ -255,20 +262,43 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                             groupingEnabled: true
                         });
                     }
-                    hBox.addItem(new sap.m.Input({
-                        value: {
-                            path: inputColumn,
-                            type: valueType
-                        },
-                        tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error: "1"
-                        // is not valid for aggregation "tooltip" of Element" error which happen when input a
-                        // number
-                        editable: inputEnabled,
-                        textAlign: sap.ui.core.TextAlign.Right,
-                        liveChange: function(e) {
-                            oController.onCellLiveChange(e);
-                        }
-                    }).addStyleClass("input-in-table-cell"));
+                    var inputControl;
+                    if (inputColumn === "department") {
+                        inputControl = new sap.m.Select({
+                            change: function(e) {
+                                oController.onCellLiveChange(e);
+                            },
+                            value: "{" + inputColumn + "}",
+                            tooltip: "{" + inputColumn + "}",
+                            enabled: enableIfInThisMonth,
+                            selectedKey: "{" + inputColumn + "}",
+                            items: {
+                                path: "/departmentNames",
+                                template: new sap.ui.core.Item({
+                                    key: "{name}",
+                                    text: "{name}"
+                                }),
+                                templateShareable: true
+                            }
+                        });
+                    } else {
+                        inputControl = new sap.m.Input({
+                            value: {
+                                path: inputColumn,
+                                type: valueType
+                            },
+                            tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error:
+                            // "1"
+                            // is not valid for aggregation "tooltip" of Element" error which happen when input a
+                            // number
+                            editable: inputEnabled,
+                            textAlign: sap.ui.core.TextAlign.Right,
+                            liveChange: function(e) {
+                                oController.onCellLiveChange(e);
+                            }
+                        }).addStyleClass("input-in-table-cell")
+                    }
+                    hBox.addItem(inputControl);
                     vBox.addItem(hBox);
                 });
                 tableCells.push(vBox);

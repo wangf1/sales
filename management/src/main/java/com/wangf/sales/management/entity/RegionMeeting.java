@@ -60,6 +60,9 @@ public class RegionMeeting {
 	@JoinColumn(name = "LAST_MODIFY_BY", referencedColumnName = "USERNAME")
 	private User lastModifyBy;
 
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	private DepartmentName departmentName;
+
 	public long getId() {
 		return id;
 	}
@@ -186,6 +189,14 @@ public class RegionMeeting {
 
 	public void setLastModifyBy(User lastModifyBy) {
 		this.lastModifyBy = lastModifyBy;
+	}
+
+	public DepartmentName getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(DepartmentName departmentName) {
+		this.departmentName = departmentName;
 	}
 
 	@Override

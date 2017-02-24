@@ -41,6 +41,8 @@ public class RegionMeetingPojo extends PoJoBase {
 
 	private String lastModifyBy;
 
+	private String department;
+
 	public long getId() {
 		return id;
 	}
@@ -177,6 +179,14 @@ public class RegionMeetingPojo extends PoJoBase {
 		this.lastModifyBy = lastModifyBy;
 	}
 
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
 	@Override
 	public String toString() {
 		return "RegionMeetingPojo [id=" + id + ", date=" + date + ", salesPerson=" + salesPerson + ", name=" + name
@@ -208,6 +218,8 @@ public class RegionMeetingPojo extends PoJoBase {
 			pojo.setLastModifyBy(PojoUtils.getFullName(r.getLastModifyBy()));
 		}
 		pojo.setLastModifyAt(r.getLastModifyAt());
+		String departName = r.getDepartmentName() == null ? "" : r.getDepartmentName().getName();
+		pojo.setDepartment(departName);
 		return pojo;
 	}
 }

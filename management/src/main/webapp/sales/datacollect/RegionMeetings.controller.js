@@ -187,6 +187,23 @@ sap.ui
                 });
                 return promiseAfterGetStatuses;
             }
+            function refreshDepartmentNames() {
+                var promise = AjaxUtils.ajaxCallAsPromise({
+                    method: "GET",
+                    url: "listAllDepartments",
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+                var promiseAfterGetAllDepartNames = promise.then(function(result) {
+                    var departNames = result.data;
+                    // For now make department name is must input
+// departNames.unshift({
+// name: ""
+// });
+                    oViewModel.setProperty("/departmentNames", result.data);
+                });
+                return promiseAfterGetAllDepartNames;
+            }
 
             function onRefresh() {
                 var that = this;
@@ -208,6 +225,7 @@ sap.ui
                     that.setTableModel();
                 });
                 refreshAvailableRegions();
+                refreshDepartmentNames();
             }
 
             function onAdd() {

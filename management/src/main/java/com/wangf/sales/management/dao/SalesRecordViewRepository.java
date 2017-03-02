@@ -36,7 +36,8 @@ public interface SalesRecordViewRepository extends PagingAndSortingRepository<Sa
 			+ "	where date >= :previoudMonthFirstday and date < :dayAfterPrevioudMonthlastDay) as previoudMonth \n"
 			+ "on thisMonth.hospital=previoudMonth.hospital \n" + "	and thisMonth.product=previoudMonth.product \n"
 			+ "where (thisMonth.hospital is null or thisMonth.quantity<=0)\n"
-			+ "and previoudMonth.province in :provinces\n" + "group by previoudMonth.hospital, previoudMonth.product";
+			+ "and previoudMonth.province in :provinces\n" + "and previoudMonth.quantity>0\n"
+			+ "group by previoudMonth.hospital, previoudMonth.product";
 
 	@Query(value = jql_findLostCustomer, nativeQuery = true)
 	List<Object[]> findLostCustomer(@Param("thisMonthFirstDay") Date thisMonthFirstDay,

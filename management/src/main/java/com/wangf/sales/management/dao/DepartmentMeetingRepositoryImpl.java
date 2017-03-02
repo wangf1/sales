@@ -12,11 +12,13 @@ import com.wangf.sales.management.entity.DepartmentMeeting;
 
 public class DepartmentMeetingRepositoryImpl implements DepartmentMeetingCustomQuery {
 
+	public static final String STATUS_PLAN = "预申请";
+
 	@PersistenceContext
 	private EntityManager em;
 
 	@Override
-	public List<DepartmentMeeting> searchAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
+	public List<DepartmentMeeting> searchFinishedMeetingAgainstMultipleValues(SalesRecordSearchCriteria criteria) {
 		String queryString = "select record from DepartmentMeeting record " + " join record.department department ";
 		if (CollectionUtils.isNotEmpty(criteria.getSalesPersonNames())) {
 			queryString = queryString + " join record.salesPerson person ";
@@ -39,6 +41,9 @@ public class DepartmentMeetingRepositoryImpl implements DepartmentMeetingCustomQ
 			String compareOperater = criteria.isIncludeEndAt() ? "<=" : "<";
 			queryString = queryString + " and record.date " + compareOperater + " :endAt ";
 		}
+		// We only want query finished meetings, so the planed meeting should
+		// not include
+		queryString = queryString + " and record.status !='" + STATUS_PLAN + "' ";
 
 		TypedQuery<DepartmentMeeting> query = em.createQuery(queryString, DepartmentMeeting.class);
 

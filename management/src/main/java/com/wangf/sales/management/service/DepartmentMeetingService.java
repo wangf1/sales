@@ -132,7 +132,7 @@ public class DepartmentMeetingService {
 			}
 		}
 		criteria.setSalesPersonNames(allEmployeesIncludeSelf);
-		List<DepartmentMeeting> records = departmentMeetingRepository.searchAgainstMultipleValues(criteria);
+		List<DepartmentMeeting> records = departmentMeetingRepository.searchFinishedMeetingAgainstMultipleValues(criteria);
 		List<DepartmentMeetingPojo> result = new ArrayList<>();
 		for (DepartmentMeeting record : records) {
 			DepartmentMeetingPojo pojo = DepartmentMeetingPojo.from(record);

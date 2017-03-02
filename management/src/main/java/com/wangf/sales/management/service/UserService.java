@@ -173,16 +173,19 @@ public class UserService {
 	}
 
 	public UserPojo insertOrUpdate(UserPojo pojo) {
-		User toSave = userRepository.findOne(pojo.getUserName());
-		if (toSave == null) {
-			toSave = new User();
+		String oldUserName = pojo.getId();
+
+		String newUserName = pojo.getUserName();
+		if (!oldUserName.equals(newUserName)) {
+			userRepository.updateUserName(oldUserName, newUserName);
 		}
-		toSave.setUserName(pojo.getUserName());
+
+		User toSave = userRepository.findOne(newUserName);
 		toSave.setFirstName(pojo.getFirstName());
 		toSave.setLastName(pojo.getLastName());
 		toSave.setPassword(pojo.getPassword());
 		String managerName = pojo.getManager();
-		if (!StringUtils.equals(pojo.getUserName(), managerName)) {
+		if (!StringUtils.equals(newUserName, managerName)) {
 			User manager = userRepository.findByUserName(managerName);
 			toSave.setManager(manager);
 		} else {

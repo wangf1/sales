@@ -162,13 +162,13 @@ public class SalesRecordsService {
 		salesRecordRepository.deleteByIds(salesRecordIds);
 	}
 
-	public StatusPojo cloneLastMonthData() {
+	public StatusPojo cloneLastMonthData(Date whichMonthToClone) {
 		StatusPojo statusPojo = new StatusPojo();
 		if (isAlreadyCloned()) {
 			statusPojo.setStatusKey(StatusPojo.STATUS_KEY_ALREADY_CLONED_LAST_MONTH);
 			return statusPojo;
 		}
-		List<SalesRecord> salesRecordsOfLastMonth = getSalesRrecordOfLastMonthForCurrentUser();
+		List<SalesRecord> salesRecordsOfLastMonth = getSalesRrecordOfLastMonthForCurrentUser(whichMonthToClone);
 		for (SalesRecord record : salesRecordsOfLastMonth) {
 			SalesRecordPojo pojo = SalesRecordPojo.from(record);
 			// Set id = 0 in order to perform insert if not exist
@@ -208,11 +208,17 @@ public class SalesRecordsService {
 		userPreferenceRepository.save(lastCloneMonthProperty);
 	}
 
-	private List<SalesRecord> getSalesRrecordOfLastMonthForCurrentUser() {
+	private List<SalesRecord> getSalesRrecordOfLastMonthForCurrentUser(Date whichMonthToClone) {
 		SalesRecordSearchCriteria criteria = new SalesRecordSearchCriteria();
-		Date startAt = DateUtils.getFirstDayOfLastMonth();
+		Date startAt, endAt;
+		if (whichMonthToClone == null) {
+			startAt = DateUtils.getFirstDayOfLastMonth();
+			endAt = DateUtils.getFirstDayOfCurrentMonth();
+		} else {
+			startAt = DateUtils.getFirstDayOfMonth(whichMonthToClone);
+			endAt = DateUtils.getFirstDayOfNextMonth(whichMonthToClone);
+		}
 		criteria.setStartAt(startAt);
-		Date endAt = DateUtils.getFirstDayOfCurrentMonth();
 		criteria.setEndAt(endAt);
 		criteria.setIncludeEndAt(false);
 

@@ -153,8 +153,8 @@ public class SalesRecordsController {
 	}
 
 	@RequestMapping(path = "/cloneLastMonthSalesRecords", method = RequestMethod.POST)
-	public StatusPojo cloneLastMonthSalesRecords() {
-		StatusPojo pojo = salesRecordsService.cloneLastMonthData();
+	public StatusPojo cloneLastMonthSalesRecords(@RequestBody(required = false) Date whichMonthToClone) {
+		StatusPojo pojo = salesRecordsService.cloneLastMonthData(whichMonthToClone);
 		return pojo;
 	}
 }

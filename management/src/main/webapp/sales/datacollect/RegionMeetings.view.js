@@ -96,6 +96,31 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
         return toolBar;
     };
 
+    function createFormsCell(oController, columName) {
+        var hBox = new sap.m.HBox();
+
+        var input = new sap.m.Input({
+            value: {
+                path: columName,
+            },
+            tooltip: {
+                path: columName,
+            },
+            enabled: false
+        });
+        hBox.addItem(input);
+
+        var button = new sap.m.Button({
+            icon: "sap-icon://edit",
+            press: function(e) {
+                oController.onEditMettingForms(e);
+            }
+        });
+        hBox.addItem(button);
+
+        return hBox;
+    }
+
     function createTable(oController) {
         var tableCells = [];
         var tableColumns = [];
@@ -142,7 +167,6 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     change: function(e) {
                         oController.onRegionChanged(e);
                     },
-                    value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
@@ -160,7 +184,6 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
-                    value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
@@ -178,7 +201,6 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
-                    value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonthOrLastMonth,
                     selectedKey: "{" + columName + "}",
@@ -196,7 +218,6 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     change: function(e) {
                         oController.onCellLiveChange(e);
                     },
-                    value: "{" + columName + "}",
                     tooltip: "{" + columName + "}",
                     enabled: enableIfInThisMonth,
                     selectedKey: "{" + columName + "}",
@@ -210,23 +231,8 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                     }
                 }));
             } else if (columName === "form") {
-                tableCells.push(new sap.m.Select({
-                    change: function(e) {
-                        oController.onCellLiveChange(e);
-                    },
-                    value: "{" + columName + "}",
-                    tooltip: "{" + columName + "}",
-                    enabled: enableIfInThisMonth,
-                    selectedKey: "{" + columName + "}",
-                    items: {
-                        path: "/region_meeting_forms",
-                        template: new sap.ui.core.Item({
-                            key: "{}",
-                            text: "{}"
-                        }),
-                        templateShareable: true
-                    }
-                }));
+                var formsCell = createFormsCell(oController, columName);
+                tableCells.push(formsCell);
             } else if (columName === "name") {
                 // Above columns can only edit in current month
                 tableCells.push(new sap.m.Input({
@@ -268,7 +274,6 @@ sap.ui.jsview("sales.datacollect.RegionMeetings", (function() {
                             change: function(e) {
                                 oController.onCellLiveChange(e);
                             },
-                            value: "{" + inputColumn + "}",
                             tooltip: "{" + inputColumn + "}",
                             enabled: enableIfInThisMonth,
                             selectedKey: "{" + inputColumn + "}",

@@ -14,8 +14,7 @@ sap.ui.model.SimpleType.extend("sales.common.StringArrayAsCommaStringType", (fun
         },
 
         parseValue: function(commaSeparateString) {
-            var re = /\s*,\s*/;
-            var stringArray = commaSeparateString.split(re);
+            var stringArray = sales.common.ArrayUtils.commaStringToArray(commaSeparateString);
             return stringArray;
         },
 

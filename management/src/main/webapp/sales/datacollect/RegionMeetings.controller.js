@@ -30,14 +30,22 @@ sap.ui
             var region_meeting_types =
                                        [
                                            resBundle.getText("region_meeting_type_1"), resBundle.getText("region_meeting_type_2"), resBundle.getText("region_meeting_type_3"),
-                                           resBundle.getText("region_meeting_type_4")
+                                           resBundle.getText("region_meeting_type_4"), resBundle.getText("region_meeting_type_5")
                                        ];
 
-            var region_meeting_forms =
-                                       [
-                                           resBundle.getText("region_meeting_form_1"), resBundle.getText("region_meeting_form_2"), resBundle.getText("region_meeting_form_3"),
-                                           resBundle.getText("region_meeting_form_4"), resBundle.getText("region_meeting_form_5")
-                                       ];
+            var region_meeting_forms = [
+                {
+                    name: resBundle.getText("region_meeting_form_1")
+                }, {
+                    name: resBundle.getText("region_meeting_form_2")
+                }, {
+                    name: resBundle.getText("region_meeting_form_3")
+                }, {
+                    name: resBundle.getText("region_meeting_form_4")
+                }, {
+                    name: resBundle.getText("region_meeting_form_5")
+                }
+            ];
 
             var firstDayOfCurrentMonth = oViewModel.getProperty("/firstDayOfCurrentMonth");
             var firstDayOfPreviousMonth = Date.parse(DateTimeUtils.firstDayOfPreviousMonth());
@@ -49,7 +57,7 @@ sap.ui
                 var endAt = DateTimeUtils.today();
                 oViewModel.setProperty("/startAt", startAt);
                 oViewModel.setProperty("/endAt", endAt);
-                oViewModel.setProperty("/region_meeting_forms", region_meeting_forms);
+// oViewModel.setProperty("/region_meeting_forms", region_meeting_forms);
             }
 
             function filterProvinceByRegion(region) {
@@ -240,7 +248,7 @@ sap.ui
                 newAdded["status"] = newAdded["availableStatuses"][0];
                 // Purpose of set a date is the cell enabled status depends on date
                 newAdded["date"] = DateTimeUtils.today();
-                newAdded["form"] = region_meeting_forms[0];
+// newAdded["form"] = region_meeting_forms[0];
                 newAdded["type"] = region_meeting_types[0];
                 // After move all input into one cell, the two-day binding cannot initialize the property, so must explicitly set numberOfPeople to
                 // undefined in order to do validate before save
@@ -360,6 +368,37 @@ sap.ui
                 return readableMessage;
             }
 
+            var meetingToEditForms;
+
+            function onEditMettingForms(e) {
+                meetingToEditForms = e.getSource().getBindingContext().getObject();
+                var formSelectDialog = sap.ui.view({
+                    type: sap.ui.core.mvc.ViewType.JS,
+                    viewName: "sales.datacollect.ItemSelect"
+                });
+                // Should attach confirm event listener ONLY one time
+                formSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
+                    onEditFormsDialogConfirm(selectConfirmEvent);
+                });
+                var initialFormNames = ArrayUtils.commaStringToArray(meetingToEditForms.form);
+                formSelectDialog.getController().setModelAndInitialSelection(region_meeting_forms, initialFormNames);
+                // Must call addDependent otherwise the dialog will cannot access the i18n model
+                this.getView().addDependent(formSelectDialog);
+                formSelectDialog.dialog.open();
+            }
+
+            function onEditFormsDialogConfirm(oEvent) {
+                var selectedForms = [];
+                var aContexts = oEvent.getParameter("selectedContexts");
+                aContexts.forEach(function(oContext) {
+                    var form = oContext.getObject();
+                    selectedForms.push(form.name);
+                });
+                var forms = ArrayUtils.stringArrayToCommaString(selectedForms);
+                meetingToEditForms.form = forms;
+                CRUDTableController.prototype.tableItemDataChanged(meetingToEditForms);
+            }
+
             var controller = CRUDTableController.extend("sales.datacollect.RegionMeetings", {
                 columnNames: columnNames,
                 onInit: init,
@@ -375,7 +414,8 @@ sap.ui
                 onExport: onExport,
                 initColumnVisiableModel: initColumnVisiableModel,
                 onCustomizeTable: onCustomizeTable,
-                onSelectColumnDialogConfirm: onSelectColumnDialogConfirm
+                onSelectColumnDialogConfirm: onSelectColumnDialogConfirm,
+                onEditMettingForms: onEditMettingForms
             });
             return controller;
         });

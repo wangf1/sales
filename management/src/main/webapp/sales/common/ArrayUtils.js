@@ -31,9 +31,16 @@ sales.common.ArrayUtils = (function() {
         return commaSeparateString;
     }
 
+    function commaStringToArray(commaSeparateString) {
+        var re = /\s*,\s*/;
+        var stringArray = commaSeparateString.split(re);
+        return stringArray;
+    }
+
     var toExpose = {
         removeFromById: removeFromById,
-        stringArrayToCommaString: stringArrayToCommaString
+        stringArrayToCommaString: stringArrayToCommaString,
+        commaStringToArray: commaStringToArray
     };
     return toExpose;
 })();

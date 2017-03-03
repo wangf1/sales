@@ -10,7 +10,7 @@ sap.ui.define([
 
     var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
-    function setTableModel() {
+    function setTableModel(thisController) {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
             url: "listAllUsers",
@@ -19,12 +19,13 @@ sap.ui.define([
         });
         var promiseAfterSetTableModel = promise.then(function(result) {
             oViewModel.setProperty("/users", result.data);
+            initSelection(thisController);
         });
         return promiseAfterSetTableModel;
     }
 
     function init() {
-        setTableModel();
+        setTableModel(this);
         this.getView().setModel(oViewModel);
     }
 
@@ -54,12 +55,12 @@ sap.ui.define([
         }
     }
 
-    function initSelection(selectedUsers) {
+    function initSelection(thisController) {
         if (!selectedUsers || selectedUsers.length === 0) {
             // if there is no selected users, should keep last time's selection
             return;
         }
-        var table = this.byId("theTable")._oTable;
+        var table = thisController.byId("theTable")._oTable;
         table.removeSelections();
         var tableItems = table.getItems();
         tableItems.forEach(function(item) {
@@ -73,6 +74,13 @@ sap.ui.define([
 
     }
 
+    var selectedUsers;
+    function setInitialSelected(initialSelected) {
+        selectedUsers = initialSelected;
+        // setTableModel only called one time, so should also init selection here to make sure the method called every time the dialog opened
+        initSelection(this);
+    }
+
     var controller = Controller.extend("sales.basicData.UserSelect", {
         onInit: init,
         sortTable: sortTable,
@@ -80,7 +88,7 @@ sap.ui.define([
         columnNames: [
             "fullNameWithLoginName"
         ],
-        initSelection: initSelection
+        setInitialSelected: setInitialSelected
     });
     return controller;
 });

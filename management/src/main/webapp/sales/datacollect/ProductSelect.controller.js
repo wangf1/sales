@@ -10,7 +10,9 @@ sap.ui.define([
 
     var oViewModel = UIUtils.createJsonModelWithSizeLimit10000(viewModelData);
 
-    function setTableModel() {
+    var selectedProducts;
+
+    function setTableModel(thisController) {
         var promise = AjaxUtils.ajaxCallAsPromise({
             method: "GET",
             url: "listNormalProducts",
@@ -19,12 +21,13 @@ sap.ui.define([
         });
         var promiseAfterSetTableModel = promise.then(function(result) {
             oViewModel.setProperty("/products", result.data);
+            initSelection(thisController);
         });
         return promiseAfterSetTableModel;
     }
 
     function init() {
-        setTableModel();
+        setTableModel(this);
         this.getView().setModel(oViewModel);
     }
 
@@ -54,12 +57,12 @@ sap.ui.define([
         }
     }
 
-    function initSelection(selectedProducts) {
+    function initSelection(thisController) {
         if (!selectedProducts || selectedProducts.length === 0) {
             // if there is no selected product, should keep last time's selection
             return;
         }
-        var table = this.byId("theTable")._oTable;
+        var table = thisController.byId("theTable")._oTable;
         table.removeSelections();
         var tableItems = table.getItems();
         tableItems.forEach(function(item) {
@@ -73,6 +76,12 @@ sap.ui.define([
 
     }
 
+    function setInitialSelected(initialSelected) {
+        selectedProducts = initialSelected;
+        // setTableModel only called one time, so should also init selection here to make sure the method called every time the dialog opened
+        initSelection(this);
+    }
+
     var controller = Controller.extend("sales.datacollect.ProductSelect", {
         onInit: init,
         sortTable: sortTable,
@@ -80,7 +89,7 @@ sap.ui.define([
         columnNames: [
             "name"
         ],
-        initSelection: initSelection
+        setInitialSelected: setInitialSelected
     });
     return controller;
 });

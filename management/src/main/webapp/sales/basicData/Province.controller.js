@@ -301,7 +301,7 @@ sap.ui.define([
                 onEditSalesPersonsDialogConfirm(selectConfirmEvent);
             });
         }
-        userSelectDialog.getController().initSelection(provinceToEditSalesPersons.salesPersons);
+        userSelectDialog.getController().setInitialSelected(provinceToEditSalesPersons.salesPersons);
         // Must call addDependent otherwise the dialog will cannot access the i18n model
         this.getView().addDependent(userSelectDialog);
         userSelectDialog.dialog.open();

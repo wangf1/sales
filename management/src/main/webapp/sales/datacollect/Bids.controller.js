@@ -120,7 +120,7 @@ sap.ui.define([
         this.initColumnVisiableModel();
 
         var newAdded = CRUDTableController.prototype.onAdd.call(this);
-        newAdded["price"] = 0;
+        newAdded["biddingPrice"] = 0;
         newAdded["region"] = oViewModel.getProperty("/regions")[0];
         newAdded["bidStatus"] = oViewModel.getProperty("/bidStatuses")[0];
         newAdded["filteredProvinces"] = filterProvinceByRegion(newAdded.region);
@@ -138,7 +138,7 @@ sap.ui.define([
     }
 
     function isPriceValid(object) {
-        if (!ValidateUtils.isGreaterOrEqualThan0(object.price)) {
+        if (!ValidateUtils.isGreaterOrEqualThan0(object.biddingPrice)) {
             var message = resBundle.getText("bid_price_invalid");
             UIUtils.showMessageToast(message);
             return false;
@@ -211,7 +211,7 @@ sap.ui.define([
                 onEditProductsDialogConfirm(selectConfirmEvent);
             });
         }
-        productSelectDialog.getController().initSelection(agencyToEditProducts.products);
+        productSelectDialog.getController().setInitialSelected(agencyToEditProducts.products);
         // Must call addDependent otherwise the dialog will cannot access the i18n model
         this.getView().addDependent(productSelectDialog);
         productSelectDialog.dialog.open();

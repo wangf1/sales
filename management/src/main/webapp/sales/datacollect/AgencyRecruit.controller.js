@@ -254,7 +254,7 @@ sap.ui.define([
         productSelectDialog.dialog.attachConfirm(function(selectConfirmEvent) {
             onEditProductsDialogConfirm(selectConfirmEvent);
         });
-        productSelectDialog.getController().initSelection(agencyToEditProducts.products);
+        productSelectDialog.getController().setInitialSelected(agencyToEditProducts.products);
         // Must call addDependent otherwise the dialog will cannot access the i18n model
         this.getView().addDependent(productSelectDialog);
         productSelectDialog.dialog.open();

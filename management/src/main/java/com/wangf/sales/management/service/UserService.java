@@ -176,11 +176,18 @@ public class UserService {
 		String oldUserName = pojo.getId();
 
 		String newUserName = pojo.getUserName();
-		if (!oldUserName.equals(newUserName)) {
+		if (oldUserName != null && !oldUserName.equals(newUserName)) {
+			// oldUserName != null and olderUserName not equal newUserName means
+			// user name changed
 			userRepository.updateUserName(oldUserName, newUserName);
 		}
 
 		User toSave = userRepository.findOne(newUserName);
+		if (toSave == null) {
+			toSave = new User();
+			toSave.setUserName(newUserName);
+		}
+
 		toSave.setFirstName(pojo.getFirstName());
 		toSave.setLastName(pojo.getLastName());
 		toSave.setPassword(pojo.getPassword());

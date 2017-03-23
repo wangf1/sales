@@ -39,4 +39,9 @@ public interface RegionMeetingRepository extends PagingAndSortingRepository<Regi
 	@Query(query_getRegionMeetingStatuses)
 	Set<String> getRegionMeetingStatuses();
 
+	String query_getRegionMeetingTypes = "select distinct rm.type from RegionMeeting rm ";
+
+	@Query(query_getRegionMeetingTypes)
+	Set<String> getRegionMeetingTypes();
+
 }

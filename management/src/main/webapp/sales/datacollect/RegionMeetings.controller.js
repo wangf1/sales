@@ -212,19 +212,35 @@ sap.ui
                 });
                 return promiseAfterGetAllDepartNames;
             }
+            function refreshRegionMeetingTypes() {
+                var promise = AjaxUtils.ajaxCallAsPromise({
+                    method: "GET",
+                    url: "getRegionMeetingTypes",
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+                var promiseAfterGetStatuses = promise.then(function(result) {
+                    var types = result.data;
+                    types.forEach(function(type) {
+                        if (region_meeting_types.indexOf(type) < 0) {
+                            region_meeting_types.push(type);
+                        }
+                    });
+                    // 1. Since all controller extend CRUDTableController, so all views share same oViewModel object, and same viewModelData object.
+                    // 2. I find when two Select controls in different view try to bind to same model property(in this case "type"), but the "items"
+                    // of the Select bind to different model path, then a serious problem will happen: The Select cannot drop down..
+                    // 3. To fix the issue, the "items" bind path must be same, so I must use same property name to store the region meeting types and
+                    // speaker types.
+                    // 4. This is a very tricky problem, so next time I will not try to create a supper controller for sub controller to extend, never
+                    // try to use the "module pattern" to create super controller, it cause lots of potential problems.
+                    oViewModel.setProperty("/allTypes", region_meeting_types);
+                });
+                return promiseAfterGetStatuses;
+            }
 
             function onRefresh() {
                 var that = this;
                 CRUDTableController.prototype.clearSelectAndChangedData.call(this);
-                // 1. Since all controller extend CRUDTableController, so all views share same oViewModel object, and same viewModelData object.
-                // 2. I find when two Select controls in different view try to bind to same model property(in this case "type"), but the "items" of
-                // the
-                // Select bind to different model path, then a serious problem will happen: The Select cannot drop down..
-                // 3. To fix the issue, the "items" bind path must be same, so I must use same property name to store the region meeting types and
-                // speaker types.
-                // 4. This is a very tricky problem, so next time I will not try to create a supper controller for sub controller to extend, never try
-                // to use the "module pattern" to create super controller, it cause lots of potential problems.
-                oViewModel.setProperty("/allTypes", region_meeting_types);
                 var promiseAfterGetAllProvinces = refreshProvinces();
                 var promiseAfterGetStatuses = refreshRegionMeetingStatuses();
                 Promise.all([
@@ -234,6 +250,7 @@ sap.ui
                 });
                 refreshAvailableRegions();
                 refreshDepartmentNames();
+                refreshRegionMeetingTypes();
             }
 
             function onAdd() {

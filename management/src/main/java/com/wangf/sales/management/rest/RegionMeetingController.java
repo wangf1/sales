@@ -83,4 +83,10 @@ public class RegionMeetingController {
 		return types;
 	}
 
+	@RequestMapping(value = "/getRegionMeetingTypes", method = RequestMethod.GET)
+	public Set<String> getRegionMeetingTypes() {
+		Set<String> types = regionMeetingService.getRegionMeetingTypes();
+		return types;
+	}
+
 }

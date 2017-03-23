@@ -113,4 +113,9 @@ public class RegionMeetingService {
 		return types;
 	}
 
+	public Set<String> getRegionMeetingTypes() {
+		Set<String> types = regionMeetingRepository.getRegionMeetingTypes();
+		return types;
+	}
+
 }

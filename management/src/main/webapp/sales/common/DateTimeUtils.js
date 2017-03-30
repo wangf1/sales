@@ -8,12 +8,13 @@ sales.common.DateTimeUtils = (function() {
      */
     function firstDayOfPreviousMonth() {
         var current = new Date();
+        // Must firstly set date to 1, then set month to last month.
+        // Otherwise when 30 March, the current month -1 will still in March.
+        // It should be JavaScript Date behavior.
+        current.setDate(1);
         current.setMonth(current.getMonth() - 1);
-        var lastMonth = current.getMonth();
-        var oneBasedLastMonth = lastMonth + 1;// js month is 0 based, so we get 1 based lastMonth
-        var lastMonthString = (lastMonth < 10 ? "0" : "") + lastMonth;
-        var dateString = current.getFullYear() + "-" + oneBasedLastMonth + "-" + "01";
-        return dateString;
+        var isoString = yyyyMMdd(current);
+        return isoString;
     }
 
     function yyyyMMdd(date) {

@@ -477,10 +477,12 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            var iframe = document.createElement("iframe");
-            iframe.setAttribute("src", result.data);
-            iframe.setAttribute("style", "display: none");
-            document.body.appendChild(iframe);
+            // Chrome will check the "X-Frame-Options" option. The error is:
+            // Refused to display 'http://localhost:8100/sales/exportAgencyRecruits/nCFEILUzoVEJTCVw5YcVA' in a frame because it set 'X-Frame-Options'
+            // to 'deny'.
+            // So I do not use iframe anymore.
+            var url = result.data;
+            window.open(url, '_blank');
         });
     }
 

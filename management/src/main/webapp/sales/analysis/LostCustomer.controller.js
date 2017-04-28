@@ -49,10 +49,8 @@ sap.ui.define([
             contentType: "application/json"
         });
         promise.then(function(result) {
-            var iframe = document.createElement("iframe");
-            iframe.setAttribute("src", result.data);
-            iframe.setAttribute("style", "display: none");
-            document.body.appendChild(iframe);
+            var url = result.data;
+            window.open(url, '_blank');
         });
     }
 

@@ -269,7 +269,7 @@ sap.ui
                 newAdded["date"] = DateTimeUtils.today();
                 // After move all input into one cell, the two-day binding cannot initialize the property, so must explicitly set numberOfPeople to
                 // undefined in order to do validate before save
-                newAdded["planCost"] = undefined;
+                newAdded["planDate"] = undefined;
                 oViewModel.refresh();
                 return newAdded;
             }
@@ -328,7 +328,7 @@ sap.ui
                     if (!object.hasOwnProperty(key)) {
                         continue;
                     }
-                    if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "columnsNeedInOneCell" || key === "planCost" || key === "actualCost" || key === "lastModifyBy" || key === "lastModifyAt") {
+                    if (key === "date" || key === "salesPersonFullName" || key === "allKindsOfInputs" || key === "planCost" || key === "actualCost" || key === "lastModifyBy" || key === "lastModifyAt") {
                         continue;
                     }
                     var value = object[key];
@@ -380,7 +380,7 @@ sap.ui
             function buildReadableDetailMessage(dataItem) {
                 var readableMessage = "";
                 for ( var key in dataItem) {
-                    if (key === "filteredProvinces" || key === "filteredHospitals" || key === "columnsNeedInOneCell" || key === "availableStatuses" || key === "subject") {
+                    if (key === "filteredProvinces" || key === "filteredHospitals" || key === "allKindsOfInputs" || key === "availableStatuses" || key === "subject") {
                         continue;
                     }
                     if (!dataItem.hasOwnProperty(key)) {

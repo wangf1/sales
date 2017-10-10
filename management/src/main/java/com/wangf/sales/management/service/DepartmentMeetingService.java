@@ -96,6 +96,7 @@ public class DepartmentMeetingService {
 			entity.setLastModifyBy(salesPerson);
 			entity.setLastModifyAt(new Date());
 		}
+		entity.setPlanDate(pojo.getPlanDate());
 
 		departmentMeetingRepository.save(entity);
 		DepartmentMeetingPojo savedPojo = DepartmentMeetingPojo.from(entity);
@@ -132,7 +133,8 @@ public class DepartmentMeetingService {
 			}
 		}
 		criteria.setSalesPersonNames(allEmployeesIncludeSelf);
-		List<DepartmentMeeting> records = departmentMeetingRepository.searchFinishedMeetingAgainstMultipleValues(criteria);
+		List<DepartmentMeeting> records = departmentMeetingRepository
+				.searchFinishedMeetingAgainstMultipleValues(criteria);
 		List<DepartmentMeetingPojo> result = new ArrayList<>();
 		for (DepartmentMeeting record : records) {
 			DepartmentMeetingPojo pojo = DepartmentMeetingPojo.from(record);

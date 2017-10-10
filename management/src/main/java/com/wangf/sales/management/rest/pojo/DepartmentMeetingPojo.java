@@ -37,6 +37,8 @@ public class DepartmentMeetingPojo extends PoJoBase {
 
 	private int numberOfPeople;
 
+	private Date planDate;
+
 	public long getId() {
 		return id;
 	}
@@ -165,6 +167,14 @@ public class DepartmentMeetingPojo extends PoJoBase {
 		this.numberOfPeople = numberOfPeople;
 	}
 
+	public Date getPlanDate() {
+		return planDate;
+	}
+
+	public void setPlanDate(Date planDate) {
+		this.planDate = planDate;
+	}
+
 	@Override
 	public String toString() {
 		return "DepartmentMeetingPojo [id=" + id + ", date=" + date + ", region=" + region + ", province=" + province
@@ -194,6 +204,7 @@ public class DepartmentMeetingPojo extends PoJoBase {
 		}
 		pojo.setLastModifyAt(d.getLastModifyAt());
 		pojo.setNumberOfPeople(d.getNumberOfPeople());
+		pojo.setPlanDate(d.getPlanDate());
 
 		return pojo;
 	}

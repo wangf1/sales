@@ -54,6 +54,8 @@ public class DepartmentMeeting {
 
 	private int numberOfPeople;
 
+	private Date planDate;
+
 	public long getId() {
 		return id;
 	}
@@ -156,6 +158,14 @@ public class DepartmentMeeting {
 
 	public void setNumberOfPeople(int numberOfPeople) {
 		this.numberOfPeople = numberOfPeople;
+	}
+
+	public Date getPlanDate() {
+		return planDate;
+	}
+
+	public void setPlanDate(Date planDate) {
+		this.planDate = planDate;
 	}
 
 	@Override

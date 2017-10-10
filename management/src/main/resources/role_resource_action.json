@@ -18,7 +18,7 @@
     {
         "role":"User",
         "resourcePermission":{
-            "salesRecord": {"create":true,"delete":true,"read":true,"update":true},
+            "salesRecord": {"create":true,"delete":true,"read":true,"update":true, "export":true},
             "province": {"create":false,"delete":false,"read":true,"update":false},
             "hospital": {"create":false,"delete":false,"read":false,"update":false},
             "department": {"create":true,"delete":true,"read":true,"update":true},
@@ -26,13 +26,14 @@
             "product": {"create":false,"delete":false,"read":true,"update":false},
             "user": {"create":false,"delete":false,"read":false,"update":true},
             "productPrice": {"create":true,"delete":true,"read":true,"update":true},
-            "dataCollect": {"update":true}
+            "dataCollect": {"update":true, "export":true},
+            "analysis": {"export":true}
         }
     },
     {
         "role":"Manager",
         "resourcePermission":{
-            "salesRecord": {"create":true,"delete":true,"read":true,"update":true},
+            "salesRecord": {"create":true,"delete":true,"read":true,"update":true, "export":true},
             "province": {"create":false,"delete":false,"read":true,"update":false},
             "hospital": {"create":false,"delete":false,"read":false,"update":false},
             "department": {"create":true,"delete":true,"read":true,"update":true},
@@ -41,7 +42,8 @@
             "user": {"create":false,"delete":false,"read":false,"update":true},
             "productPrice": {"create":true,"delete":true,"read":true,"update":true},
             "showSalesPersonForSalesRecord": {"read":true},
-            "dataCollect": {"update":true}
+            "dataCollect": {"update":true, "export":true},
+            "analysis": {"export":true}
         }
     },
     {

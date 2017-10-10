@@ -109,7 +109,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
             var width = "auto";
             if (columName === "hospital") {
                 width = "15%"
-            } else if (columName == "columnsNeedInOneCell") {
+            } else if (columName == "allKindsOfInputs") {
                 width = "15%";
             }
             tableColumns.push(new sap.m.Column({
@@ -285,7 +285,7 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                 }));
             } else if (columName === "allKindsOfInputs") {
                 var columnsInCell = [
-                    "planCost", "actualCost", "numberOfPeople"
+                    "planCost", "actualCost", "numberOfPeople", "planDate"
                 ];
                 var vBox = new sap.m.VBox();
                 columnsInCell.forEach(function(inputColumn) {
@@ -297,20 +297,35 @@ sap.ui.jsview("sales.datacollect.DepartmentMeetings", (function() {
                     if (inputColumn === "planCost") {
                         inputEnabled = enableIfInThisMonth;
                     }
-                    var valueControl = new sap.m.Input({
-                        value: {
-                            path: inputColumn,
-                            type: new sales.common.FloatTypeOnlyFormatValue()
-                        },
-                        tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error: "1"
-                        // is not valid for aggregation "tooltip" of Element" error which happen when input a
-                        // number
-                        editable: inputEnabled,
-                        textAlign: sap.ui.core.TextAlign.Right,
-                        liveChange: function(e) {
-                            oController.onCellLiveChange(e);
-                        }
-                    }).addStyleClass("input-in-table-cell");
+                    var valueControl;
+                    if (inputColumn === "planDate") {
+                        valueControl = new sap.m.DatePicker({
+                            value: "{" + inputColumn + "}",
+                            tooltip: "{" + inputColumn + "}",
+                            valueFormat: "yyyy-MM-dd",
+                            displayFormat: "yyyy-MM-dd",
+                            editable: inputEnabled,
+                            change: function(e) {
+                                oController.onCellLiveChange(e);
+                            }
+                        });
+                    } else {
+                        valueControl = new sap.m.Input({
+                            value: {
+                                path: inputColumn,
+                                type: new sales.common.FloatTypeOnlyFormatValue()
+                            },
+                            tooltip: "{" + inputColumn + "} ",// Intend add a tail space here to convert number to string, to avoid "Uncaught Error:
+                            // "1"
+                            // is not valid for aggregation "tooltip" of Element" error which happen when input a
+                            // number
+                            editable: inputEnabled,
+                            textAlign: sap.ui.core.TextAlign.Right,
+                            liveChange: function(e) {
+                                oController.onCellLiveChange(e);
+                            }
+                        }).addStyleClass("input-in-table-cell");
+                    }
                     hBox.addItem(valueControl);
                     vBox.addItem(hBox);
                 });

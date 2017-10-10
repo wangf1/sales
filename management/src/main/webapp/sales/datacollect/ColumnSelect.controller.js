@@ -21,7 +21,7 @@ sap.ui.define([
                 "product": true,
                 "purpose": true,
                 "status": true,
-                "columnsNeedInOneCell": true
+                "allKindsOfInputs": true
             };
      @ Output like this:
             [

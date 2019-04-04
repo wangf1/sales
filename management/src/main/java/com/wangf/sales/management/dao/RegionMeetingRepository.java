@@ -14,7 +14,7 @@ import com.wangf.sales.management.entity.RegionMeeting;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface RegionMeetingRepository extends PagingAndSortingRepository<RegionMeeting, Long> {
+public interface RegionMeetingRepository extends BaseRepository<RegionMeeting, Long> {
 	String query_findBetweenDate = "select rm from RegionMeeting rm " + " where rm.date >= :startAt "
 			+ " and rm.date < :endAt ";
 

@@ -12,7 +12,7 @@ import com.wangf.sales.management.entity.Hospital;
 import com.wangf.sales.management.entity.Province;
 
 @Repository
-public interface HospitalRepository extends PagingAndSortingRepository<Hospital, Long> {
+public interface HospitalRepository extends BaseRepository<Hospital, Long> {
 
 	Hospital findByName(String name);
 

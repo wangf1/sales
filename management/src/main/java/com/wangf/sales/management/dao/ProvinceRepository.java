@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.Province;
 
 @Repository
-public interface ProvinceRepository extends PagingAndSortingRepository<Province, Long> {
+public interface ProvinceRepository extends BaseRepository<Province, Long> {
 
 	Province findByName(String name);
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.ProductInstallLocation;
 
 @Repository
-public interface ProductInstallLocationRepository extends PagingAndSortingRepository<ProductInstallLocation, Long> {
+public interface ProductInstallLocationRepository extends BaseRepository<ProductInstallLocation, Long> {
 
 	String query_findByProductDepartmentHospital = "select location from ProductInstallLocation location "
 			+ " join location.product prod " + " join location.department dep "

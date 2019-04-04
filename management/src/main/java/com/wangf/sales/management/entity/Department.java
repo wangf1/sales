@@ -17,7 +17,7 @@ import com.google.common.base.MoreObjects;
 @Entity
 public class Department {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)

@@ -15,7 +15,7 @@ public class UserPreference {
 	public static final String PROPERTY_LAST_CLONE_MONTH = "last_clone_month";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false)

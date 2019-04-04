@@ -96,14 +96,14 @@ public class DepartmentService {
 			// be allowed.
 			DepartmentName departmentName = departmentNameRepository.findOne(id);
 			deleteAllDepartmentOfName(departmentName);
-			departmentNameRepository.delete(id);
+			departmentNameRepository.deleteById(id);
 		}
 	}
 
 	/**
-	 * Just try to delete all Department of a same name. But will throw
-	 * exception if other database record refer this department.
-	 * 
+	 * Just try to delete all Department of a same name. But will throw exception if
+	 * other database record refer this department.
+	 *
 	 * @param departmentName
 	 */
 	private void deleteAllDepartmentOfName(DepartmentName departmentName) {

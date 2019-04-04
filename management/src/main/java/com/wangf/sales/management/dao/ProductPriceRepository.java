@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.wangf.sales.management.entity.ProductPrice;
 
-public interface ProductPriceRepository extends PagingAndSortingRepository<ProductPrice, Long> {
+public interface ProductPriceRepository extends BaseRepository<ProductPrice, Long> {
 
 	String query_findByProductNameAndHospitalName = "select price from ProductPrice price " + " join price.product prod"
 			+ " join price.hospital hos " + " where prod.name = :product " + " and hos.name = :hospital ";

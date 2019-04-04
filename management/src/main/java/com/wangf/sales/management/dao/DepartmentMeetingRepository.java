@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +14,7 @@ import com.wangf.sales.management.entity.User;
 
 @Repository
 public interface DepartmentMeetingRepository
-		extends PagingAndSortingRepository<DepartmentMeeting, Long>, DepartmentMeetingCustomQuery {
+		extends BaseRepository<DepartmentMeeting, Long>, DepartmentMeetingCustomQuery {
 	String query_findBetweenDate = "select dm from DepartmentMeeting dm " + " where dm.date >= :startAt "
 			+ " and dm.date < :endAt ";
 
@@ -31,6 +30,7 @@ public interface DepartmentMeetingRepository
 
 	String jpql_deleteById = "delete from DepartmentMeeting dm where dm.id = :id";
 
+	@Override
 	@Modifying
 	@Query(jpql_deleteById)
 	void deleteById(@Param("id") Long id);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface UserRepository extends PagingAndSortingRepository<User, String>, UserCustomQuery {
+public interface UserRepository extends BaseRepository<User, String>, UserCustomQuery {
 
 	User findByUserName(String name);
 

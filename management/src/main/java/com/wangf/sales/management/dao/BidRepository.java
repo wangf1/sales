@@ -13,7 +13,7 @@ import com.wangf.sales.management.entity.Bid;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface BidRepository extends PagingAndSortingRepository<Bid, Long> {
+public interface BidRepository extends BaseRepository<Bid, Long> {
 	String query_findBetweenDate = "select b from Bid b " + " where b.date >= :startAt " + " and b.date < :endAt ";
 
 	@Query(query_findBetweenDate)

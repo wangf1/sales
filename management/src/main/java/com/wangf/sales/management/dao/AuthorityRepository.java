@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.Authority;
 
 @Repository
-public interface AuthorityRepository extends PagingAndSortingRepository<Authority, Long> {
+public interface AuthorityRepository extends BaseRepository<Authority, Long> {
 
 	String query_findByUserNameAndAuthority = "select auth from Authority auth " + " join auth.user u "
 			+ " where u.userName = :userName " + " and auth.authority = :role ";

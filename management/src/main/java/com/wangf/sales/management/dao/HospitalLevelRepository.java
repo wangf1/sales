@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.HospitalLevel;
 
 @Repository
-public interface HospitalLevelRepository extends PagingAndSortingRepository<HospitalLevel, Long> {
+public interface HospitalLevelRepository extends BaseRepository<HospitalLevel, Long> {
 
 	HospitalLevel findByName(String name);
 

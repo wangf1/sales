@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.Product;
 
 @Repository
-public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
+public interface ProductRepository extends BaseRepository<Product, Long> {
 
 	Product findByName(String name);
 

@@ -16,7 +16,7 @@ import com.google.common.base.MoreObjects;
 @Entity
 public class HospitalLevel {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Column(unique = true, nullable = false)

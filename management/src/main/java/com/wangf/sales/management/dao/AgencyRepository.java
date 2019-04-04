@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.wangf.sales.management.entity.Agency;
 
-public interface AgencyRepository extends PagingAndSortingRepository<Agency, Long> {
+public interface AgencyRepository extends BaseRepository<Agency, Long> {
 
 	Agency findByName(String name);
 

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.DepartmentName;
 
 @Repository
-public interface DepartmentNameRepository extends PagingAndSortingRepository<DepartmentName, Long> {
+public interface DepartmentNameRepository extends BaseRepository<DepartmentName, Long> {
 	DepartmentName findByName(String name);
 }

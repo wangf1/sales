@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.SalesRecordView;
 
 @Repository
-public interface SalesRecordViewRepository extends PagingAndSortingRepository<SalesRecordView, Long> {
+public interface SalesRecordViewRepository extends BaseRepository<SalesRecordView, Long> {
 
 	static final String jql_findNewCustomer = "select distinct thisMonth.hospital, thisMonth.product, thisMonth.region, thisMonth.province, thisMonth.sales_person from\n"
 			+ "	(SELECT *\n" + "	FROM sales_record_view\n"

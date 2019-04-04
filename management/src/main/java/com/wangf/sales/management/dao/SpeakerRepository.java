@@ -13,7 +13,7 @@ import com.wangf.sales.management.entity.Speaker;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface SpeakerRepository extends PagingAndSortingRepository<Speaker, Long> {
+public interface SpeakerRepository extends BaseRepository<Speaker, Long> {
 	String query_findBetweenDate = "select s from Speaker s " + " where s.date >= :startAt " + " and s.date < :endAt ";
 
 	@Query(query_findBetweenDate)

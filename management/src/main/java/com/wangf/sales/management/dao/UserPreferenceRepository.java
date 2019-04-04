@@ -7,6 +7,6 @@ import com.wangf.sales.management.entity.User;
 import com.wangf.sales.management.entity.UserPreference;
 
 @Repository
-public interface UserPreferenceRepository extends PagingAndSortingRepository<UserPreference, Long> {
+public interface UserPreferenceRepository extends BaseRepository<UserPreference, Long> {
 	UserPreference findByUserAndPropertyName(User user, String propertyName);
 }

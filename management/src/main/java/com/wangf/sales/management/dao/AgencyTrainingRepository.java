@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import com.wangf.sales.management.entity.AgencyTraining;
 import com.wangf.sales.management.entity.User;
 
-public interface AgencyTrainingRepository extends PagingAndSortingRepository<AgencyTraining, Long> {
+public interface AgencyTrainingRepository extends BaseRepository<AgencyTraining, Long> {
 	String query_findBetweenDate = "select ar from AgencyTraining ar " + " where ar.date >= :startAt "
 			+ " and ar.date < :endAt ";
 

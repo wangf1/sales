@@ -15,7 +15,7 @@ import com.wangf.sales.management.entity.SalesRecord;
 import com.wangf.sales.management.entity.User;
 
 @Repository
-public interface SalesRecordRepository extends PagingAndSortingRepository<SalesRecord, Long>, SalesRecordCustomQuery {
+public interface SalesRecordRepository extends BaseRepository<SalesRecord, Long>, SalesRecordCustomQuery {
 
 	List<SalesRecord> findBySalesPersonAndInstallLocationAndOrderDepartmentAndDateAfter(User salesPerson,
 			ProductInstallLocation installLocation, Department orderDepartment, Date date);

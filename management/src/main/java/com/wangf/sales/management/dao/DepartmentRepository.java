@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.wangf.sales.management.entity.Department;
 
 @Repository
-public interface DepartmentRepository extends PagingAndSortingRepository<Department, Long> {
+public interface DepartmentRepository extends BaseRepository<Department, Long> {
 	String query_findByDepartmentNameHospitalName = "select dep from Department dep " + " join dep.hospital hos "
 			+ " where dep.name.name = :department " + " and hos.name = :hospital ";
 
